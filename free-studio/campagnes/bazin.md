@@ -57,3 +57,42 @@ présence. Couleurs éclatantes, qualité authentique, prêt pour vos plus grand
 occasions. Commandez aujourd'hui sur WhatsApp — livraison partout au Sénégal. »
 
 **Musique :** afro/mbalax moderne, montée sur le plan 2 (bibliothèque CapCut).
+
+## Vidéo UGC — femme portant LE bazin de la boutique (photo client)
+
+Tissu réel : bazin glacé doré-bronze, tie-dye violet en rosaces circulaires,
+cœurs rouge carmin (photo fournie par le client).
+
+### Étape 1 — Image de la femme portant CE tissu (Gemini, gratuit)
+Sur gemini.google.com, **joindre la photo du tissu** + coller :
+
+> Using the EXACT fabric from this photo (glossy bronze-gold bazin with large
+> purple tie-dye rosette circles and crimson-red centers), create an
+> ultra-realistic UGC-style selfie photo of a beautiful Senegalese woman in her
+> 30s wearing an elegant tailored boubou made of this exact fabric, with a
+> matching headwrap, taking a selfie in a bright room at home, natural lighting,
+> authentic casual vibe, joyful confident smile, vertical 9:16
+
+### Étape 2 — Animer l'image (Kling ou Gemini/Veo, crédits gratuits)
+Mode **image-to-video**, uploader l'image de l'étape 1 + coller :
+
+> handheld selfie video, UGC testimonial style: the woman talks
+> enthusiastically to the camera, shows off her boubou by turning slightly so
+> the glossy fabric catches the light, natural hand gestures, authentic
+> smartphone footage look, realistic movement
+
+Sur **Veo (Gemini)**, on peut ajouter la parole directement :
+
+> ...she speaks in French with a Senegalese accent: "Regardez-moi ce bazin !
+> La qualité, la brillance... c'est ça qu'il vous faut pour la Tabaski !"
+
+### Étape 3 — Montage CapCut
+- Assembler le(s) clip(s) + la voix off / le script ci-dessous
+- Sous-titres auto CapCut + musique afro
+- Fin : « Commandez sur WhatsApp » (réutiliser la fin de pub-bazin-24s.mp4)
+
+### Script UGC (15-20 s, à dire ou en voix off)
+« Regardez-moi ce bazin ! La qualité, la brillance... je l'ai commandé sur
+WhatsApp et je l'ai reçu en 24 h. Doré avec le tie-dye violet, vous ne
+trouverez pas ça partout. Pour vos cérémonies, c'est ÇA qu'il vous faut.
+Écrivez-nous vite — le stock part très vite ! »
