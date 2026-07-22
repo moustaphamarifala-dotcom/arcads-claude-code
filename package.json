@@ -1,0 +1,26 @@
+{
+  "name": "arcads-claude-code",
+  "version": "0.1.0",
+  "description": "Génération de vidéos publicitaires IA (style Arcads) propulsée par l'API Higgsfield",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "generate:image": "node src/cli.js image",
+    "generate:video": "node src/cli.js video",
+    "generate:ad": "node src/cli.js ad"
+  },
+  "keywords": [
+    "higgsfield",
+    "ai-video",
+    "ads",
+    "ugc"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@higgsfield/client": "^0.2.1",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
