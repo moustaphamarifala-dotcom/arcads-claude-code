@@ -42,7 +42,8 @@ export default function Home() {
       {tab === "video" && <VideoGenerator />}
 
       <footer className="footer">
-        Textes générés par Claude (Anthropic) · Images par FLUX · Vidéos par WAN
+        Mode gratuit : textes et images sans clé API (Pollinations.ai) · Avec clés
+        API : Claude (textes), FLUX (images), WAN (vidéos)
       </footer>
     </main>
   );

@@ -2,19 +2,22 @@
 
 Application web de génération de contenu par intelligence artificielle : **textes**, **images** et **vidéos**, dans une interface simple en français.
 
+**✅ Fonctionne gratuitement, sans aucune clé API** — les textes et les images utilisent alors Pollinations.ai. Si vous ajoutez des clés API (optionnel), l'application bascule automatiquement sur des moteurs premium de meilleure qualité.
+
 ## Fonctionnalités
 
-| Onglet | Description | Moteur IA |
+| Onglet | Mode gratuit (sans clé) | Mode premium (avec clés) |
 |---|---|---|
-| ✍️ **Textes** | Articles de blog, posts réseaux sociaux, pubs, scripts vidéo, emails, fiches produits — avec choix du ton, affichage en streaming temps réel | Claude (Anthropic) |
-| 🎨 **Images** | Génération d'images à partir d'une description, choix du format (carré, paysage, story…) | FLUX Schnell (via Replicate) |
-| 🎬 **Vidéos** | Génération de courtes vidéos à partir d'un texte, avec suivi de progression | WAN 2.1 (via Replicate) |
+| ✍️ **Textes** | Pollinations.ai | Claude (Anthropic), streaming temps réel |
+| 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
+| 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
+
+\* Il n'existe à ce jour aucune API de génération vidéo réellement gratuite et fiable.
 
 ## Prérequis
 
 - Node.js 18.18 ou plus récent
-- Une clé API [Anthropic](https://platform.claude.com) (textes)
-- Un jeton API [Replicate](https://replicate.com/account/api-tokens) (images et vidéos)
+- C'est tout ! Les clés API sont **optionnelles** (voir `.env.example`)
 
 ## Installation
 
@@ -22,12 +25,12 @@ Application web de génération de contenu par intelligence artificielle : **tex
 # 1. Installer les dépendances
 npm install
 
-# 2. Configurer les clés API
-cp .env.example .env
-# puis éditez .env avec vos clés
-
-# 3. Lancer en développement
+# 2. Lancer en développement — aucune configuration nécessaire
 npm run dev
+
+# (Optionnel) Pour le mode premium :
+cp .env.example .env
+# puis décommentez et remplissez les clés souhaitées
 ```
 
 Ouvrez ensuite [http://localhost:3000](http://localhost:3000).
@@ -57,8 +60,11 @@ L'application se déploie en un clic sur [Vercel](https://vercel.com) :
 2. Ajoutez les variables d'environnement `ANTHROPIC_API_KEY` et `REPLICATE_API_TOKEN`
 3. Déployez
 
-## Coûts indicatifs
+## Coûts
 
-- **Textes** : facturés par Anthropic selon les tokens utilisés
-- **Images** : ~0,003 $ par image (FLUX Schnell)
-- **Vidéos** : quelques centimes par vidéo selon la durée (WAN 2.1)
+| Mode | Coût |
+|---|---|
+| **Gratuit** (par défaut, sans clé) | 0 F CFA — textes et images illimités, avec des limites de débit et une qualité correcte |
+| **Premium textes** (clé Anthropic) | Facturé par Anthropic selon les tokens utilisés |
+| **Premium images** (jeton Replicate) | ~0,003 $ par image (FLUX Schnell) |
+| **Vidéos** (jeton Replicate requis) | Quelques centimes par vidéo (WAN 2.1) |

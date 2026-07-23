@@ -9,21 +9,44 @@ textes publicitaires, scripts vidéo, emails marketing, descriptions de produits
 Adapte toujours le ton, la longueur et le format au type de contenu demandé.
 Réponds directement avec le contenu, sans préambule du type « Voici votre texte : ».`;
 
-export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+// Mode gratuit : Pollinations.ai, sans clé API (qualité moindre, limites de débit)
+async function generateFree(userMessage: string): Promise<Response> {
+  const res = await fetch("https://text.pollinations.ai/openai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "openai",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userMessage },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
     return Response.json(
-      { error: "ANTHROPIC_API_KEY manquante. Ajoutez-la dans votre fichier .env" },
-      { status: 500 },
+      {
+        error:
+          "Le service gratuit est momentanément indisponible ou saturé. Réessayez dans quelques instants.",
+      },
+      { status: 502 },
     );
   }
 
+  const data = await res.json();
+  const text: string = data?.choices?.[0]?.message?.content ?? "";
+
+  return new Response(text, {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });
+}
+
+export async function POST(req: Request) {
   const { prompt, contentType, tone } = await req.json();
 
   if (!prompt || typeof prompt !== "string") {
     return Response.json({ error: "Le champ « prompt » est requis." }, { status: 400 });
   }
-
-  const client = new Anthropic();
 
   const userMessage = [
     contentType ? `Type de contenu : ${contentType}` : null,
@@ -32,6 +55,13 @@ export async function POST(req: Request) {
   ]
     .filter(Boolean)
     .join("\n");
+
+  // Sans clé Anthropic → bascule automatique sur le mode gratuit
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return generateFree(userMessage);
+  }
+
+  const client = new Anthropic();
 
   const stream = client.messages.stream({
     model: "claude-opus-4-8",

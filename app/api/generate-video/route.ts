@@ -10,8 +10,13 @@ export async function POST(req: Request) {
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) {
     return Response.json(
-      { error: "REPLICATE_API_TOKEN manquant. Ajoutez-le dans votre fichier .env" },
-      { status: 500 },
+      {
+        error:
+          "La génération de vidéos nécessite un jeton Replicate (il n'existe pas d'API vidéo gratuite fiable). " +
+          "Les textes et les images fonctionnent gratuitement sans clé. " +
+          "Pour activer les vidéos, ajoutez REPLICATE_API_TOKEN dans votre fichier .env",
+      },
+      { status: 402 },
     );
   }
 

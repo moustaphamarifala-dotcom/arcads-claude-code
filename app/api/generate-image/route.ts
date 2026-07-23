@@ -5,19 +5,37 @@ const REPLICATE_API = "https://api.replicate.com/v1";
 // FLUX Schnell : rapide et économique, bon rendu général
 const IMAGE_MODEL = "black-forest-labs/flux-schnell";
 
-export async function POST(req: Request) {
-  const token = process.env.REPLICATE_API_TOKEN;
-  if (!token) {
-    return Response.json(
-      { error: "REPLICATE_API_TOKEN manquant. Ajoutez-le dans votre fichier .env" },
-      { status: 500 },
-    );
-  }
+// Dimensions par format pour le mode gratuit
+const FREE_SIZES: Record<string, { width: number; height: number }> = {
+  "1:1": { width: 1024, height: 1024 },
+  "16:9": { width: 1280, height: 720 },
+  "9:16": { width: 720, height: 1280 },
+  "4:3": { width: 1024, height: 768 },
+  "3:2": { width: 1152, height: 768 },
+};
 
+// Mode gratuit : Pollinations.ai génère l'image directement depuis une URL, sans clé
+function generateFree(prompt: string, aspectRatio: string): Response {
+  const { width, height } = FREE_SIZES[aspectRatio] ?? FREE_SIZES["1:1"];
+  const seed = Math.floor(Math.random() * 1_000_000);
+  const url =
+    `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
+    `?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+
+  return Response.json({ id: `free-${seed}`, status: "succeeded", imageUrl: url });
+}
+
+export async function POST(req: Request) {
   const { prompt, aspectRatio } = await req.json();
 
   if (!prompt || typeof prompt !== "string") {
     return Response.json({ error: "Le champ « prompt » est requis." }, { status: 400 });
+  }
+
+  // Sans jeton Replicate → bascule automatique sur le mode gratuit
+  const token = process.env.REPLICATE_API_TOKEN;
+  if (!token) {
+    return generateFree(prompt, aspectRatio || "1:1");
   }
 
   const res = await fetch(`${REPLICATE_API}/models/${IMAGE_MODEL}/predictions`, {

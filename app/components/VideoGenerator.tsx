@@ -120,7 +120,8 @@ export default function VideoGenerator() {
 
       <p className="hint">
         La génération vidéo prend généralement 2 à 5 minutes. Vous pouvez laisser
-        cette page ouverte pendant le traitement.
+        cette page ouverte pendant le traitement. ⚠️ Cette fonctionnalité nécessite
+        un jeton Replicate (les textes et images, eux, sont gratuits sans clé).
       </p>
     </div>
   );
