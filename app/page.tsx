@@ -41,6 +41,23 @@ export default function Home() {
       {tab === "image" && <ImageGenerator />}
       {tab === "video" && <VideoGenerator />}
 
+      <p style={{ textAlign: "center", marginTop: 28 }}>
+        <a
+          href="/photo"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
+          📷 Ouvrir le Studio Photo ultra-réaliste →
+        </a>
+      </p>
+
       <footer className="footer">
         Mode gratuit : textes et images sans clé API (Pollinations.ai) · Avec clés
         API : Claude (textes), FLUX (images), WAN (vidéos)

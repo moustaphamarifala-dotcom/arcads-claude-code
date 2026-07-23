@@ -6,11 +6,14 @@ Application web de génération de contenu par intelligence artificielle : **tex
 
 ## Fonctionnalités
 
-| Onglet | Mode gratuit (sans clé) | Mode premium (avec clés) |
+| Onglet / Page | Mode gratuit (sans clé) | Mode premium (avec clés) |
 |---|---|---|
 | ✍️ **Textes** | Pollinations.ai | Claude (Anthropic), streaming temps réel |
 | 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
 | 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
+| 📷 **Studio Photo** (`/photo`) | FLUX ultra-réaliste (Pollinations) | FLUX 1.1 Pro (Replicate) |
+
+Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie de session et téléchargement de chaque image.
 
 \* Il n'existe à ce jour aucune API de génération vidéo réellement gratuite et fiable.
 
