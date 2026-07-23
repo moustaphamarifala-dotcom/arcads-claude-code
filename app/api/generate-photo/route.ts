@@ -6,21 +6,25 @@ const REPLICATE_API = "https://api.replicate.com/v1";
 const PREMIUM_MODEL = "black-forest-labs/flux-1.1-pro";
 
 // Suffixes de style qui poussent vers l'ultra-réalisme
+// On insiste sur la netteté (mise au point nette, ultra détaillé, sans flou)
+// pour éviter le rendu doux/flou du modèle gratuit.
+const SHARP = "mise au point nette, ultra détaillé, netteté maximale, image nette et piquée, sans flou, haute résolution";
 const STYLE_SUFFIX: Record<string, string> = {
-  "Réaliste": "photographie ultra réaliste, haute résolution, détails nets, lumière naturelle, texture réaliste, 8k",
-  "Portrait": "portrait photographique ultra réaliste, peau détaillée, regard vivant, bokeh doux, objectif 85mm, lumière de studio, haute résolution",
-  "Paysage": "paysage photographique ultra réaliste, grand angle, lumière naturelle dorée, profondeur, détails nets, 8k",
-  "Produit": "photographie de produit ultra réaliste, studio, éclairage professionnel, fond épuré, netteté maximale, reflets réalistes",
-  "Nourriture": "photographie culinaire ultra réaliste, appétissante, gros plan, lumière naturelle douce, vapeur, détails de texture",
-  "Rue / Vie": "photographie de rue ultra réaliste, ambiance authentique, lumière naturelle, grain photo léger, moment sur le vif",
+  "Réaliste": `photographie ultra réaliste, lumière naturelle, texture réaliste, ${SHARP}, 8k`,
+  "Portrait": `portrait photographique ultra réaliste, peau détaillée, regard vivant, bokeh doux, objectif 85mm, lumière de studio, ${SHARP}`,
+  "Paysage": `paysage photographique ultra réaliste, grand angle, lumière naturelle dorée, profondeur, ${SHARP}, 8k`,
+  "Produit": `photographie de produit ultra réaliste, studio, éclairage professionnel, fond épuré, reflets réalistes, ${SHARP}`,
+  "Nourriture": `photographie culinaire ultra réaliste, appétissante, gros plan, lumière naturelle douce, détails de texture, ${SHARP}`,
+  "Rue / Vie": `photographie de rue ultra réaliste, ambiance authentique, lumière naturelle, moment sur le vif, ${SHARP}`,
 };
 
+// Résolutions plus élevées = images plus nettes
 const SIZES: Record<string, { width: number; height: number }> = {
-  "1:1": { width: 1024, height: 1024 },
-  "3:2": { width: 1216, height: 832 },
-  "2:3": { width: 832, height: 1216 },
-  "16:9": { width: 1280, height: 720 },
-  "9:16": { width: 720, height: 1280 },
+  "1:1": { width: 1280, height: 1280 },
+  "3:2": { width: 1440, height: 960 },
+  "2:3": { width: 960, height: 1440 },
+  "16:9": { width: 1536, height: 864 },
+  "9:16": { width: 864, height: 1536 },
 };
 
 export async function POST(req: Request) {
@@ -70,7 +74,7 @@ export async function POST(req: Request) {
       const seed = Math.floor(Math.random() * 1_000_000);
       imageUrl =
         `https://image.pollinations.ai/prompt/${encodeURIComponent(enriched)}` +
-        `?width=${width}&height=${height}&seed=${seed}&model=flux&nologo=true&enhance=true`;
+        `?width=${width}&height=${height}&seed=${seed}&model=flux&nologo=true`;
     }
 
     if (!imageUrl) {
