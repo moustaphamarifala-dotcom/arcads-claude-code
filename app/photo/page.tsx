@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./photo.module.css";
 
 const STYLES = ["Réaliste", "Portrait", "Paysage", "Produit", "Nourriture", "Rue / Vie"];
@@ -64,6 +64,15 @@ export default function PhotoStudio() {
   const [error, setError] = useState<string | null>(null);
   const [current, setCurrent] = useState<Shot | null>(null);
   const [gallery, setGallery] = useState<Shot[]>([]);
+  const promptRef = useRef<HTMLTextAreaElement>(null);
+
+  // Reprend la description d'une image pour la modifier puis régénérer
+  function modifyFrom(shot: Shot) {
+    setPrompt(shot.prompt);
+    setCurrent(shot);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => promptRef.current?.focus(), 350);
+  }
 
   // Charge la galerie sauvegardée au démarrage
   useEffect(() => {
@@ -141,6 +150,7 @@ export default function PhotoStudio() {
               <label htmlFor="prompt">Décris ton image</label>
               <textarea
                 id="prompt"
+                ref={promptRef}
                 placeholder="Ex. : un jeune entrepreneur africain souriant dans son atelier de couture, lumière naturelle, tissus wax colorés en arrière-plan…"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -200,8 +210,14 @@ export default function PhotoStudio() {
                 <a className={`${styles.actionBtn} ${styles.primary}`} href={current.url} download={`image-${Date.now()}.jpg`}>
                   ⬇ Télécharger
                 </a>
+                <button className={styles.actionBtn} onClick={() => modifyFrom(current)}>
+                  ✏️ Modifier
+                </button>
                 <button className={styles.actionBtn} onClick={generate}>
                   🔄 Regénérer
+                </button>
+                <button className={styles.actionBtn} onClick={() => removeShot(current.id)}>
+                  🗑 Supprimer
                 </button>
               </div>
             )}
@@ -230,6 +246,14 @@ export default function PhotoStudio() {
                 <div className={styles.thumb} key={s.id}>
                   <img src={s.url} alt={s.prompt} onClick={() => setCurrent(s)} />
                   <div className={styles.thumbActions}>
+                    <button
+                      className={styles.thumbBtn}
+                      onClick={() => modifyFrom(s)}
+                      title="Modifier"
+                      aria-label="Modifier cette image"
+                    >
+                      ✏️
+                    </button>
                     <a
                       className={styles.thumbBtn}
                       href={s.url}
