@@ -13,7 +13,12 @@ const FORMATS = [
   { value: "9:16", label: "Story (9:16)" },
 ];
 
-type Shot = { url: string; prompt: string };
+type Shot = { id: string; url: string; prompt: string };
+
+const newId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 export default function PhotoStudio() {
   const [prompt, setPrompt] = useState("");
@@ -51,7 +56,7 @@ export default function PhotoStudio() {
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      const shot = { url, prompt };
+      const shot = { id: newId(), url, prompt };
       setCurrent(shot);
       setGallery((prev) => [shot, ...prev].slice(0, 12));
     } catch (err) {
@@ -59,6 +64,24 @@ export default function PhotoStudio() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Supprimer une image de la galerie
+  function removeShot(id: string) {
+    setGallery((prev) => {
+      const target = prev.find((s) => s.id === id);
+      if (target) URL.revokeObjectURL(target.url);
+      return prev.filter((s) => s.id !== id);
+    });
+    setCurrent((cur) => (cur && cur.id === id ? null : cur));
+  }
+
+  // Vider toute la galerie
+  function clearGallery() {
+    if (!confirm("Supprimer toutes les images de la galerie ?")) return;
+    gallery.forEach((s) => URL.revokeObjectURL(s.url));
+    setGallery([]);
+    setCurrent(null);
   }
 
   return (
@@ -152,14 +175,34 @@ export default function PhotoStudio() {
 
         {gallery.length > 0 && (
           <section className={styles.gallery}>
-            <h2>Tes créations ({gallery.length})</h2>
+            <div className={styles.galleryHead}>
+              <h2>Tes créations ({gallery.length})</h2>
+              <button className={styles.clearBtn} onClick={clearGallery}>
+                🗑 Tout effacer
+              </button>
+            </div>
             <div className={styles.grid}>
               {gallery.map((s, i) => (
-                <div className={styles.thumb} key={i}>
+                <div className={styles.thumb} key={s.id}>
                   <img src={s.url} alt={s.prompt} onClick={() => setCurrent(s)} />
-                  <a href={s.url} download={`image-${i}.jpg`}>
-                    ⬇
-                  </a>
+                  <div className={styles.thumbActions}>
+                    <a
+                      className={styles.thumbBtn}
+                      href={s.url}
+                      download={`image-${i}.jpg`}
+                      title="Télécharger"
+                    >
+                      ⬇
+                    </a>
+                    <button
+                      className={styles.thumbBtn}
+                      onClick={() => removeShot(s.id)}
+                      title="Supprimer"
+                      aria-label="Supprimer cette image"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

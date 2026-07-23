@@ -244,13 +244,36 @@
 .gallery {
   margin-top: 28px;
 }
+.galleryHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
 .gallery h2 {
   font-size: 1rem;
   color: var(--muted);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin: 0;
+}
+.clearBtn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.clearBtn:hover {
+  border-color: #f87171;
+  color: #fca5a5;
 }
 .grid {
   display: grid;
@@ -271,19 +294,28 @@
   object-fit: cover;
   display: block;
 }
-.thumb a {
+.thumbActions {
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background: rgba(10, 12, 16, 0.8);
+  display: flex;
+  gap: 6px;
+}
+.thumbBtn {
+  background: rgba(10, 12, 16, 0.82);
   color: var(--ink);
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 5px 9px;
   font-size: 0.8rem;
   text-decoration: none;
-  border: 1px solid var(--line);
+  cursor: pointer;
+  line-height: 1;
+  font-family: inherit;
+  display: grid;
+  place-items: center;
 }
-.thumb a:hover {
+.thumbBtn:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
