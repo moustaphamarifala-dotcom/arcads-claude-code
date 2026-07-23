@@ -20,6 +20,42 @@ const newId = () =>
     ? crypto.randomUUID()
     : Date.now().toString(36) + Math.random().toString(36).slice(2);
 
+const GALLERY_KEY = "photo.gallery";
+const MAX_GALLERY = 8;
+
+// Convertit l'image en donnée sauvegardable (pour survivre au rafraîchissement)
+function blobToDataURL(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result as string);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
+
+function loadGallery(): Shot[] {
+  try {
+    const raw = localStorage.getItem(GALLERY_KEY);
+    return raw ? (JSON.parse(raw) as Shot[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Sauvegarde en gérant la limite d'espace : on réduit si nécessaire
+function persistGallery(list: Shot[]) {
+  let arr = list.slice(0, MAX_GALLERY);
+  while (arr.length) {
+    try {
+      localStorage.setItem(GALLERY_KEY, JSON.stringify(arr));
+      return;
+    } catch {
+      arr = arr.slice(0, arr.length - 1);
+    }
+  }
+  try { localStorage.removeItem(GALLERY_KEY); } catch {}
+}
+
 export default function PhotoStudio() {
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState(STYLES[0]);
@@ -29,12 +65,9 @@ export default function PhotoStudio() {
   const [current, setCurrent] = useState<Shot | null>(null);
   const [gallery, setGallery] = useState<Shot[]>([]);
 
-  // Libère les URLs objets quand le composant est démonté
+  // Charge la galerie sauvegardée au démarrage
   useEffect(() => {
-    return () => {
-      gallery.forEach((s) => URL.revokeObjectURL(s.url));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setGallery(loadGallery());
   }, []);
 
   async function generate() {
@@ -55,10 +88,14 @@ export default function PhotoStudio() {
       }
 
       const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const shot = { id: newId(), url, prompt };
+      const dataUrl = await blobToDataURL(blob);
+      const shot = { id: newId(), url: dataUrl, prompt };
       setCurrent(shot);
-      setGallery((prev) => [shot, ...prev].slice(0, 12));
+      setGallery((prev) => {
+        const next = [shot, ...prev].slice(0, MAX_GALLERY);
+        persistGallery(next);
+        return next;
+      });
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -69,9 +106,9 @@ export default function PhotoStudio() {
   // Supprimer une image de la galerie
   function removeShot(id: string) {
     setGallery((prev) => {
-      const target = prev.find((s) => s.id === id);
-      if (target) URL.revokeObjectURL(target.url);
-      return prev.filter((s) => s.id !== id);
+      const next = prev.filter((s) => s.id !== id);
+      persistGallery(next);
+      return next;
     });
     setCurrent((cur) => (cur && cur.id === id ? null : cur));
   }
@@ -79,8 +116,8 @@ export default function PhotoStudio() {
   // Vider toute la galerie
   function clearGallery() {
     if (!confirm("Supprimer toutes les images de la galerie ?")) return;
-    gallery.forEach((s) => URL.revokeObjectURL(s.url));
     setGallery([]);
+    persistGallery([]);
     setCurrent(null);
   }
 
@@ -173,14 +210,21 @@ export default function PhotoStudio() {
           </section>
         </div>
 
-        {gallery.length > 0 && (
-          <section className={styles.gallery}>
-            <div className={styles.galleryHead}>
-              <h2>Tes créations ({gallery.length})</h2>
+        <section className={styles.gallery}>
+          <div className={styles.galleryHead}>
+            <h2>🖼 Ma galerie ({gallery.length})</h2>
+            {gallery.length > 0 && (
               <button className={styles.clearBtn} onClick={clearGallery}>
                 🗑 Tout effacer
               </button>
-            </div>
+            )}
+          </div>
+          {gallery.length === 0 ? (
+            <p className={styles.galleryEmpty}>
+              Tes images générées apparaîtront ici et resteront sauvegardées sur cet
+              appareil, même après avoir fermé la page. 🌱
+            </p>
+          ) : (
             <div className={styles.grid}>
               {gallery.map((s, i) => (
                 <div className={styles.thumb} key={s.id}>
@@ -206,8 +250,8 @@ export default function PhotoStudio() {
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
         <p className={styles.foot}>
           Mode gratuit : modèle FLUX via Pollinations.ai · Pour une qualité maximale,
