@@ -52,9 +52,25 @@ export default function Home() {
             color: "var(--accent)",
             textDecoration: "none",
             fontWeight: 600,
+            margin: "0 6px 10px",
           }}
         >
-          📷 Ouvrir le Studio Photo ultra-réaliste →
+          📷 Studio Photo ultra-réaliste →
+        </a>
+        <a
+          href="/couture"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🧵 Studio Couture Bazin →
         </a>
       </p>
 

@@ -278,8 +278,9 @@ export default function PhotoStudio() {
         </section>
 
         <p className={styles.foot}>
-          Mode gratuit : modèle FLUX via Pollinations.ai · Pour une qualité maximale,
-          ajoutez une clé Replicate (FLUX 1.1 Pro). · <a href="/">← Retour au studio</a>
+          Mode gratuit : modèle FLUX via Pollinations.ai · 🧵{" "}
+          <a href="/couture">Studio Couture Bazin</a> (habille un modèle avec ton tissu) ·{" "}
+          <a href="/">← Accueil</a>
         </p>
       </div>
     </main>
