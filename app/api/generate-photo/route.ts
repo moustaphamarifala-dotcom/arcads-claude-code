@@ -16,6 +16,7 @@ const STYLE_SUFFIX: Record<string, string> = {
   "Produit": `photographie de produit ultra réaliste, studio, éclairage professionnel, fond épuré, reflets réalistes, ${SHARP}`,
   "Nourriture": `photographie culinaire ultra réaliste, appétissante, gros plan, lumière naturelle douce, détails de texture, ${SHARP}`,
   "Rue / Vie": `photographie de rue ultra réaliste, ambiance authentique, lumière naturelle, moment sur le vif, ${SHARP}`,
+  "Mode / Couture": `photographie de mode ultra réaliste, mannequin, vêtement de couture élégant, tissu détaillé, pose professionnelle, éclairage de studio, style éditorial magazine, ${SHARP}`,
 };
 
 // Résolutions plus élevées = images plus nettes

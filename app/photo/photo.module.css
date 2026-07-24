@@ -116,6 +116,28 @@
   border-color: var(--accent);
 }
 
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+.exampleChip {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+.exampleChip:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
 .rowTwo {
   display: grid;
   grid-template-columns: 1fr 1fr;

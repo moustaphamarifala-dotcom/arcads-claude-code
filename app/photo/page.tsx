@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./photo.module.css";
 
-const STYLES = ["Réaliste", "Portrait", "Paysage", "Produit", "Nourriture", "Rue / Vie"];
+const STYLES = ["Réaliste", "Mode / Couture", "Portrait", "Paysage", "Produit", "Nourriture", "Rue / Vie"];
+
+// Exemples prêts à cliquer, orientés mode / bazin
+const EXAMPLES = [
+  "Une femme élégante en robe de couture en bazin bleu à motifs dorés, pose de mannequin, fond studio, style tendance",
+  "Un homme en boubou bazin blanc brodé, chic et moderne, photo de mode professionnelle",
+  "Ensemble deux pièces féminin en bazin coloré, coupe couture moderne, défilé de mode africain",
+  "Robe de soirée en bazin richement brodé, mannequin, éclairage éditorial magazine",
+];
 
 const FORMATS = [
   { value: "1:1", label: "Carré (1:1)" },
@@ -155,6 +163,13 @@ export default function PhotoStudio() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
               />
+              <div className={styles.examples}>
+                {EXAMPLES.map((ex, i) => (
+                  <button key={i} className={styles.exampleChip} onClick={() => setPrompt(ex)}>
+                    {ex.split(",")[0]}…
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className={styles.rowTwo}>
