@@ -494,21 +494,18 @@ const GEO = {
     ["#burkina", "moyen", "Forme courte, souvent plus tapée que le nom complet."],
     ["#fasodanfani", "niche", "Le tissu tissé national : audience très attachée, forte intention d'achat."],
     ["#bazinburkina", "niche", "Croise ton produit et ton marché : quasiment aucune concurrence."]],
-  "Ouagadougou": [["#ouaga", "moyen", "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent."],
-    ["#burkinafaso", "moyen", "Élargit au pays entier et touche la diaspora burkinabè."],
-    ["#fasodanfani", "niche", "Le tissu tissé national : audience très attachée, forte intention d'achat."]],
-  "Bobo-Dioulasso": [["#bobodioulasso", "moyen", "Trafic local sur la deuxième ville du pays."],
-    ["#burkinafaso", "moyen", "Élargit au pays entier."],
-    ["#kokodunda", "niche", "Le teint de Bobo : très recherché, quasiment aucune concurrence sur TikTok."]],
-  "Bamako": [["#bamako", "moyen", "Trafic local."], ["#mali", "moyen", "Élargit au pays entier."],
-    ["#bazinmali", "niche", "Le Mali est un marché historique du bazin."]],
-  "Abidjan": [["#abidjan", "moyen", "Trafic local."], ["#cotedivoire", "moyen", "Élargit au pays entier."],
-    ["#modeivoirienne", "niche", "Communauté locale active."]],
-  "Dakar": [["#dakar", "moyen", "Trafic local."], ["#senegal", "moyen", "Élargit au pays entier."],
-    ["#couturedakar", "niche", "Intention locale forte, très peu de concurrence."]],
-  "Paris (diaspora)": [["#paris", "moyen", "Diaspora : panier moyen nettement plus élevé."],
-    ["#diaspora", "moyen", "Commande à distance et paie la livraison."],
-    ["#modeafricaineparis", "niche", "Très ciblé, faible concurrence, forte intention."]],
+  "Mali": [["#mali", "moyen", "Marché historique du bazin, juste à côté."],
+    ["#bamako", "moyen", "La capitale concentre les grossistes et les revendeuses."],
+    ["#bazinmali", "niche", "Audience qui connaît déjà les qualités et les prix."]],
+  "Côte d'Ivoire": [["#cotedivoire", "moyen", "Gros marché, pouvoir d'achat plus élevé."],
+    ["#abidjan", "moyen", "La capitale économique de la sous-région."],
+    ["#modeivoirienne", "niche", "Communauté locale très active sur TikTok."]],
+  "Sénégal": [["#senegal", "moyen", "Marché mature du bazin brodé."],
+    ["#dakar", "moyen", "Trafic local sur la capitale."],
+    ["#couturesenegalaise", "niche", "Communauté fidèle, bon taux de commentaires."]],
+  "France (diaspora)": [["#diaspora", "moyen", "Commande à distance et paie la livraison sans discuter."],
+    ["#paris", "moyen", "Panier moyen nettement plus élevé qu'au pays."],
+    ["#modeafricaineparis", "niche", "Très ciblé, faible concurrence, forte intention d'achat."]],
 };
 
 const LARGES = [["#pourtoi", "large", "Portée maximale, aucun classement possible. Un seul suffit."],
@@ -669,7 +666,7 @@ function analyser(e) {
     else f.push("Ajoute un hashtag long et spécifique (#fasodanfani, #bazinriche). Sur #mode tu es invisible.");
     const nb = e.legende.replace(/#\w+/g, "").trim().length;
     if (nb >= 40 && nb <= 200) { s += 15; o.push("Légende de bonne longueur — assez de texte pour être indexée."); }
-    else if (nb < 40) f.push("Légende trop courte. Écris une phrase contenant ce que les gens tapent (« bazin riche gros Ouaga prix »).");
+    else if (nb < 40) f.push("Légende trop courte. Écris une phrase contenant ce que les gens tapent (« bazin riche en gros Burkina prix »).");
     else f.push("Légende trop longue : elle est coupée. Va à l'essentiel en 2 lignes.");
     const cles = bas(e.hook).split(/\s+/).filter((m) => m.length > 4);
     if (cles.some((m) => bas(e.legende).includes(m))) { s += 12; o.push("Le mot-clé principal est dit ET écrit — TikTok le comprend deux fois."); }
@@ -822,7 +819,10 @@ function genererPlan(o) {
 
 /* ═══════════════ État ═══════════════ */
 
+const VERSION = 2;
+
 const DEFAUT = {
+  v: VERSION,
   onglet: "diag",
   produit: "bazin riche", prix: "10000", ville: "Burkina Faso",
   abonnes: 51400, vuesMoy: 836, freins: [],
@@ -836,7 +836,16 @@ const DEFAUT = {
 let S = Object.assign({}, DEFAUT);
 try {
   const brut = localStorage.getItem("studio.tiktok");
-  if (brut) S = Object.assign({}, DEFAUT, JSON.parse(brut), { eco: Object.assign({}, DEFAUT.eco, (JSON.parse(brut) || {}).eco) });
+  if (brut) {
+    const sauve = JSON.parse(brut) || {};
+    S = Object.assign({}, DEFAUT, sauve, { eco: Object.assign({}, DEFAUT.eco, sauve.eco) });
+    // La zone est passée de la capitale au pays entier : une valeur enregistrée
+    // avant ce changement ne doit pas écraser le nouveau réglage.
+    if (sauve.v !== VERSION) {
+      if (!(S.ville in GEO)) S.ville = DEFAUT.ville;
+      S.v = VERSION;
+    }
+  }
 } catch (e) { /* stockage indisponible : on continue sans sauvegarde */ }
 
 const sauver = () => { try { localStorage.setItem("studio.tiktok", JSON.stringify(S)); } catch (e) {} };

@@ -31,7 +31,7 @@ Le **Studio TikTok** (page `/tiktok`) sert à **débloquer la distribution puis 
 
 Tout est calculé **sur l'appareil**, sans réseau ni clé API — y compris les réponses au diagnostic, qui ne sortent jamais du téléphone. Seuls les scripts appellent une IA.
 
-Zones couvertes par le moteur de hashtags : **Burkina Faso** (pays entier, par défaut), Ouagadougou, Bobo-Dioulasso, Dakar, Bamako, Abidjan, Conakry et Paris (diaspora). Les créneaux de publication sont valables pour tout le bloc UTC+0.
+Zones couvertes par le moteur de hashtags — ce sont des **pays**, pas des villes, parce qu'un grossiste ne vend pas dans une seule ville : **Burkina Faso** (par défaut), Mali, Côte d'Ivoire, Sénégal et France (diaspora). Les créneaux de publication sont valables pour tout le bloc UTC+0.
 
 > ⚠️ Le Fonds Créateur de TikTok (rémunération aux vues) n'existe pas au Burkina Faso, au Sénégal, au Mali, en Côte d'Ivoire ni dans la plupart des pays d'Afrique de l'Ouest. Le simulateur ne compte donc **aucun revenu par vue** : l'argent vient des ventes, des partenariats et de l'affiliation.
 

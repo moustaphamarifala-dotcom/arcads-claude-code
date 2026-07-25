@@ -52,44 +52,31 @@ const GEO: Record<string, Tag[]> = {
     { tag: "#fasodanfani", taille: "niche", note: "Le tissu tissé national : audience très attachée, forte intention d'achat." },
     { tag: "#bazinburkina", taille: "niche", note: "Croise ton produit et ton marché : quasiment aucune concurrence." },
   ],
-  Ouagadougou: [
-    { tag: "#ouaga", taille: "moyen", note: "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent." },
-    { tag: "#burkinafaso", taille: "moyen", note: "Élargit au pays entier et touche la diaspora burkinabè." },
-    { tag: "#fasodanfani", taille: "niche", note: "Le tissu tissé national : audience très attachée, forte intention d'achat." },
+  Mali: [
+    { tag: "#mali", taille: "moyen", note: "Marché historique du bazin, juste à côté." },
+    { tag: "#bamako", taille: "moyen", note: "La capitale concentre les grossistes et les revendeuses." },
+    { tag: "#bazinmali", taille: "niche", note: "Audience qui connaît déjà les qualités et les prix." },
   ],
-  "Bobo-Dioulasso": [
-    { tag: "#bobodioulasso", taille: "moyen", note: "Trafic local sur la deuxième ville du pays." },
-    { tag: "#burkinafaso", taille: "moyen", note: "Élargit au pays entier." },
-    { tag: "#kokodunda", taille: "niche", note: "Le teint de Bobo : très recherché, quasiment aucune concurrence sur TikTok." },
+  "Côte d'Ivoire": [
+    { tag: "#cotedivoire", taille: "moyen", note: "Gros marché, pouvoir d'achat plus élevé." },
+    { tag: "#abidjan", taille: "moyen", note: "La capitale économique de la sous-région." },
+    { tag: "#modeivoirienne", taille: "niche", note: "Communauté locale très active sur TikTok." },
   ],
-  Dakar: [
-    { tag: "#dakar", taille: "moyen", note: "Trafic local : ceux qui peuvent venir en boutique." },
-    { tag: "#senegal", taille: "moyen", note: "Élargit au pays entier." },
-    { tag: "#coutureDakar", taille: "niche", note: "Intention locale forte, très peu de concurrence." },
+  "Sénégal": [
+    { tag: "#senegal", taille: "moyen", note: "Marché mature du bazin brodé." },
+    { tag: "#dakar", taille: "moyen", note: "Trafic local sur la capitale." },
+    { tag: "#couturesenegalaise", taille: "niche", note: "Communauté fidèle, bon taux de commentaires." },
   ],
-  Bamako: [
-    { tag: "#bamako", taille: "moyen", note: "Trafic local." },
-    { tag: "#mali", taille: "moyen", note: "Élargit au pays entier." },
-    { tag: "#bazinmali", taille: "niche", note: "Le Mali est un marché historique du bazin." },
-  ],
-  Abidjan: [
-    { tag: "#abidjan", taille: "moyen", note: "Trafic local." },
-    { tag: "#cotedivoire", taille: "moyen", note: "Élargit au pays entier." },
-    { tag: "#modeivoirienne", taille: "niche", note: "Communauté locale active." },
-  ],
-  Conakry: [
-    { tag: "#conakry", taille: "moyen", note: "Trafic local." },
-    { tag: "#guinee", taille: "moyen", note: "Élargit au pays entier." },
-    { tag: "#modeguineenne", taille: "niche", note: "Communauté locale active." },
-  ],
-  Paris: [
-    { tag: "#paris", taille: "moyen", note: "Diaspora : panier moyen nettement plus élevé." },
-    { tag: "#diaspora", taille: "moyen", note: "Audience qui commande à distance et paie la livraison." },
-    { tag: "#modeafricaineparis", taille: "niche", note: "Très ciblé, faible concurrence, forte intention." },
+  "France (diaspora)": [
+    { tag: "#diaspora", taille: "moyen", note: "Commande à distance et paie la livraison sans discuter." },
+    { tag: "#paris", taille: "moyen", note: "Panier moyen nettement plus élevé qu'au pays." },
+    { tag: "#modeafricaineparis", taille: "niche", note: "Très ciblé, faible concurrence, forte intention d'achat." },
   ],
 };
 
-export const VILLES = Object.keys(GEO);
+/** Zones de vente proposées. Ce sont des pays : un grossiste ne vend pas dans une seule ville. */
+export const ZONES = Object.keys(GEO);
+export const VILLES = ZONES;
 
 /** Transforme un mot libre en hashtag propre (sans accents ni espaces). */
 export function enTag(mot: string): string {
