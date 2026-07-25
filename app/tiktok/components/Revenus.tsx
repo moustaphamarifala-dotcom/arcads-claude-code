@@ -54,6 +54,11 @@ const CHAMPS: { cle: keyof Entrees; label: string; aide: string; pas?: number }[
     pas: 5,
   },
   {
+    cle: "rachatsParAn",
+    label: "Rachats par an d'une même cliente",
+    aide: "Une revendeuse se réapprovisionne. Une particulière achète 1 ou 2 fois par an.",
+  },
+  {
     cle: "videosUgcParMois",
     label: "Vidéos payées par des marques / mois",
     aide: "Zéro au début, c'est normal. Ça vient une fois l'audience installée.",
@@ -148,6 +153,42 @@ export default function Revenus({ profil }: { profil: Profil }) {
       </div>
 
       <div className={styles.carte}>
+        <div className={styles.carteTitre}>Ce que vaut vraiment une revendeuse</div>
+        <p className={styles.carteSous}>
+          Le chiffre ci-dessus ne compte que les nouvelles clientes du mois. Or une
+          revendeuse ne commande pas une fois : elle se réapprovisionne. C&apos;est ce
+          qui change tout entre vendre au détail et vendre en gros.
+        </p>
+
+        <div className={styles.etape}>
+          <div>
+            <div className={styles.etapeLabel}>Une revendeuse gagnée ce mois-ci</div>
+            <div className={styles.etapeDetail}>
+              te rapporte sur 12 mois, en marge nette, si elle reste
+            </div>
+          </div>
+          <div className={styles.etapeValeur} style={{ color: "var(--success)" }}>
+            {formatFcfa(r.valeurClient12Mois)}
+          </div>
+        </div>
+
+        <div className={styles.total}>
+          <div className={styles.totalChiffre}>{formatFcfa(r.revenuRegime)}</div>
+          <div className={styles.totalLabel}>
+            par mois en régime établi — au bout d&apos;environ un an, quand les anciennes
+            revendeuses rachètent pendant que de nouvelles arrivent
+          </div>
+        </div>
+
+        <div className={styles.note}>
+          C&apos;est la différence entre les deux chiffres qui doit guider ton travail :
+          si une revendeuse vaut {formatFcfa(r.valeurClient12Mois)} sur l&apos;année, il
+          est rentable de passer du temps à la garder — un message trois semaines après
+          sa commande coûte dix fois moins cher que d&apos;en trouver une nouvelle.
+        </div>
+      </div>
+
+      <div className={styles.carte}>
         <div className={styles.carteTitre}>Trois scénarios</div>
         <p className={styles.carteSous}>
           Même volume de publication. Ce qui change, c&apos;est uniquement la qualité de
@@ -168,9 +209,9 @@ export default function Revenus({ profil }: { profil: Profil }) {
       <div className={styles.carte}>
         <div className={styles.carteTitre}>Où mettre ton énergie</div>
         <p className={styles.carteSous}>
-          Si tu améliores un seul chiffre de 20 %, voilà ce que ça rapporte en plus chaque
-          mois. Commence par le haut de la liste — c&apos;est là que ton effort compte le
-          plus.
+          Si tu améliores un seul chiffre de 20 %, voilà ce que ça rapporte en plus par
+          mois en régime établi. Commence par le haut de la liste — c&apos;est là que ton
+          effort compte le plus.
         </p>
         {r.leviers.map((l) => (
           <div key={l.label} className={styles.levier}>

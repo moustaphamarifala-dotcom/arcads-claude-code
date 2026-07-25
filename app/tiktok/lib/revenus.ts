@@ -21,6 +21,7 @@ export interface Entrees {
   margeNette: number;
   videosUgcParMois: number;
   tarifUgc: number;
+  rachatsParAn: number;
 }
 
 export const ENTREES_DEFAUT: Entrees = {
@@ -33,6 +34,7 @@ export const ENTREES_DEFAUT: Entrees = {
   margeNette: 40,
   videosUgcParMois: 0,
   tarifUgc: 75000,
+  rachatsParAn: 6,
 };
 
 export interface Etape {
@@ -55,6 +57,8 @@ export interface Resultat {
   revenuUgc: number;
   total: number;
   parVideo: number;
+  valeurClient12Mois: number;
+  revenuRegime: number;
   scenarios: { nom: string; total: number; note: string }[];
   leviers: Levier[];
 }
@@ -80,6 +84,17 @@ function calculerTotal(e: Entrees): {
   const marge = ca * (e.margeNette / 100);
   const ugc = e.videosUgcParMois * e.tarifUgc;
   return { vues, visites, contacts, ventes, ca, marge, ugc, total: marge + ugc };
+}
+
+/**
+ * Revenu en régime établi : chaque revendeuse gagnée rachète (1 + rachatsParAn)
+ * fois sur l'année. Au bout de 12 mois les anciennes rachètent pendant que de
+ * nouvelles arrivent — c'est le vrai palier du business, et donc la bonne base
+ * pour comparer les leviers.
+ */
+function totalRegime(e: Entrees): number {
+  const b = calculerTotal(e);
+  return b.ventes * (1 + e.rachatsParAn) * e.panierMoyen * (e.margeNette / 100) + b.ugc;
 }
 
 /** Analyse de sensibilité : +20 % sur un levier, combien ça rapporte en plus ? */
@@ -116,6 +131,11 @@ function calculerLeviers(e: Entrees, base: number): Levier[] {
       conseil: "Propose systématiquement une pièce complémentaire (foulard, retouche, seconde tenue) au moment de la commande.",
     },
     {
+      cle: "rachatsParAn",
+      label: "Rachats par an d'une même revendeuse",
+      conseil: "Écris à chaque revendeuse 3 semaines après sa commande, avant qu'elle ne cherche ailleurs. Garder une cliente coûte dix fois moins cher que d'en trouver une.",
+    },
+    {
       cle: "margeNette",
       label: "Marge nette",
       conseil: "Négocie le tissu au volume et regroupe tes achats fournisseurs sur un seul déplacement.",
@@ -125,7 +145,7 @@ function calculerLeviers(e: Entrees, base: number): Levier[] {
   return variantes
     .map(({ cle, label, conseil }) => {
       const modifie = { ...e, [cle]: (e[cle] as number) * 1.2 };
-      return { label, gain: Math.round(calculerTotal(modifie).total - base), conseil };
+      return { label, gain: Math.round(totalRegime(modifie) - base), conseil };
     })
     .sort((a, b) => b.gain - a.gain);
 }
@@ -175,6 +195,13 @@ export function simuler(e: Entrees): Resultat {
     revenuUgc: Math.round(b.ugc),
     total: Math.round(b.total),
     parVideo: videosMois > 0 ? Math.round(b.total / videosMois) : 0,
+    // Une revendeuse gagnée ce mois-ci rachète (1 + rachatsParAn) fois sur l'année.
+    valeurClient12Mois: Math.round(
+      e.panierMoyen * (1 + e.rachatsParAn) * (e.margeNette / 100),
+    ),
+    // Régime établi : au bout de 12 mois, les anciennes clientes rachètent
+    // pendant que de nouvelles arrivent. C'est le vrai palier, pas le mois 1.
+    revenuRegime: Math.round(totalRegime(e)),
     scenarios: [
       {
         nom: "Prudent",
@@ -192,7 +219,7 @@ export function simuler(e: Entrees): Resultat {
         note: "Appel à l'action clair, réponse en moins d'une heure, offre simple.",
       },
     ],
-    leviers: calculerLeviers(e, b.total),
+    leviers: calculerLeviers(e, totalRegime(e)),
   };
 }
 

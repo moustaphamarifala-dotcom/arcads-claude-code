@@ -7,10 +7,10 @@ export interface Profil {
 }
 
 export const PROFIL_DEFAUT: Profil = {
-  produit: "bazin brodé homme",
-  prix: "35000",
+  produit: "bazin riche",
+  prix: "10000",
   ville: "Ouagadougou",
-  client: "ma cliente",
+  client: "ma revendeuse",
 };
 
 const CLE = "tiktok.profil";

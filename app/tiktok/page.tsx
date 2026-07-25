@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Accroches from "./components/Accroches";
+import Diagnostic from "./components/Diagnostic";
+import FicheProfil from "./components/FicheProfil";
 import Analyseur from "./components/Analyseur";
 import Hashtags from "./components/Hashtags";
 import PlanContenu from "./components/PlanContenu";
@@ -10,9 +12,19 @@ import Scripts from "./components/Scripts";
 import { chargerProfil, enregistrerProfil, PROFIL_DEFAUT, type Profil } from "./lib/profil";
 import styles from "./tiktok.module.css";
 
-type Onglet = "plan" | "scripts" | "accroches" | "analyse" | "hashtags" | "revenus";
+type Onglet =
+  | "diagnostic"
+  | "fiche"
+  | "plan"
+  | "scripts"
+  | "accroches"
+  | "analyse"
+  | "hashtags"
+  | "revenus";
 
 const ONGLETS: { id: Onglet; label: string }[] = [
+  { id: "diagnostic", label: "🩺 Diagnostic" },
+  { id: "fiche", label: "👤 Mon profil" },
   { id: "plan", label: "📅 Plan 30 jours" },
   { id: "scripts", label: "✍️ Scripts" },
   { id: "accroches", label: "🎣 Accroches" },
@@ -22,7 +34,7 @@ const ONGLETS: { id: Onglet; label: string }[] = [
 ];
 
 export default function StudioTikTok() {
-  const [onglet, setOnglet] = useState<Onglet>("plan");
+  const [onglet, setOnglet] = useState<Onglet>("diagnostic");
   const [profil, setProfil] = useState<Profil>(PROFIL_DEFAUT);
 
   // Le profil est relu après le montage : le rendu serveur ne connaît pas localStorage.
@@ -43,18 +55,18 @@ export default function StudioTikTok() {
           Studio <em>TikTok</em>
         </h1>
         <p>
-          Transformer des vues en commandes : plan de contenu, scripts, analyse de
-          viralité et calcul de revenus
+          Débloquer la distribution, puis transformer les vues en commandes
         </p>
       </header>
 
       <p className={styles.intro}>
-        Aucun outil ne fabrique de l&apos;argent tout seul. Celui-ci fait autre chose, et
-        c&apos;est plus utile : il t&apos;évite les erreurs qui coûtent des mois de
-        travail pour rien — publier sans plan, écrire des accroches qui font scroller,
-        oublier de dire comment commander, et croire que les vues rapportent alors
-        qu&apos;elles ne servent qu&apos;à amener des gens vers toi. Publie 5 fois par
-        semaine pendant 30 jours avec ce plan, et tu sauras exactement où tu en es.
+        Avant de produire plus de contenu, vérifie que le contenu que tu produis déjà
+        sort. Beaucoup de comptes n&apos;ont pas un problème de création mais un problème
+        de distribution : les vidéos ne sont même plus montrées aux abonnés. Tant que ce
+        blocage tient, chaque nouvelle vidéo ira mourir au même niveau que la précédente.
+        Commence donc par le <strong>diagnostic</strong>, corrige ton <strong>profil</strong>{" "}
+        — c&apos;est là que se décide chaque commande — et seulement ensuite reprends la
+        production avec le plan, les scripts et l&apos;analyseur.
       </p>
 
       <div className={styles.profil}>
@@ -68,7 +80,7 @@ export default function StudioTikTok() {
               id="pr-produit"
               type="text"
               value={profil.produit}
-              placeholder="bazin brodé homme"
+              placeholder="bazin riche"
               onChange={(e) => modifier("produit", e.target.value)}
             />
           </div>
@@ -89,7 +101,7 @@ export default function StudioTikTok() {
               id="pr-ville"
               type="text"
               value={profil.ville}
-              placeholder="Dakar"
+              placeholder="Ouagadougou"
               onChange={(e) => modifier("ville", e.target.value)}
             />
           </div>
@@ -99,7 +111,7 @@ export default function StudioTikTok() {
               id="pr-client"
               type="text"
               value={profil.client}
-              placeholder="ma cliente"
+              placeholder="ma revendeuse"
               onChange={(e) => modifier("client", e.target.value)}
             />
           </div>
@@ -118,6 +130,8 @@ export default function StudioTikTok() {
         ))}
       </nav>
 
+      {onglet === "diagnostic" && <Diagnostic />}
+      {onglet === "fiche" && <FicheProfil profil={profil} />}
       {onglet === "plan" && <PlanContenu profil={profil} />}
       {onglet === "scripts" && <Scripts profil={profil} />}
       {onglet === "accroches" && <Accroches profil={profil} />}
@@ -126,9 +140,9 @@ export default function StudioTikTok() {
       {onglet === "revenus" && <Revenus profil={profil} />}
 
       <footer className="footer">
-        Plan, analyse de viralité, hashtags et revenus : calculés sur ton appareil, sans
-        clé API. Les scripts utilisent Claude si une clé est configurée, sinon le mode
-        gratuit.
+        Diagnostic, profil, plan, analyse, hashtags et revenus : tout est calculé sur ton
+        appareil, sans clé API et sans que rien ne sorte de ton téléphone. Seuls les
+        scripts appellent une IA.
       </footer>
     </main>
   );

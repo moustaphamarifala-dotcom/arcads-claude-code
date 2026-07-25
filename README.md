@@ -16,18 +16,20 @@ Application web de génération de contenu par intelligence artificielle : **tex
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
-Le **Studio TikTok** (page `/tiktok`) sert à **transformer des vues en commandes**. Six outils, tous en français et en francs CFA :
+Le **Studio TikTok** (page `/tiktok`) sert à **débloquer la distribution puis transformer les vues en commandes**. Huit outils, tous en français et en francs CFA :
 
 | Outil | Ce qu'il fait |
 |---|---|
+| 🩺 **Diagnostic** | Calcule ton taux de portée (vues ÷ abonnés). En dessous de 5 %, le problème n'est pas le contenu mais la distribution. Liste les freins connus, les classe par impact et chiffre le multiplicateur de vues récupérable. |
+| 👤 **Mon profil** | Nom affiché, bio (80 caractères) et générateur de lien WhatsApp cliquable, avec validation en direct. C'est la page où se décide chaque commande. |
 | 📅 **Plan 30 jours** | Génère le calendrier complet : quelle vidéo, quel jour, à quelle heure, avec quelle accroche. Fait tourner 4 piliers (attirer / convaincre / prouver / vendre) pour ne pas saturer l'audience. |
 | ✍️ **Scripts** | Écrit 3 accroches au choix, le script plan par plan avec timecodes, le texte à l'écran, l'appel à l'action, la légende et les hashtags. |
 | 🎣 **Accroches** | 60 structures d'accroches éprouvées, déjà remplies avec ton produit et ton prix, classées par intention. |
-| 📊 **Analyser** | Note une vidéo sur 100 **avant** publication, sur 6 critères pondérés (accroche, rétention, émotion, conversion, découvrabilité, format). Chaque point perdu vient avec la correction exacte à faire. |
+| 📊 **Analyser** | Note une vidéo sur 100 **avant** publication, sur 7 critères pondérés (accroche, rétention, **freins de distribution**, conversion, émotion, découvrabilité, format). Détecte les numéros de téléphone et les renvois hors plateforme, qui coûtent le plus cher en portée. Chaque point perdu vient avec la correction exacte à faire. |
 | #️⃣ **Hashtags** | Compose le mélange 1 large / 2 moyens / 3 niche — la seule stratégie qui permet de réellement se classer. |
-| 💰 **Revenus** | Simulateur d'entonnoir vérifiable ligne par ligne, avec 3 scénarios et une analyse de sensibilité qui dit sur quel levier appuyer en premier. |
+| 💰 **Revenus** | Simulateur d'entonnoir vérifiable ligne par ligne, avec 3 scénarios et une analyse de sensibilité. Modélise le rachat : une revendeuse se réapprovisionne, d'où une valeur client à 12 mois et un revenu en régime établi. |
 
-Le plan, l'analyse, les hashtags et les revenus sont calculés **sur l'appareil**, sans réseau ni clé API. Seuls les scripts appellent une IA.
+Tout est calculé **sur l'appareil**, sans réseau ni clé API — y compris les réponses au diagnostic, qui ne sortent jamais du téléphone. Seuls les scripts appellent une IA.
 
 Zones couvertes par le moteur de hashtags : **Ouagadougou**, **Bobo-Dioulasso**, Dakar, Bamako, Abidjan, Conakry et Paris (diaspora). Les créneaux de publication sont valables pour tout le bloc UTC+0.
 
@@ -65,6 +67,8 @@ app/
 ├── tiktok/                      # Studio TikTok
 │   ├── page.tsx                 # Onglets + profil produit partagé
 │   ├── lib/
+│   │   ├── diagnostic.ts        # Taux de portée + freins de distribution
+│   │   ├── profilCompte.ts      # Nom, bio, lien WhatsApp
 │   │   ├── viralite.ts          # Moteur d'analyse de viralité (local)
 │   │   ├── hooks.ts             # Accroches, piliers, créneaux
 │   │   ├── hashtags.ts          # Stratégie de mélange par taille

@@ -82,6 +82,11 @@ const MOTS_BOUCLE = [
   "résultat", "resultat", "au final", "et devine",
 ];
 
+const MOTS_SURVENTE = [
+  "meilleur", "meilleure", "garanti", "garantie", "n°1", "numéro 1", "numero 1",
+  "imbattable", "unique en son genre", "100%", "le plus grand", "le plus beau",
+];
+
 const OUVERTURES_FAIBLES = [
   "bonjour", "salut tout le monde", "bienvenue sur", "aujourd'hui je vais",
   "dans cette vidéo", "dans cette video", "comme vous le savez",
@@ -121,7 +126,7 @@ function analyserHook(e: EntreeAnalyse): Critere {
     return {
       id: "hook",
       nom: "Accroche (0-3 s)",
-      poids: 30,
+      poids: 28,
       score: 0,
       role: "Décide si TikTok montre la vidéo à plus de monde.",
       constats: [],
@@ -191,7 +196,7 @@ function analyserHook(e: EntreeAnalyse): Critere {
   return {
     id: "hook",
     nom: "Accroche (0-3 s)",
-    poids: 30,
+    poids: 28,
     score: borner(score),
     role: "Décide si TikTok montre la vidéo à plus de monde.",
     constats,
@@ -212,7 +217,7 @@ function analyserRetention(e: EntreeAnalyse): Critere {
     return {
       id: "retention",
       nom: "Rétention (corps de la vidéo)",
-      poids: 25,
+      poids: 22,
       score: 0,
       role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.",
       constats: [],
@@ -276,7 +281,7 @@ function analyserRetention(e: EntreeAnalyse): Critere {
   return {
     id: "retention",
     nom: "Rétention (corps de la vidéo)",
-    poids: 25,
+    poids: 22,
     score: borner(score),
     role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.",
     constats,
@@ -332,7 +337,7 @@ function analyserEmotion(e: EntreeAnalyse): Critere {
   return {
     id: "emotion",
     nom: "Émotion & partage",
-    poids: 15,
+    poids: 12,
     score: borner(score),
     role: "Pousse la vidéo au-delà de tes abonnés (partages, commentaires).",
     constats,
@@ -391,9 +396,70 @@ function analyserConversion(e: EntreeAnalyse): Critere {
   return {
     id: "conversion",
     nom: "Conversion (vues → argent)",
-    poids: 15,
+    poids: 13,
     score: borner(score),
     role: "Transforme l'audience en messages, puis en commandes.",
+    constats,
+    correctifs,
+  };
+}
+
+/**
+ * Freins de distribution : ce qui empêche la vidéo d'être montrée, quelle que
+ * soit sa qualité. Une vidéo excellente qui pousse hors de TikTok sort moins
+ * qu'une vidéo moyenne qui garde l'utilisateur sur la plateforme.
+ */
+function analyserDistribution(e: EntreeAnalyse): Critere {
+  const constats: string[] = [];
+  const correctifs: string[] = [];
+  let score = 100;
+
+  const tout = `${e.hook}\n${e.script}\n${e.legende}`;
+
+  // Un numéro : au moins 8 chiffres, séparateurs tolérés. Les prix (« 10 000 F ») ne matchent pas.
+  const suites = tout.match(/\+?\d[\d\s.-]{6,}\d/g) ?? [];
+  const telephones = suites.filter((s) => s.replace(/\D/g, "").length >= 8);
+  if (telephones.length) {
+    score -= 40;
+    correctifs.push(
+      `Un numéro de téléphone apparaît (« ${telephones[0].trim()} »). C'est le frein de distribution le plus coûteux : TikTok réduit la portée de tout ce qui fait sortir de l'application. Mets-le dans le lien de ton profil — même information, cliquable, sans pénalité.`,
+    );
+  } else {
+    constats.push("Aucun numéro de téléphone dans le texte.");
+  }
+
+  if (/instagram|facebook|snapchat|telegram|https?:\/\/|www\.|\.com\b|\.fr\b/i.test(tout)) {
+    score -= 25;
+    correctifs.push(
+      "Tu renvoies vers une autre plateforme. Garde un seul chemin de sortie, et qu'il soit dans ta bio — nulle part ailleurs.",
+    );
+  } else {
+    constats.push("Aucun renvoi vers une plateforme concurrente.");
+  }
+
+  const survente = contient(tout, MOTS_SURVENTE);
+  if (survente.length) {
+    score -= 15;
+    correctifs.push(
+      `« ${survente[0]} » appartient au vocabulaire du spam : ça fait baisser la confiance autant que la portée. Remplace l'affirmation par la preuve — montre le tissu au lieu de dire qu'il est le meilleur.`,
+    );
+  } else {
+    constats.push("Pas de survente : le texte reste crédible.");
+  }
+
+  if (/\b(image|photo)s? (générée|generee|ia|par ia)\b/i.test(tout)) {
+    score -= 20;
+    correctifs.push(
+      "Un visuel généré par IA est dépriorisé et le public le repère. Pour un produit qu'on achète pour sa matière, filme le vrai tissu.",
+    );
+  }
+
+  return {
+    id: "distribution",
+    nom: "Freins de distribution",
+    poids: 15,
+    score: borner(score),
+    role: "Détermine si TikTok accepte de montrer la vidéo, avant même sa qualité.",
     constats,
     correctifs,
   };
@@ -457,7 +523,7 @@ function analyserSeo(e: EntreeAnalyse): Critere {
   return {
     id: "seo",
     nom: "Découvrabilité (recherche)",
-    poids: 10,
+    poids: 6,
     score: borner(score),
     role: "Fait revenir des vues pendant des mois via la recherche TikTok.",
     constats,
@@ -509,7 +575,7 @@ function analyserFormat(e: EntreeAnalyse): Critere {
   return {
     id: "format",
     nom: "Format technique",
-    poids: 5,
+    poids: 4,
     score: borner(score),
     role: "Durée, texte à l'écran, son : les réglages qui multiplient le reste.",
     constats,
@@ -541,6 +607,7 @@ export function analyser(e: EntreeAnalyse): Analyse {
   const criteres = [
     analyserHook(e),
     analyserRetention(e),
+    analyserDistribution(e),
     analyserEmotion(e),
     analyserConversion(e),
     analyserSeo(e),
