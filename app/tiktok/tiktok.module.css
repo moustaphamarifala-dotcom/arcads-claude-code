@@ -1,0 +1,568 @@
+.intro {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ── Profil produit (partagé par tous les outils) ────────────────────── */
+
+.profil {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.profilTitre {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.profilGrille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.champ label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.champ input,
+.champ select,
+.champ textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.champ input:focus,
+.champ select:focus,
+.champ textarea:focus {
+  border-color: var(--accent);
+}
+
+/* ── Cartes et blocs ─────────────────────────────────────────────────── */
+
+.carte {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.carteTitre {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.carteSous {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.grille2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .grille2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Score de viralité ───────────────────────────────────────────────── */
+
+.scoreBloc {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  margin-bottom: 18px;
+}
+
+.scoreChiffre {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.scoreInfo {
+  flex: 1;
+  min-width: 200px;
+}
+
+.scoreMention {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.scoreDetail {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.critere {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--bg-input);
+}
+
+.critereEntete {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.critereNom {
+  font-weight: 600;
+}
+
+.criterePoids {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.critereRole {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.jauge {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.jaugeRemplie {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.liste {
+  list-style: none;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.liste li {
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.ok::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--success);
+}
+
+.corriger::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.priorite {
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.prioriteLabel {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+/* ── Accroches ───────────────────────────────────────────────────────── */
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.filtre {
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all 0.15s ease;
+}
+
+.filtre:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.filtreActif {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hook {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--bg-input);
+}
+
+.hookTexte {
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.hookPourquoi {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.copier {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copier:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Plan 30 jours ───────────────────────────────────────────────────── */
+
+.jour {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--bg-input);
+}
+
+.jourNum {
+  text-align: center;
+}
+
+.jourNumChiffre {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.jourNumLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.jourDate {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  margin-bottom: 5px;
+}
+
+.jourPilier {
+  display: inline-block;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.jourFormat {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.jourHook {
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.jourObjectif {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+/* ── Revenus ─────────────────────────────────────────────────────────── */
+
+.etape {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.etape:last-child {
+  border-bottom: none;
+}
+
+.etapeLabel {
+  font-weight: 600;
+}
+
+.etapeDetail {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin-top: 3px;
+}
+
+.etapeValeur {
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.total {
+  text-align: center;
+  padding: 24px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  margin: 18px 0;
+}
+
+.totalChiffre {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.totalLabel {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-top: 6px;
+}
+
+.scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 640px) {
+  .scenarios {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scenario {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  background: var(--bg-input);
+}
+
+.scenarioNom {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.scenarioValeur {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.scenarioNote {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 8px;
+  line-height: 1.45;
+}
+
+.levier {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.levier:last-child {
+  border-bottom: none;
+}
+
+.levierNom {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.levierConseil {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.levierGain {
+  color: var(--success);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Hashtags ────────────────────────────────────────────────────────── */
+
+.tagChaine {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--accent);
+  margin-bottom: 14px;
+  word-break: break-word;
+}
+
+.tagLigne {
+  display: grid;
+  grid-template-columns: 150px 74px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.tagLigne:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 560px) {
+  .tagLigne {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+.tagNom {
+  font-weight: 600;
+  color: var(--accent);
+  word-break: break-word;
+}
+
+.tagTaille {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.tagNote {
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Divers ──────────────────────────────────────────────────────────── */
+
+.sortie {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 1rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.barreActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.note {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  border-left: 2px solid var(--border);
+  padding-left: 14px;
+  margin-top: 16px;
+}
+
+.retour {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.retour:hover {
+  color: var(--accent);
+}
