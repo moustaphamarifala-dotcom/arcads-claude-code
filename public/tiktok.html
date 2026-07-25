@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101320">
+<title>Studio TikTok — diagnostic et vente</title>
+
+<style>
+  :root {
+    --ground: #101320;
+    --surface: #191d2d;
+    --surface-2: #212639;
+    --line: #2e3348;
+    --ink: #eaebf2;
+    --ink-soft: #949ab4;
+    --brass: #d9a441;
+    --brass-ink: #f0c069;
+    --brass-soft: rgba(217, 164, 65, 0.13);
+    --crit: #e5565b;
+    --warn: #dd8b3a;
+    --mid: #c9ac4e;
+    --ok: #46a86c;
+    --r: 14px;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #f1f2f7;
+      --surface: #ffffff;
+      --surface-2: #f7f8fb;
+      --line: #dcdfe9;
+      --ink: #171a26;
+      --ink-soft: #5b6278;
+      --brass: #9a6f16;
+      --brass-ink: #7d5a0f;
+      --brass-soft: rgba(154, 111, 22, 0.09);
+      --crit: #c4353a;
+      --warn: #a9631b;
+      --mid: #8a7420;
+      --ok: #2c7d4b;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #101320;
+    --surface: #191d2d;
+    --surface-2: #212639;
+    --line: #2e3348;
+    --ink: #eaebf2;
+    --ink-soft: #949ab4;
+    --brass: #d9a441;
+    --brass-ink: #f0c069;
+    --brass-soft: rgba(217, 164, 65, 0.13);
+    --crit: #e5565b;
+    --warn: #dd8b3a;
+    --mid: #c9ac4e;
+    --ok: #46a86c;
+  }
+
+  :root[data-theme="light"] {
+    --ground: #f1f2f7;
+    --surface: #ffffff;
+    --surface-2: #f7f8fb;
+    --line: #dcdfe9;
+    --ink: #171a26;
+    --ink-soft: #5b6278;
+    --brass: #9a6f16;
+    --brass-ink: #7d5a0f;
+    --brass-soft: rgba(154, 111, 22, 0.09);
+    --crit: #c4353a;
+    --warn: #a9631b;
+    --mid: #8a7420;
+    --ok: #2c7d4b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .app { max-width: 560px; margin: 0 auto; padding: 0 16px 64px; }
+
+  header { padding: 28px 0 18px; }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    line-height: 1.2;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  h1 em { color: var(--brass); font-style: italic; }
+
+  .sous { color: var(--ink-soft); font-size: 0.94rem; margin: 0; }
+
+  /* ── Navigation : rangée défilante, collée en haut ─────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 10px 16px;
+    margin: 0 -16px 18px;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+
+  .chip {
+    flex: 0 0 auto;
+    padding: 8px 15px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chip[aria-selected="true"] {
+    background: var(--brass-soft);
+    border-color: var(--brass);
+    color: var(--brass-ink);
+    font-weight: 600;
+  }
+  .chip:focus-visible, button:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible, a:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+
+  /* ── Cartes ────────────────────────────────────────────────────── */
+  .carte {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .carte.liseré { border-left-width: 4px; }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.13rem;
+    margin: 0 0 6px;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .aide { color: var(--ink-soft); font-size: 0.89rem; margin: 0 0 15px; }
+  .aide:last-child { margin-bottom: 0; }
+
+  /* ── Formulaires ───────────────────────────────────────────────── */
+  .grille { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 430px) { .grille { grid-template-columns: 1fr; } }
+
+  .champ { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .champ:last-child { margin-bottom: 0; }
+  .champ > label { color: var(--ink-soft); font-size: 0.83rem; }
+  .champ .note { color: var(--ink-soft); font-size: 0.78rem; line-height: 1.45; }
+
+  input, select, textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 11px 12px;
+  }
+  input[type="number"] { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
+  input:focus, select:focus, textarea:focus { border-color: var(--brass); }
+
+  .btn {
+    font: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: 9px;
+    padding: 11px 20px;
+    background: var(--brass);
+    color: var(--ground);
+    cursor: pointer;
+  }
+  .btn.ghost {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
+
+  /* ── Métriques ─────────────────────────────────────────────────── */
+  .metrique { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .chiffre {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 2.9rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .chiffre .u { font-size: 1.1rem; font-weight: 400; }
+  .metrique .txt { flex: 1; min-width: 190px; }
+  @media (max-width: 460px) {
+    .metrique { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .metrique .txt { min-width: 0; }
+  }
+
+  .pastille {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    margin-bottom: 5px;
+  }
+
+  .encadre {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid var(--brass);
+    background: var(--brass-soft);
+    border-radius: var(--r);
+    margin: 16px 0;
+  }
+  .encadre .chiffre { color: var(--brass); font-size: 2.2rem; }
+  .encadre .lg { color: var(--ink-soft); font-size: 0.86rem; margin-top: 7px; }
+
+  /* ── Lignes de données ─────────────────────────────────────────── */
+  .ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ligne:last-child { border-bottom: none; }
+  .ligne .lbl { font-weight: 600; font-size: 0.94rem; }
+  .ligne .det { color: var(--ink-soft); font-size: 0.79rem; }
+  .ligne .val {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .jauge { height: 5px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 9px 0 11px; }
+  .jauge i { display: block; height: 100%; border-radius: 999px; }
+
+  ul.pts { list-style: none; margin: 0; padding: 0; font-size: 0.88rem; }
+  ul.pts li { position: relative; padding-left: 20px; margin-bottom: 5px; line-height: 1.5; }
+  ul.pts li.oui::before { content: "✓"; position: absolute; left: 0; color: var(--ok); }
+  ul.pts li.non::before { content: "→"; position: absolute; left: 0; color: var(--brass); }
+
+  .coche { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; }
+  .coche input { width: 19px; height: 19px; flex: 0 0 auto; margin-top: 2px; accent-color: var(--brass); }
+  .coche .q { font-weight: 600; font-size: 0.93rem; line-height: 1.45; }
+
+  .bloc-tags {
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--brass-ink);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    word-break: break-word;
+  }
+  .lien-wa {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    word-break: break-all;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--brass-ink);
+  }
+
+  .item { border: 1px solid var(--line); border-radius: 11px; padding: 13px 14px; margin-bottom: 10px; background: var(--surface-2); }
+  .item .eyebrow { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); }
+  .item .cite { font-size: 1rem; line-height: 1.5; margin: 5px 0; }
+  .item .pourquoi { color: var(--ink-soft); font-size: 0.84rem; line-height: 1.5; }
+
+  .mini {
+    font: inherit;
+    font-size: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    border-radius: 7px;
+    padding: 5px 12px;
+    cursor: pointer;
+    margin-top: 9px;
+    margin-right: 7px;
+  }
+  .mini:hover { border-color: var(--brass); color: var(--brass-ink); }
+
+  .jour { display: grid; grid-template-columns: 46px 1fr; gap: 12px; }
+  .jour .n {
+    font-family: var(--mono);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--brass);
+    text-align: center;
+    line-height: 1.1;
+  }
+  .jour .n small { display: block; font-size: 0.6rem; color: var(--ink-soft); letter-spacing: 0.06em; }
+
+  .rappel {
+    color: var(--ink-soft);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    border-left: 2px solid var(--line);
+    padding-left: 13px;
+    margin-top: 14px;
+  }
+
+  footer {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 26px 0 8px;
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Studio <em>TikTok</em></h1>
+    <p class="sous">Débloquer la distribution, puis transformer les vues en commandes. Tout est calculé sur ton téléphone — rien ne sort d'ici.</p>
+  </header>
+
+  <nav id="nav" role="tablist" aria-label="Outils"></nav>
+  <main id="vue"></main>
+
+  <footer>
+    Bazin en gros · Ouagadougou · francs CFA<br>
+    Aucune donnée envoyée. Tes chiffres restent enregistrés sur cet appareil.
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ═══════════════ Données ═══════════════ */
+
+const FREINS = [
+  { id: "numero", q: "Un numéro de téléphone ou WhatsApp est affiché dans tes vidéos", p: 22,
+    pourquoi: "TikTok gagne de l'argent quand les gens restent sur TikTok. Un numéro à l'écran envoie l'utilisateur ailleurs, et la distribution est réduite en conséquence.",
+    fix: "Retire le numéro de l'image. Mets-le dans le lien de ton profil : même information, cliquable, autorisée, et sans coût de distribution." },
+  { id: "ia", q: "Tes visuels sont générés par intelligence artificielle", p: 20,
+    pourquoi: "Les contenus générés non déclarés sont dépriorisés, et le public réagit mal à ce qu'il identifie comme faux — surtout pour un produit qu'on achète pour sa matière.",
+    fix: "Filme ton vrai stock. Le tissu qu'on déroule, la main qui passe dessus, le bruit du bazin qu'on froisse. C'est gratuit, et personne ne peut le copier." },
+  { id: "statique", q: "Tes publications sont des images fixes plutôt que de la vidéo filmée", p: 16,
+    pourquoi: "Une image fixe ne génère ni durée de visionnage ni replay, les deux signaux qui déclenchent la diffusion large.",
+    fix: "Même dix secondes filmées au téléphone valent mieux qu'une belle image fixe. Le mouvement et le son sont ce qui fait rester." },
+  { id: "plateforme", q: "Tu mets un lien ou un @ d'une autre plateforme dans la vidéo ou la légende", p: 12,
+    pourquoi: "Même logique que le numéro : tout ce qui fait sortir de l'application coûte en portée.",
+    fix: "Un seul chemin de sortie, et il est dans ta bio. Nulle part ailleurs." },
+  { id: "vignette", q: "Tes vignettes sont couvertes de texte publicitaire", p: 10,
+    pourquoi: "Une vignette qui ressemble à une publicité fait scroller avant même la première seconde, et TikTok apprend vite que ton contenu ne retient pas.",
+    fix: "Une ligne de texte maximum sur la vignette, et le produit bien visible derrière. Le reste se dit à l'oral." },
+  { id: "filigrane", q: "Tes vidéos portent le filigrane d'une autre application", p: 8,
+    pourquoi: "Un filigrane extérieur signale un contenu importé, ce qui réduit la mise en avant.",
+    fix: "Exporte sans filigrane, ou refilme directement dans TikTok." },
+  { id: "repetition", q: "Tu republies souvent le même visuel ou presque", p: 7,
+    pourquoi: "Les contenus quasi identiques sont regroupés et un seul est distribué. Les autres partent à vide.",
+    fix: "Change de décor, d'angle et de tissu à chaque vidéo, même pour dire la même chose." },
+  { id: "promesses", q: "Tes textes contiennent des promesses commerciales très appuyées", p: 5,
+    pourquoi: "« Meilleur prix », « garanti », « le meilleur du pays » : ce vocabulaire est associé au spam et fait baisser la confiance autant que la portée.",
+    fix: "Remplace l'affirmation par la preuve. Montre le tissu au lieu de dire qu'il est le meilleur." },
+];
+
+const HOOKS = [
+  ["Ne commande jamais un {p} sans vérifier ça d'abord.", "curiosite", "Interdiction plus information manquante : le cerveau ne peut pas scroller."],
+  ["Personne ne te dira ça sur le {p}, alors je le dis.", "curiosite", "Promesse d'information rare, et posture de courage."],
+  ["Regarde bien la différence à la 8ᵉ seconde.", "curiosite", "Rendez-vous futur : force à rester jusqu'au repère annoncé."],
+  ["Ce détail change tout sur un {p}, et 9 personnes sur 10 l'ignorent.", "curiosite", "Chiffre, information cachée, et sentiment d'être dans les 10 %."],
+  ["Tu vois ce {p} ? Devine son prix avant la fin.", "curiosite", "Le jeu de devinette bloque le scroll et remplit les commentaires."],
+  ["Ce que ton fournisseur ne te montre jamais : l'envers du tissu.", "curiosite", "Information réservée aux initiés, sur un détail vérifiable."],
+  ["Il y a une raison pour laquelle ton {p} ne dure pas 6 mois.", "curiosite", "Problème vécu, cause cachée annoncée."],
+
+  ["Toi qui revends du bazin et qui galères avec ton fournisseur, regarde.", "douleur", "Cible une seule personne, qui vit exactement ce problème."],
+  ["Si ton {p} se froisse au bout de deux heures, voilà pourquoi.", "douleur", "Décrit un problème précis que la cible vit déjà."],
+  ["Tu as payé {x} et le résultat ne ressemble pas à la photo ?", "douleur", "Question qui vise une frustration très répandue."],
+  ["Ce que tu appelles « bazin pas cher » te coûte plus cher à la fin.", "douleur", "Renverse la logique d'économie du spectateur."],
+  ["Trois revendeuses m'ont dit la même phrase cette semaine.", "douleur", "Preuve sociale d'un problème partagé."],
+  ["Le vrai problème, ce n'est pas ton budget. C'est ça.", "douleur", "Retire l'excuse habituelle, ce qui oblige à écouter la suite."],
+
+  ["Voilà la commande d'une seule revendeuse. Elle repart avec tout ça.", "preuve", "Preuve de volume : rassure sur ta capacité à fournir."],
+  ["Ma revendeuse m'a envoyé ça ce matin. Je n'ai pas pu me retenir.", "preuve", "Preuve venue du client, pas du vendeur."],
+  ["Zoom sur la trame. Tu vas comprendre.", "preuve", "Invitation à regarder un détail : mécanique de rétention pure."],
+  ["Voici les 3 finitions qui séparent un {p} à {x} d'un vrai.", "preuve", "Éduque et justifie le prix en même temps."],
+  ["Elle m'avait dit « je ne pense pas que ça se vende ». Regarde.", "preuve", "Objection nommée puis démentie en image."],
+
+  ["Acheter moins cher au marché te coûte plus cher à la fin.", "contrarian", "Renverse le réflexe du prix bas chez un acheteur professionnel."],
+  ["Le {p} le plus cher n'est pas le meilleur. Je t'explique.", "contrarian", "Contredit une croyance dominante : déclenche le débat."],
+  ["Arrête d'acheter ton bazin en ligne. Vraiment.", "contrarian", "Un vendeur qui dit d'arrêter d'acheter : impossible à ignorer."],
+  ["Tout le monde te dit de baisser tes prix. C'est une erreur.", "contrarian", "Prend le contre-pied du conseil habituel."],
+  ["Je ne prends plus certaines commandes. Voici pourquoi.", "contrarian", "Refuser du travail signale de la valeur et intrigue."],
+
+  ["Combien une revendeuse gagne vraiment sur 3 mètres ?", "argent", "Montre la marge du client, pas la tienne : c'est ce qui décide un revendeur."],
+  ["Voilà ce que coûte vraiment un {p} à {x}.", "argent", "Transparence des coûts : sujet à très fort taux de commentaires."],
+  ["{x} pour ça. Je détaille chaque franc.", "argent", "Décomposition du prix : construit la confiance et désamorce l'objection."],
+  ["J'ai comparé 3 fournisseurs. L'écart va te surprendre.", "argent", "Comparaison plus promesse de surprise."],
+  ["Avec {x} tu peux avoir ça. Beaucoup ne le savent pas.", "argent", "Rend le produit accessible : élargit l'audience acheteuse."],
+
+  ["Ma première revendeuse a commencé avec 3 mètres.", "histoire", "Rend le premier pas accessible à celle qui hésite à se lancer."],
+  ["J'ai commencé avec un seul mètre de tissu.", "histoire", "Origine humble : déclenche l'attachement et les abonnements."],
+  ["Ma pire commande, c'était il y a deux ans.", "histoire", "Vulnérabilité assumée : très fort taux de complétion."],
+  ["On m'a dit que ça ne marcherait jamais à {v}.", "histoire", "Doute extérieur puis revanche : structure narrative universelle."],
+  ["J'ai perdu de l'argent sur cette commande. Je la referais.", "histoire", "Paradoxe qui oblige à écouter l'explication."],
+
+  ["3 choses à vérifier avant de choisir ton fournisseur de bazin.", "liste", "Contenu utile qui te positionne en expert au lieu de vendeur."],
+  ["3 erreurs qui ruinent ton {p}. La 3ᵉ est la pire.", "liste", "Numérotation et hiérarchie annoncée : rétention jusqu'au bout."],
+  ["5 signes que ton tissu n'est pas du vrai bazin.", "liste", "Liste de vérification : le spectateur s'auto-teste en regardant."],
+  ["2 choses à vérifier avant de payer un acompte.", "liste", "Protège le spectateur : déclenche l'enregistrement de la vidéo."],
+  ["4 tenues, un seul tissu.", "liste", "Promesse de variété : le spectateur reste pour voir toutes les options."],
+
+  ["Cet arrivage part en 3 jours. Après, j'attends six semaines.", "urgence", "Rareté crédible parce qu'elle vient d'une contrainte réelle d'approvisionnement."],
+  ["Il me reste 3 mètres de ce tissu. Après, c'est fini.", "urgence", "Rareté vérifiable et concrète."],
+  ["Ce prix, c'est jusqu'à dimanche. Je ne le referai pas.", "urgence", "Date limite précise : transforme l'intérêt en action."],
+  ["Dernière pièce dans cette teinte.", "urgence", "Rareté sur mesure : parle à une seule personne, qui agit."],
+];
+
+const CATS = [
+  ["curiosite", "Curiosité", "Ouvre une boucle. Pour les vues."],
+  ["douleur", "Problème", "Parle à qui souffre déjà. Pour les ventes."],
+  ["preuve", "Preuve", "Montre un résultat réel. Pour la confiance."],
+  ["contrarian", "À contre-courant", "Contredit une croyance. Pour les commentaires."],
+  ["argent", "Prix & argent", "Le sujet le plus commenté. Pour l'engagement."],
+  ["histoire", "Histoire vraie", "Crée l'attachement. Pour les abonnés."],
+  ["liste", "Liste", "Rétention mécanique. Pour la complétion."],
+  ["urgence", "Urgence", "Déclenche l'action. Pour les commandes."],
+];
+
+const PILIERS = [
+  { id: "attirer", nom: "Attirer", obj: "Des vues auprès de gens qui ne te connaissent pas. Ne vends pas dans cette vidéo.",
+    formats: ["Déballage d'un arrivage : le carton qu'on ouvre", "Le vrai bazin contre l'imitation, en gros plan",
+      "Devine le prix de cette pièce", "Le bruit du bazin qu'on froisse, son réel",
+      "L'erreur que font 9 revendeuses sur 10", "La pile de commande qui se monte, en accéléré"] },
+  { id: "convaincre", nom: "Convaincre", obj: "Donner envie de te faire confiance. Montre le travail, pas seulement le produit.",
+    formats: ["Visite de mon stock, rayon par rayon", "Comment je reconnais un bazin grade impérial",
+      "Pourquoi ce prix : je décompose le coût", "Réponse à l'objection qu'on me fait le plus souvent",
+      "Comment j'emballe une commande avant l'envoi", "D'où vient mon tissu et pourquoi ce fournisseur"] },
+  { id: "prouver", nom: "Prouver", obj: "Montrer qu'on achète déjà chez toi. Un client réel vaut dix arguments.",
+    formats: ["La commande d'une revendeuse, prête à partir", "Capture d'un message reçu cette semaine",
+      "Une revendeuse qui reçoit son colis", "Ce qu'une revendeuse a écoulé en un mois",
+      "Les avis reçus depuis lundi"] },
+  { id: "vendre", nom: "Vendre", obj: "Demander la commande, clairement, une seule fois.",
+    formats: ["Arrivage du jour : ce qui est disponible maintenant", "Stock restant sur cette teinte",
+      "Prix revendeuse contre prix détail", "Comment commander en 3 étapes"] },
+];
+
+const SEQUENCE = ["attirer", "convaincre", "attirer", "prouver", "attirer", "convaincre", "vendre", "attirer", "prouver", "convaincre"];
+
+const CRENEAUX = [
+  ["06 h 30", "Réveil et trajet — audience calme, forte complétion."],
+  ["12 h 30", "Pause déjeuner — pic de scroll de la journée."],
+  ["19 h 00", "Retour à la maison — bon pour les vidéos longues."],
+  ["21 h 30", "Meilleur créneau pour vendre : posé, disponible, répond aux messages."],
+];
+
+const GEO = {
+  "Ouagadougou": [["#ouaga", "moyen", "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent."],
+    ["#burkinafaso", "moyen", "Élargit au pays entier et touche la diaspora burkinabè."],
+    ["#fasodanfani", "niche", "Le tissu tissé national : audience très attachée, forte intention d'achat."]],
+  "Bobo-Dioulasso": [["#bobodioulasso", "moyen", "Trafic local sur la deuxième ville du pays."],
+    ["#burkinafaso", "moyen", "Élargit au pays entier."],
+    ["#kokodunda", "niche", "Le teint de Bobo : très recherché, quasiment aucune concurrence sur TikTok."]],
+  "Bamako": [["#bamako", "moyen", "Trafic local."], ["#mali", "moyen", "Élargit au pays entier."],
+    ["#bazinmali", "niche", "Le Mali est un marché historique du bazin."]],
+  "Abidjan": [["#abidjan", "moyen", "Trafic local."], ["#cotedivoire", "moyen", "Élargit au pays entier."],
+    ["#modeivoirienne", "niche", "Communauté locale active."]],
+  "Dakar": [["#dakar", "moyen", "Trafic local."], ["#senegal", "moyen", "Élargit au pays entier."],
+    ["#couturedakar", "niche", "Intention locale forte, très peu de concurrence."]],
+  "Paris (diaspora)": [["#paris", "moyen", "Diaspora : panier moyen nettement plus élevé."],
+    ["#diaspora", "moyen", "Commande à distance et paie la livraison."],
+    ["#modeafricaineparis", "niche", "Très ciblé, faible concurrence, forte intention."]],
+};
+
+const LARGES = [["#pourtoi", "large", "Portée maximale, aucun classement possible. Un seul suffit."],
+  ["#fyp", "large", "Équivalent anglophone de #pourtoi."],
+  ["#mode", "large", "Très large. Sert de contexte, pas de trafic."]];
+
+const MOYENS = [["#bazin", "moyen", "Ton tag central : audience déjà intéressée par le tissu."],
+  ["#bazinriche", "moyen", "Acheteurs qui connaissent déjà la qualité — les meilleurs clients."],
+  ["#modeafricaine", "moyen", "Communauté active et acheteuse."],
+  ["#tissu", "moyen", "Utile pour les vidéos qui montrent la matière."],
+  ["#pagne", "moyen", "Recherche directe par nom de produit."]];
+
+const NICHES = [["#bazinbrode", "niche", "Très ciblé : broderie, donc panier élevé."],
+  ["#getzner", "niche", "Nom de fabricant : audience qui connaît les prix."],
+  ["#grossistetissu", "niche", "Intention d'achat professionnelle explicite."],
+  ["#bazingrosiste", "niche", "Ta cible exacte : celles qui achètent pour revendre."],
+  ["#tenuedefete", "niche", "À activer avant les fêtes et les mariages."],
+  ["#revendeuse", "niche", "Parle directement à ton client type."]];
+
+/* ═══════════════ Moteurs de calcul ═══════════════ */
+
+const MOTS = {
+  interruption: ["arrête","arrete","arrêtez","stop","attention","jamais","personne","erreur","erreurs","secret","vérité","verite","attends","surtout pas","oublie","piège","piege","arnaque"],
+  curiosite: ["pourquoi","comment","ce que","voici","révèle","revele","personne ne","jusqu'à la fin","jusqu'a la fin","la suite","regarde bien","regardez bien","devine","ce détail","ce detail","résultat","resultat"],
+  emotion: ["choqué","choque","incroyable","fou","folle","honte","fier","fière","pleuré","rêve","reve","galère","galere","trahison","magnifique","sublime","waouh","dingue","hallucinant"],
+  argent: ["franc","fcfa","f cfa","prix","gratuit","rentable","bénéfice","benefice","gagner","coûte","coute","moins cher","économise","economise","vendu","commande","budget","marge","revenu"],
+  cta: ["commente","commentez","écris","ecris","écrivez","ecrivez","dm","message privé","message prive","lien en bio","en bio","abonne","partage","enregistre","clique","whatsapp","appelle","réserve","reserve"],
+  urgence: ["aujourd'hui","ce soir","cette semaine","dernier","dernière","derniere","plus que","limité","limite","vite","avant que","il reste","stock"],
+  boucle: ["mais","sauf que","sauf qu'","attends","le pire","le meilleur","et là","et la","sauf","pourtant","puis","ensuite","alors que","résultat","resultat","au final"],
+  faible: ["bonjour","salut tout le monde","bienvenue sur","aujourd'hui je vais","dans cette vidéo","dans cette video","comme vous le savez","j'espère que vous allez bien","je m'appelle","avant de commencer"],
+  survente: ["meilleur","meilleure","garanti","garantie","n°1","numéro 1","numero 1","imbattable","100%","le plus grand","le plus beau"],
+};
+
+const bas = (t) => (t || "").toLowerCase();
+const trouve = (t, liste) => liste.filter((m) => bas(t).includes(m));
+const nbMots = (t) => (t || "").trim().split(/\s+/).filter(Boolean).length;
+const borne = (n) => Math.max(0, Math.min(100, Math.round(n)));
+const fr = (n) => Math.round(n).toLocaleString("fr-FR");
+const fcfa = (n) => fr(n) + " F";
+const dec1 = (n) => n.toFixed(1).replace(".", ",");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function analyser(e) {
+  const C = [];
+  const tout = e.hook + "\n" + e.script + "\n" + e.legende;
+
+  // Accroche
+  {
+    const o = [], f = [];
+    let s = 40;
+    const m = nbMots(e.hook);
+    if (!e.hook.trim()) {
+      C.push({ id: "hook", nom: "Accroche (0-3 s)", p: 28, s: 0, role: "Décide si TikTok montre la vidéo à plus de monde.", o: [], f: ["Écris une accroche : c'est 80 % du résultat. Sans elle, rien ne part."] });
+    } else {
+      if (m >= 3 && m <= 12) { s += 15; o.push("Accroche courte (" + m + " mots) — elle tient en 3 secondes."); }
+      else if (m > 12) { s -= 10; f.push("Accroche trop longue (" + m + " mots). Coupe à 8-12 mots : on doit pouvoir la dire en 3 secondes."); }
+      else f.push("Accroche trop courte pour créer une tension. Vise 6 à 12 mots.");
+      const i = trouve(e.hook, MOTS.interruption);
+      if (i.length) { s += 14; o.push("Rupture de scroll détectée : « " + i[0] + " »."); }
+      else f.push("Ajoute un mot qui casse le scroll : « arrête », « erreur », « personne ne », « jamais ».");
+      if (trouve(e.hook, MOTS.curiosite).length) { s += 12; o.push("L'accroche ouvre une boucle : le spectateur veut la réponse."); }
+      else f.push("Promets une information qu'il n'aura qu'en restant (« voici pourquoi… », « ce détail change tout »).");
+      if (/\d/.test(e.hook)) { s += 8; o.push("Présence d'un chiffre — le cerveau s'accroche aux chiffres."); }
+      else f.push("Mets un chiffre concret : un prix, une durée, un nombre d'erreurs.");
+      if (/\b(tu|toi|ton|ta|tes|vous|votre|vos)\b/i.test(e.hook)) { s += 8; o.push("Adresse directe au spectateur."); }
+      else f.push("Parle à UNE personne : « toi qui… », « si tu… ». Pas « les gens ».");
+      if (e.hook.includes("?")) { s += 5; o.push("Question posée dès la première seconde."); }
+      const w = trouve(e.hook, MOTS.faible);
+      if (w.length) { s -= 30; f.push("Supprime « " + w[0] + " ». Les politesses tuent la rétention : entre directement dans le sujet."); }
+      C.push({ id: "hook", nom: "Accroche (0-3 s)", p: 28, s: borne(s), role: "Décide si TikTok montre la vidéo à plus de monde.", o, f });
+    }
+  }
+
+  // Rétention
+  {
+    const o = [], f = [];
+    let s = 45;
+    if (!e.script.trim()) {
+      C.push({ id: "ret", nom: "Rétention", p: 22, s: 0, role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.", o: [], f: ["Écris le script plan par plan pour contrôler le rythme."] });
+    } else {
+      const parle = nbMots(e.script) / 2.5;
+      const r = e.duree > 0 ? parle / e.duree : 1;
+      if (r > 1.2) { s -= 12; f.push("Trop de texte pour " + e.duree + " s (il en faudrait ~" + Math.round(parle) + "). Coupe " + Math.round((r - 1) * 100) + " % ou allonge la vidéo."); }
+      else if (r < 0.5) { s -= 6; f.push("Beaucoup de silence pour cette durée. Raccourcis la vidéo ou ajoute du contenu : les temps morts font scroller."); }
+      else { s += 12; o.push("Densité de parole cohérente avec la durée."); }
+      const b = trouve(e.script, MOTS.boucle);
+      if (b.length >= 3) { s += 16; o.push(b.length + " relances de tension détectées."); }
+      else if (b.length) { s += 8; o.push("Quelques relances présentes."); f.push("Ajoute une relance toutes les 5 secondes : « mais attends », « sauf que… », « et le pire »."); }
+      else f.push("Aucune relance : le spectateur décroche vers la 5ᵉ seconde. Place un « mais » ou un « sauf que » régulièrement.");
+      const lignes = e.script.split(/\n+/).filter((l) => l.trim());
+      if (lignes.length >= 4) { s += 12; o.push(lignes.length + " plans — le changement d'image relance l'attention."); }
+      else f.push("Découpe en au moins 4 plans. Un plan fixe de 30 s perd la moitié de l'audience.");
+      if (/\b(avant|après|apres)\b/i.test(e.script)) { s += 8; o.push("Structure avant/après — format à très forte rétention."); }
+      if (/\b(1|2|3|premier|deuxième|troisième|étape|etape)\b/i.test(e.script)) { s += 7; o.push("Progression numérotée : on reste pour connaître la suite."); }
+      C.push({ id: "ret", nom: "Rétention", p: 22, s: borne(s), role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.", o, f });
+    }
+  }
+
+  // Freins de distribution
+  {
+    const o = [], f = [];
+    let s = 100;
+    const suites = tout.match(/\+?\d[\d\s.-]{6,}\d/g) || [];
+    const tel = suites.filter((x) => x.replace(/\D/g, "").length >= 8);
+    if (tel.length) { s -= 40; f.push("Un numéro apparaît (« " + tel[0].trim() + " »). C'est le frein le plus coûteux : TikTok réduit la portée de tout ce qui fait sortir de l'application. Mets-le dans le lien de ton profil."); }
+    else o.push("Aucun numéro de téléphone dans le texte.");
+    if (/instagram|facebook|snapchat|telegram|https?:\/\/|www\.|\.com\b|\.fr\b/i.test(tout)) { s -= 25; f.push("Tu renvoies vers une autre plateforme. Un seul chemin de sortie, et il est dans ta bio."); }
+    else o.push("Aucun renvoi vers une plateforme concurrente.");
+    const sv = trouve(tout, MOTS.survente);
+    if (sv.length) { s -= 15; f.push("« " + sv[0] + " » appartient au vocabulaire du spam. Remplace l'affirmation par la preuve : montre le tissu au lieu de dire qu'il est le meilleur."); }
+    else o.push("Pas de survente : le texte reste crédible.");
+    C.push({ id: "dist", nom: "Freins de distribution", p: 15, s: borne(s), role: "Détermine si TikTok accepte de montrer la vidéo, avant même sa qualité.", o, f });
+  }
+
+  // Conversion
+  {
+    const o = [], f = [];
+    let s = 30;
+    const c = trouve(e.script + "\n" + e.legende, MOTS.cta);
+    if (c.length) { s += 28; o.push("Appel à l'action présent : « " + c[0] + " »."); }
+    else f.push("Aucun appel à l'action. Une vue sans instruction ne rapporte rien : termine par « écris PRIX en commentaire ».");
+    if (c.length > 3) { s -= 12; f.push("Trop d'appels à l'action différents. Un seul par vidéo, sinon personne n'en fait aucun."); }
+    if (/\b(commente|commentez|écris|ecris|écrivez|ecrivez)\b/i.test(tout)) { s += 16; o.push("Commentaire demandé — conversion et signal algorithmique en même temps."); }
+    else f.push("Demande un mot-clé en commentaire. Ça déclenche l'algorithme ET remplit tes messages.");
+    if (trouve(tout, MOTS.urgence).length) { s += 14; o.push("Notion d'urgence ou de rareté présente."); }
+    else f.push("Ajoute une raison d'agir maintenant : stock limité, prix jusqu'à dimanche, arrivage qui part.");
+    if (/\b(bio|whatsapp|lien|dm|message)\b/i.test(tout)) { s += 12; o.push("Chemin de contact explicite."); }
+    else f.push("Dis où te joindre. « Lien WhatsApp en bio » doit être prononcé à voix haute, pas seulement écrit.");
+    C.push({ id: "conv", nom: "Conversion", p: 13, s: borne(s), role: "Transforme l'audience en messages, puis en commandes.", o, f });
+  }
+
+  // Émotion
+  {
+    const o = [], f = [];
+    let s = 40;
+    const em = trouve(tout, MOTS.emotion);
+    if (em.length >= 2) { s += 22; o.push("Charge émotionnelle forte (« " + em.slice(0, 2).join(" », « ") + " »)."); }
+    else if (em.length) { s += 10; o.push("Une note émotionnelle présente."); f.push("Monte d'un cran : raconte ce que tu as ressenti, pas seulement ce que tu as fait."); }
+    else f.push("Contenu trop neutre pour être partagé. On partage ce qui fait réagir : une fierté, une galère, une surprise.");
+    if (trouve(tout, MOTS.argent).length) { s += 14; o.push("Le sujet touche à l'argent — fort taux de commentaires."); }
+    else f.push("Parle du prix ou du coût réel : c'est le sujet qui déclenche le plus de commentaires.");
+    if (/\b(je|j'|mon|ma|mes)\b/i.test(tout)) { s += 12; o.push("Récit à la première personne — crée de l'attachement."); }
+    else f.push("Passe à la première personne : on suit une personne, pas une marque.");
+    if (/\b(toi aussi|comme moi|si tu es|vous aussi|on est nombreux)\b/i.test(tout)) { s += 12; o.push("Effet miroir : le spectateur se reconnaît et envoie la vidéo à un proche."); }
+    else f.push("Ajoute une phrase d'identification (« si toi aussi tu… ») : c'est ce qui déclenche l'envoi en privé.");
+    C.push({ id: "emo", nom: "Émotion & partage", p: 12, s: borne(s), role: "Pousse la vidéo au-delà de tes abonnés.", o, f });
+  }
+
+  // Découvrabilité
+  {
+    const o = [], f = [];
+    let s = 40;
+    const tags = e.hashtags.split(/[\s,]+/).filter((t) => t.startsWith("#") && t.length > 1);
+    if (tags.length >= 3 && tags.length <= 6) { s += 20; o.push(tags.length + " hashtags — dans la zone idéale."); }
+    else if (tags.length > 6) { s -= 8; f.push(tags.length + " hashtags, c'est trop : TikTok dilue le classement. Garde les 5 meilleurs."); }
+    else f.push("Mets 3 à 6 hashtags : 1 large, 2 moyens, 3 de niche.");
+    if (tags.some((t) => t.length >= 12)) { s += 15; o.push("Au moins un hashtag de niche — c'est là que tu peux te classer."); }
+    else f.push("Ajoute un hashtag long et spécifique (#fasodanfani, #bazinriche). Sur #mode tu es invisible.");
+    const nb = e.legende.replace(/#\w+/g, "").trim().length;
+    if (nb >= 40 && nb <= 200) { s += 15; o.push("Légende de bonne longueur — assez de texte pour être indexée."); }
+    else if (nb < 40) f.push("Légende trop courte. Écris une phrase contenant ce que les gens tapent (« bazin riche gros Ouaga prix »).");
+    else f.push("Légende trop longue : elle est coupée. Va à l'essentiel en 2 lignes.");
+    const cles = bas(e.hook).split(/\s+/).filter((m) => m.length > 4);
+    if (cles.some((m) => bas(e.legende).includes(m))) { s += 12; o.push("Le mot-clé principal est dit ET écrit — TikTok le comprend deux fois."); }
+    else f.push("Reprends dans la légende le mot-clé que tu prononces : TikTok transcrit l'audio et croise les deux.");
+    C.push({ id: "seo", nom: "Découvrabilité", p: 6, s: borne(s), role: "Fait revenir des vues pendant des mois via la recherche.", o, f });
+  }
+
+  // Format
+  {
+    const o = [], f = [];
+    let s = 50;
+    const d = e.duree;
+    if (d >= 15 && d <= 34) { s += 30; o.push(d + " s — durée idéale : assez long pour convaincre, assez court pour être fini."); }
+    else if (d >= 7 && d < 15) { s += 22; o.push(d + " s — format court : excellent taux de complétion."); }
+    else if (d > 34 && d <= 60) { s += 10; o.push(d + " s — jouable, mais chaque seconde doit être justifiée."); f.push("Au-delà de 34 s, coupe tout ce qui n'est pas indispensable."); }
+    else if (d > 60) { s -= 15; f.push(d + " s, c'est long : le taux de complétion s'effondre. Découpe en 2 vidéos."); }
+    else f.push("Moins de 7 s : pas le temps de vendre. Vise 15 à 30 s.");
+    if (/\b(texte|sous-titre|à l'écran|a l'ecran)\b/i.test(tout)) { s += 10; o.push("Texte à l'écran prévu — la majorité regarde sans le son."); }
+    else f.push("Prévois un texte à l'écran sur chaque plan : beaucoup regardent sans le son.");
+    if (/\b(son|musique|audio|tendance)\b/i.test(tout)) { s += 10; o.push("Un son est prévu."); }
+    else f.push("Choisis un son tendance (moins de 10 000 vidéos) : c'est un accélérateur gratuit.");
+    C.push({ id: "fmt", nom: "Format technique", p: 4, s: borne(s), role: "Durée, texte à l'écran, son.", o, f });
+  }
+
+  const tot = C.reduce((a, c) => a + c.p, 0);
+  const score = Math.round(C.reduce((a, c) => a + c.s * c.p, 0) / tot);
+  const pire = C.slice().sort((a, b) => (100 - b.s) * b.p - (100 - a.s) * a.p)[0];
+
+  let mention, couleur, vues;
+  if (score < 35) { mention = "À réécrire"; couleur = "var(--crit)"; vues = [100, 1000]; }
+  else if (score < 50) { mention = "Faible"; couleur = "var(--warn)"; vues = [500, 4000]; }
+  else if (score < 65) { mention = "Correct"; couleur = "var(--mid)"; vues = [2000, 20000]; }
+  else if (score < 78) { mention = "Bon"; couleur = "var(--ok)"; vues = [10000, 80000]; }
+  else if (score < 88) { mention = "Très bon"; couleur = "var(--ok)"; vues = [30000, 250000]; }
+  else { mention = "Potentiel viral"; couleur = "var(--ok)"; vues = [80000, 1000000]; }
+
+  return { score, mention, couleur, criteres: C, vues, priorite: pire.f[0] || ("Continue : « " + pire.nom + " » est déjà solide.") };
+}
+
+function diagnostiquer(ab, vu, coches) {
+  const taux = ab > 0 ? (vu / ab) * 100 : 0;
+  let niveau, couleur, verdict;
+  if (taux < 5) {
+    niveau = "Distribution bloquée"; couleur = "var(--crit)";
+    verdict = "Tes vidéos ne sont même pas montrées à tes propres abonnés. Publier davantage ne changera rien tant que ce blocage n'est pas levé : chaque nouvelle vidéo ira mourir au même niveau.";
+  } else if (taux < 15) {
+    niveau = "Distribution faible"; couleur = "var(--warn)";
+    verdict = "Tu touches une petite partie de tes abonnés et presque personne en dehors. Il reste des freins à lever avant que le volume de publication serve à quelque chose.";
+  } else if (taux < 40) {
+    niveau = "Distribution normale"; couleur = "var(--mid)";
+    verdict = "Tes vidéos sortent correctement auprès de tes abonnés. Ce sont maintenant l'accroche et la rétention qui décident si tu dépasses ton audience.";
+  } else {
+    niveau = "Bonne distribution"; couleur = "var(--ok)";
+    verdict = "TikTok te pousse au-delà de tes abonnés. Ton travail maintenant est la conversion : transformer ces vues en messages puis en commandes.";
+  }
+  const actifs = FREINS.filter((f) => coches.includes(f.id)).sort((a, b) => b.p - a.p);
+  const comp = [Math.round(ab * 0.15), Math.round(ab * 0.3)];
+  return { taux, niveau, couleur, verdict, risque: actifs.reduce((s, f) => s + f.p, 0), actifs,
+    comp, mult: vu > 0 ? [comp[0] / vu, comp[1] / vu] : [0, 0] };
+}
+
+function simuler(e) {
+  const SEM = 4.33;
+  const base = (x) => {
+    const vues = x.videos * SEM * x.vuesMoy;
+    const vis = vues * (x.tProfil / 100);
+    const con = vis * (x.tContact / 100);
+    const ven = con * (x.tConv / 100);
+    return { vues, vis, con, ven, ca: ven * x.panier, marge: ven * x.panier * (x.marge / 100) };
+  };
+  const b = base(e);
+  const regime = (x) => { const y = base(x); return y.ven * (1 + x.rachats) * x.panier * (x.marge / 100); };
+  const rBase = regime(e);
+  const leviers = [
+    ["vuesMoy", "Vues moyennes par vidéo", "Travaille l'accroche des 3 premières secondes. C'est le seul levier qui bouge les vues."],
+    ["videos", "Vidéos par semaine", "Filme 5 vidéos d'un coup le même jour, publie-les sur la semaine. Le volume bat la perfection."],
+    ["tProfil", "Taux de visite du profil", "Dis à voix haute « va voir mon profil » et montre ton nom à l'écran à la fin."],
+    ["tContact", "Taux de prise de contact", "Un seul appel à l'action, très simple. Réponds dans l'heure."],
+    ["tConv", "Taux de conversion en vente", "Réponds vite, envoie une photo réelle et propose 2 options de prix, pas 10."],
+    ["panier", "Panier moyen", "Propose systématiquement une pièce complémentaire au moment de la commande."],
+    ["rachats", "Rachats par an d'une revendeuse", "Écris-lui 3 semaines après sa commande, avant qu'elle ne cherche ailleurs."],
+    ["marge", "Marge nette", "Négocie le tissu au volume et regroupe tes achats fournisseurs."],
+  ].map(([k, nom, conseil]) => {
+    const m = Object.assign({}, e); m[k] = e[k] * 1.2;
+    return { nom, conseil, gain: Math.round(regime(m) - rBase) };
+  }).sort((a, b2) => b2.gain - a.gain);
+
+  const fac = (f) => Object.assign({}, e, { tProfil: e.tProfil * f, tContact: e.tContact * f, tConv: e.tConv * f });
+  const videosMois = Math.round(e.videos * SEM);
+
+  return {
+    entonnoir: [
+      ["Vues par mois", Math.round(b.vues), e.videos + " vidéos/sem × 4,33 sem × " + fr(e.vuesMoy) + " vues"],
+      ["Visites de ton profil", Math.round(b.vis), e.tProfil + " % des vues"],
+      ["Personnes qui te contactent", Math.round(b.con), e.tContact + " % des visiteurs"],
+      ["Commandes", Math.round(b.ven), e.tConv + " % des contacts"],
+    ],
+    ca: b.ca, total: b.marge, parVideo: videosMois ? b.marge / videosMois : 0,
+    valeur12: e.panier * (1 + e.rachats) * (e.marge / 100), regime: rBase,
+    scenarios: [["Prudent", base(fac(0.5)).marge, "Tu publies mais tu réponds lentement."],
+      ["Réaliste", b.marge, "Tu tiens le rythme et tu réponds le jour même."],
+      ["Bien exécuté", base(fac(1.8)).marge, "Appel à l'action clair, réponse en moins d'une heure, offre simple."]],
+    leviers,
+  };
+}
+
+function composerTags(ville, motsCles, graine) {
+  const geo = GEO[ville] || [];
+  const rot = (l, n, d) => l.length ? Array.from({ length: Math.min(n, l.length) }, (_, i) => l[(d + i) % l.length]) : [];
+  const perso = motsCles.map((m) => "#" + m.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase())
+    .filter((t) => t.length > 1)
+    .map((t) => [t, "niche", "Ton mot-clé : c'est ce que tapent les gens qui cherchent exactement ton produit."]);
+  const out = [].concat(
+    rot(LARGES, 1, graine),
+    rot(MOYENS, 1, graine),
+    rot(geo.filter((t) => t[1] === "moyen"), 1, graine),
+    perso.slice(0, 1),
+    rot(NICHES, perso.length ? 1 : 2, graine),
+    rot(geo.filter((t) => t[1] === "niche"), 1, graine)
+  ).filter(Boolean).slice(0, 6);
+  return out;
+}
+
+function genererPlan(o) {
+  const jours = [];
+  const inter = 7 / Math.max(1, Math.min(7, o.rythme));
+  const total = Math.floor(30 / inter);
+  const catsPar = { attirer: ["curiosite", "contrarian", "liste"], convaincre: ["douleur", "argent", "liste"],
+    prouver: ["preuve", "histoire"], vendre: ["urgence", "argent"] };
+  for (let i = 0; i < total; i++) {
+    const d = new Date(); d.setDate(d.getDate() + Math.round(i * inter));
+    const pid = SEQUENCE[i % SEQUENCE.length];
+    const pil = PILIERS.find((p) => p.id === pid);
+    const cands = HOOKS.filter((h) => catsPar[pid].includes(h[1]));
+    const cr = pid === "vendre" ? CRENEAUX[3] : CRENEAUX[i % 3];
+    jours.push({ n: i + 1,
+      date: d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }),
+      pilier: pil, format: pil.formats[i % pil.formats.length],
+      hook: remplir(cands[i % cands.length][0]), creneau: cr[0], note: cr[1] });
+  }
+  return jours;
+}
+
+/* ═══════════════ État ═══════════════ */
+
+const DEFAUT = {
+  onglet: "diag",
+  produit: "bazin riche", prix: "10000", ville: "Ouagadougou",
+  abonnes: 51400, vuesMoy: 836, freins: [],
+  nom: "", bio: "", indicatif: "226", numero: "", msg: "Bonjour, je viens de TikTok. Je voudrais les prix du bazin.",
+  hook: "", script: "", legende: "", hashtags: "", duree: 25,
+  cat: "toutes", rythme: 5, graine: 0, motsTags: "bazin riche",
+  eco: { videos: 5, vuesMoy: 836, tProfil: 2.5, tContact: 8, tConv: 15, panier: 10000, marge: 40, rachats: 6 },
+  objectif: 300000,
+};
+
+let S = Object.assign({}, DEFAUT);
+try {
+  const brut = localStorage.getItem("studio.tiktok");
+  if (brut) S = Object.assign({}, DEFAUT, JSON.parse(brut), { eco: Object.assign({}, DEFAUT.eco, (JSON.parse(brut) || {}).eco) });
+} catch (e) { /* stockage indisponible : on continue sans sauvegarde */ }
+
+const sauver = () => { try { localStorage.setItem("studio.tiktok", JSON.stringify(S)); } catch (e) {} };
+
+function remplir(t) {
+  return t.replace(/\{p\}/g, S.produit || "produit")
+          .replace(/\{x\}/g, S.prix ? fr(Number(S.prix)) + " F" : "ce prix")
+          .replace(/\{v\}/g, S.ville || "ici");
+}
+
+/* ═══════════════ Rendu ═══════════════ */
+
+const ONGLETS = [
+  ["diag", "🩺 Diagnostic"], ["profil", "👤 Mon profil"], ["analyse", "📊 Analyser"],
+  ["hooks", "🎣 Accroches"], ["plan", "📅 Plan 30 j"], ["tags", "#️⃣ Hashtags"], ["eco", "💰 Revenus"],
+];
+
+const $ = (s, r) => (r || document).querySelector(s);
+const vue = $("#vue");
+
+function nav() {
+  $("#nav").innerHTML = ONGLETS.map(([id, l]) =>
+    '<button class="chip" role="tab" data-o="' + id + '" aria-selected="' + (S.onglet === id) + '">' + l + "</button>"
+  ).join("");
+}
+
+function critereHTML(c) {
+  return '<div class="carte" style="background:var(--surface-2)">' +
+    '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">' +
+      '<strong style="font-size:.95rem">' + c.nom + "</strong>" +
+      '<span style="font-family:var(--mono);font-size:.78rem;color:var(--ink-soft)">' + c.s + "/100 · " + c.p + " %</span></div>" +
+    '<p class="aide" style="font-style:italic;margin:4px 0 0">' + c.role + "</p>" +
+    '<div class="jauge"><i style="width:' + c.s + "%;background:" + (c.s >= 65 ? "var(--ok)" : "var(--brass)") + '"></i></div>' +
+    (c.o.length ? '<ul class="pts">' + c.o.map((t) => '<li class="oui">' + esc(t) + "</li>").join("") + "</ul>" : "") +
+    (c.f.length ? '<ul class="pts" style="margin-top:7px">' + c.f.map((t) => '<li class="non">' + esc(t) + "</li>").join("") + "</ul>" : "") +
+    "</div>";
+}
+
+const VUES = {
+
+/* ─────────── Diagnostic ─────────── */
+diag() {
+  return '<div class="carte"><h2>Pourquoi tes vidéos ne sortent pas</h2>' +
+    '<p class="aide">Le chiffre qui compte n\'est pas ton nombre de vues, c\'est le rapport entre tes vues et tes abonnés. S\'il est très bas, tu n\'as pas un problème de contenu : tes vidéos ne sont même plus montrées aux gens qui te suivent.</p>' +
+    '<div class="grille">' +
+      champNum("abonnes", "Nombre d\'abonnés", S.abonnes, 100) +
+      champNum("vuesMoy", "Vues moyennes (6 dernières vidéos)", S.vuesMoy, 10) +
+    "</div></div><div id=\"out\"></div>";
+},
+diagOut() {
+  const d = diagnostiquer(S.abonnes, S.vuesMoy, S.freins);
+  let h = '<div class="carte liseré" style="border-left-color:' + d.couleur + '"><div class="metrique">' +
+    '<div class="chiffre" style="color:' + d.couleur + '">' + dec1(d.taux) + '<span class="u"> %</span></div>' +
+    '<div class="txt"><span class="pastille" style="color:' + d.couleur + '">' + d.niveau + "</span>" +
+    '<p class="aide" style="margin:0">Tes vidéos touchent ' + dec1(d.taux) + " % de tes abonnés. " + d.verdict + "</p></div></div></div>";
+
+  if (d.taux < 15 && S.abonnes > 0 && S.vuesMoy > 0) {
+    h += '<div class="carte"><h2>Ce que tu perds aujourd\'hui</h2>' +
+      '<p class="aide">Un compte de ta taille sans frein majeur tourne autour de 15 à 30 % de portée. Ce n\'est pas une promesse, c\'est un point de comparaison.</p>' +
+      ligne("Tes vues actuelles", "par vidéo", fr(S.vuesMoy)) +
+      ligne("Un compte comparable sans frein", "15 à 30 % de " + fr(S.abonnes) + " abonnés", fr(d.comp[0]) + " à " + fr(d.comp[1]), "var(--ok)") +
+      '<div class="encadre"><div class="chiffre">× ' + Math.round(d.mult[0]) + " à × " + Math.round(d.mult[1]) + "</div>" +
+      '<div class="lg">Le multiplicateur que tu récupères en levant les freins — sans publier une seule vidéo de plus</div></div></div>';
+  }
+
+  h += '<div class="carte"><h2>Coche ce qui te correspond</h2>' +
+    '<p class="aide">Sois honnête, personne ne lit tes réponses : elles restent sur ton téléphone.</p>' +
+    FREINS.map((f) => {
+      const on = S.freins.includes(f.id);
+      return '<div class="carte liseré" style="margin-bottom:9px;background:var(--surface-2);border-left-color:' + (on ? "var(--crit)" : "var(--line)") + '">' +
+        '<label class="coche"><input type="checkbox" data-frein="' + f.id + '"' + (on ? " checked" : "") + '>' +
+        '<span class="q">' + f.q + '<span style="display:block;font-weight:400;font-size:.75rem;color:var(--ink-soft);font-family:var(--mono)">impact ' + f.p + "</span></span></label>" +
+        (on ? '<p class="aide" style="font-style:italic;margin:9px 0 7px">' + f.pourquoi + '</p><ul class="pts"><li class="non">' + f.fix + "</li></ul>" : "") + "</div>";
+    }).join("") + "</div>";
+
+  if (d.actifs.length) {
+    h += '<div class="carte"><h2>Ton plan de déblocage</h2><p class="aide">' + d.actifs.length + " frein" + (d.actifs.length > 1 ? "s" : "") +
+      ", " + d.risque + " points d'impact cumulés. Traite-les dans cet ordre.</p>" +
+      d.actifs.map((f, i) => '<div class="ligne"><div><div class="lbl">' + (i + 1) + ". " + f.q + '</div><div class="det">' + f.fix + "</div></div>" +
+        '<div class="val" style="color:var(--brass)">' + f.p + " pts</div></div>").join("") +
+      '<p class="rappel">Corrige, puis attends deux semaines avant de juger. TikTok doit ré-observer ton contenu sur plusieurs publications avant de rouvrir les vannes.</p></div>';
+  }
+  return h;
+},
+
+/* ─────────── Mon profil ─────────── */
+profil() {
+  return '<div class="carte"><h2>Ta page de vente</h2>' +
+    '<p class="aide">Quand une vidéo marche, le spectateur fait un seul geste : il ouvre ton profil. Si cette page ne dit pas en trois secondes ce que tu vends, où tu es et comment commander, la vue est perdue.</p></div>' +
+    '<div class="carte"><h2>1. Nom affiché</h2>' +
+    '<p class="aide">Ce n\'est pas ton pseudo, c\'est le texte en gras au-dessus. Il est indexé par la recherche, il accepte espaces et majuscules. Mets ton mot-clé au début : l\'en-tête coupe au-delà de 20 caractères.</p>' +
+    champTxt("nom", "Nom affiché", S.nom, "Bazin Mari Falah") + '<div id="outNom"></div></div>' +
+    '<div class="carte"><h2>2. Bio</h2><p class="aide">80 caractères, pas un de plus. Trois informations : ce que tu vends, où tu es, comment commander.</p>' +
+    champAire("bio", "Bio", S.bio, "Bazin riche en gros · " + S.ville + " · Commande WhatsApp") +
+    '<div id="outBio"></div>' +
+    '<h2 style="font-size:1rem;margin-top:18px">Modèles prêts à coller</h2>' +
+    [["Grossiste — tu vends à des revendeuses", "Bazin riche en gros · " + S.ville + "\nRevendeuses bienvenues\nCommande WhatsApp 👇",
+      "Nomme ta cible dès la deuxième ligne. Une revendeuse qui se reconnaît écrit tout de suite, et elle rachètera chaque mois."],
+     ["Grossiste — mettre le prix en avant", "Bazin riche en gros · " + S.ville + "\n3 m à partir de 10 000 F\nCommande 👇",
+      "Le prix filtre. Tu perds les curieux et tu gagnes du temps sur ceux qui ont le budget."],
+     ["Filtrer par mot-clé", "Bazin riche · " + S.ville + "\nÉcris PRIX en commentaire\nou WhatsApp 👇",
+      "Le mot-clé en commentaire nourrit l'algorithme et remplit tes messages en même temps."]]
+      .map(([c, t, p]) => '<div class="item"><div class="eyebrow">' + c + '</div><div class="cite" style="white-space:pre-line">' + esc(t) +
+        '</div><div class="pourquoi">' + p + '</div><button class="mini" data-bio="' + esc(t) + '">Utiliser</button></div>').join("") +
+    "</div>" +
+    '<div class="carte"><h2>3. Lien WhatsApp</h2>' +
+    '<p class="aide">C\'est ici que ton numéro a le droit d\'exister. Affiché dans une vidéo il te coûte de la distribution ; dans le champ « lien » de ton profil il devient cliquable et ne coûte rien. Le champ s\'ouvre à partir de 1 000 abonnés.</p>' +
+    '<div class="grille">' +
+      '<div class="champ"><label for="f-indicatif">Pays</label><select id="f-indicatif" data-txt="indicatif">' +
+      [["226", "Burkina Faso"], ["223", "Mali"], ["225", "Côte d'Ivoire"], ["221", "Sénégal"], ["224", "Guinée"], ["227", "Niger"], ["228", "Togo"], ["229", "Bénin"], ["33", "France"]]
+        .map(([c, p]) => '<option value="' + c + '"' + (S.indicatif === c ? " selected" : "") + ">" + p + " (+" + c + ")</option>").join("") +
+      "</select></div>" +
+      champTxt("numero", "Ton numéro WhatsApp", S.numero, "55 13 34 14") +
+    "</div>" +
+    champTxt("msg", "Message pré-rempli à l'ouverture", S.msg, "") +
+    '<p class="aide" style="margin-top:-6px">Le message s\'écrit tout seul. La personne n\'a plus qu\'à appuyer sur envoyer — et tu sais d\'où elle vient.</p>' +
+    '<div id="outLien"></div>' +
+    '<p class="rappel">Où le coller : ton profil → Modifier le profil → Site web. Puis retire le numéro de toutes tes prochaines vignettes.</p></div>';
+},
+profilOut() {
+  // Nom
+  const n = S.nom.trim(), cle = (S.produit.trim().split(/\s+/)[0] || "bazin").toLowerCase();
+  let vn = [];
+  if (!n) vn = [[false, "Nom affiché vide : tu perds un emplacement indexé par la recherche."]];
+  else {
+    vn.push([n.length <= 30, n.length + "/30 caractères."]);
+    vn.push([n.length <= 20, n.length <= 20 ? "Le nom s'affiche en entier sur ton profil." : "Au-delà de 20 caractères, l'en-tête coupe avec « … ». Mets l'essentiel au début."]);
+    const pos = n.toLowerCase().indexOf(cle);
+    if (pos < 0) vn.push([false, "« " + cle + " » n'apparaît pas. Le nom affiché est indexé par la recherche : c'est un emplacement gratuit que tu laisses vide."]);
+    else if (pos > 10) vn.push([false, "« " + cle + " » est trop loin dans le nom. Mets-le au début pour qu'il survive à la troncature."]);
+    else vn.push([true, "« " + cle + " » est placé au début : trouvable en recherche."]);
+  }
+  $("#outNom").innerHTML = '<ul class="pts" style="margin-top:9px">' + vn.map(([o, m]) => '<li class="' + (o ? "oui" : "non") + '">' + esc(m) + "</li>").join("") + "</ul>";
+
+  // Bio
+  const b = S.bio.trim();
+  let vb = [];
+  if (!b) vb = [[false, "Bio vide. C'est la correction la plus rentable qui existe : chaque visiteur arrive sur une page qui ne lui dit rien."]];
+  else {
+    vb.push([b.length <= 80, b.length <= 80 ? b.length + "/80 caractères." : b.length + "/80 caractères : la fin sera coupée. Retire " + (b.length - 80) + " caractères."]);
+    vb.push([/bazin|tissu|couture|wax|pagne|faso dan fani|koko/i.test(b), /bazin|tissu|couture|wax|pagne|faso dan fani|koko/i.test(b) ? "On comprend ce que tu vends." : "Dis ce que tu vends, avec le mot que les gens tapent dans la recherche."]);
+    vb.push([/ouaga|bobo|burkina|dakar|bamako|abidjan|conakry/i.test(b), /ouaga|bobo|burkina|dakar|bamako|abidjan|conakry/i.test(b) ? "On sait où tu es." : "Indique ta ville. C'est ce qui rassure sur la livraison."]);
+    vb.push([/commande|whatsapp|lien|dm|message|écri|ecri|👇|⬇/i.test(b), /commande|whatsapp|lien|dm|message|écri|ecri|👇|⬇/i.test(b) ? "On sait comment te joindre." : "Termine par l'action : « Commande sur WhatsApp 👇 »."]);
+  }
+  $("#outBio").innerHTML = '<ul class="pts" style="margin-top:9px">' + vb.map(([o, m]) => '<li class="' + (o ? "oui" : "non") + '">' + esc(m) + "</li>").join("") + "</ul>";
+
+  // Lien
+  const el = $("#outLien");
+  if (!S.numero.trim()) { el.innerHTML = ""; return; }
+  const ind = S.indicatif.replace(/\D/g, "");
+  let num = S.numero.replace(/\D/g, "");
+  if (num.indexOf("00") === 0) num = num.slice(2);
+  if (num.indexOf(ind) === 0) num = num.slice(ind.length);
+  num = num.replace(/^0+/, "");
+  const complet = ind + num;
+  const url = "https://wa.me/" + complet + (S.msg.trim() ? "?text=" + encodeURIComponent(S.msg.trim()) : "");
+  el.innerHTML = (complet.length >= 10 && complet.length <= 15)
+    ? '<div class="lien-wa" style="margin-top:12px">' + esc(url) + "</div>" +
+      '<div class="actions"><button class="btn" data-copier="' + esc(url) + '">Copier le lien</button>' +
+      '<a class="btn ghost" href="' + esc(url) + '" target="_blank" rel="noreferrer" style="text-decoration:none;display:inline-block">Tester</a></div>'
+    : '<div class="carte liseré" style="border-left-color:var(--crit);margin-top:12px;background:var(--surface-2)">Ce numéro ne semble pas complet. Saisis-le sans l\'indicatif pays et sans le zéro initial.</div>';
+},
+
+/* ─────────── Analyser ─────────── */
+analyse() {
+  return '<div class="carte"><h2>Analyse ta vidéo avant de la publier</h2>' +
+    '<p class="aide">Colle ton accroche et ton script. Chaque point perdu vient avec la correction exacte à faire.</p>' +
+    champTxt("hook", "Accroche — les 3 premières secondes", S.hook, "Arrête d'acheter ton bazin au marché.") +
+    champAire("script", "Script — une ligne par plan", S.script, "Plan 1 — ce qu'on voit, ce qu'on dit. Un plan par ligne.") +
+    '<div class="grille">' + champAire("legende", "Légende", S.legende, "") + champAire("hashtags", "Hashtags", S.hashtags, "#pourtoi #bazin #ouaga") + "</div>" +
+    champNum("duree", "Durée de la vidéo (secondes)", S.duree, 1) +
+    '<div class="actions"><button class="btn ghost" id="exemple">Charger un exemple</button><button class="btn ghost" id="vider">Effacer</button></div></div>' +
+    '<div id="out"></div>';
+},
+analyseOut() {
+  if (!S.hook.trim() && !S.script.trim()) return "";
+  const a = analyser({ hook: S.hook, script: S.script, legende: S.legende, hashtags: S.hashtags, duree: S.duree });
+  return '<div class="carte liseré" style="border-left-color:' + a.couleur + '"><div class="metrique">' +
+    '<div class="chiffre" style="color:' + a.couleur + '">' + a.score + "</div>" +
+    '<div class="txt"><span class="pastille" style="color:' + a.couleur + '">' + a.mention + "</span>" +
+    '<p class="aide" style="margin:0">Ordre de grandeur des vues pour une vidéo de cette qualité : ' + fr(a.vues[0]) + " à " + fr(a.vues[1]) +
+    ". Ce n'est pas une prévision — le résultat dépend aussi de ton compte et du son choisi.</p></div></div>" +
+    '<div class="carte liseré" style="border-left-color:var(--brass);background:var(--brass-soft);margin:14px 0 0">' +
+    '<span class="pastille" style="color:var(--brass)">À corriger en premier</span><p class="aide" style="margin:0;color:var(--ink)">' + esc(a.priorite) + "</p></div></div>" +
+    a.criteres.map(critereHTML).join("");
+},
+
+/* ─────────── Accroches ─────────── */
+hooks() {
+  const liste = S.cat === "toutes" ? HOOKS : HOOKS.filter((h) => h[1] === S.cat);
+  const c = CATS.find((x) => x[0] === S.cat);
+  return '<div class="carte"><h2>' + HOOKS.length + " accroches, remplies avec ton produit</h2>" +
+    '<p class="aide">Ce sont des structures, pas des phrases à recopier bêtement. Ce que tu mets dedans doit rester vrai : une accroche qui ment fait scroller à la seconde suivante et brûle des gens qui allaient devenir clients.</p>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">' +
+    '<button class="chip" data-cat="toutes" aria-selected="' + (S.cat === "toutes") + '">Toutes</button>' +
+    CATS.map(([id, l]) => '<button class="chip" data-cat="' + id + '" aria-selected="' + (S.cat === id) + '">' + l + "</button>").join("") + "</div>" +
+    (c ? '<p class="aide">' + c[2] + "</p>" : "") +
+    liste.map((h) => {
+      const t = remplir(h[0]);
+      return '<div class="item"><div class="cite">« ' + esc(t) + ' »</div><div class="pourquoi">' + h[2] +
+        '</div><button class="mini" data-copier="' + esc(t) + '">Copier</button></div>';
+    }).join("") + "</div>";
+},
+
+/* ─────────── Plan ─────────── */
+plan() {
+  const j = genererPlan({ rythme: S.rythme });
+  return '<div class="carte"><h2>Ton plan de 30 jours</h2>' +
+    '<p class="aide">On ne publie pas « ce qui vient ». Quatre piliers tournent dans une proportion fixe : publier seulement des offres fait fuir l\'audience, publier seulement pour les vues ne rapporte rien.</p>' +
+    '<div class="champ"><label for="f-rythme">Vidéos par semaine</label><select id="f-rythme" data-num="rythme">' +
+    [2, 3, 4, 5, 6, 7].map((n) => '<option value="' + n + '"' + (S.rythme === n ? " selected" : "") + ">" + n + " vidéos" + (n >= 5 ? " — rythme qui fait décoller" : "") + "</option>").join("") +
+    "</select></div>" +
+    '<div class="actions"><button class="btn" id="copierPlan">Copier le plan (' + j.length + " vidéos)</button></div>" +
+    '<p class="rappel">' + PILIERS.map((p) => "<strong>" + p.nom + "</strong> — " + p.obj).join("<br>") + "</p></div>" +
+    '<div class="carte"><h2>Les meilleurs créneaux</h2><p class="aide">Heure locale du Burkina. Tu publies quand ton audience est disponible, pas quand toi tu as le temps.</p>' +
+    CRENEAUX.map(([h, n]) => ligne(h, n, "")).join("") + "</div>" +
+    j.map((x) => '<div class="carte"><div class="jour"><div class="n">' + x.n + "<small>vidéo</small></div><div>" +
+      '<div class="det" style="color:var(--ink-soft);font-size:.8rem">' + x.date + " · " + x.creneau + "</div>" +
+      '<span class="pastille" style="color:var(--ink-soft);margin:5px 0">' + x.pilier.nom + "</span>" +
+      '<div style="font-weight:600;margin-bottom:4px">' + x.format + "</div>" +
+      '<div style="font-style:italic;color:var(--brass-ink);line-height:1.5;margin-bottom:5px">« ' + esc(x.hook) + ' »</div>' +
+      '<div class="aide" style="margin:0">' + x.pilier.obj + "</div></div></div></div>").join("");
+},
+
+/* ─────────── Hashtags ─────────── */
+tags() {
+  const t = composerTags(S.ville in GEO ? S.ville : "Ouagadougou", S.motsTags.split(/[\s,]+/).filter(Boolean), S.graine);
+  const noms = { large: "Large", moyen: "Moyen", niche: "Niche" };
+  return '<div class="carte"><h2>Hashtags</h2>' +
+    '<p class="aide">L\'erreur classique : mettre quinze hashtags énormes. Sur #mode tu es en concurrence avec des millions de vidéos et tu n\'apparais nulle part. Le mélange ci-dessous te fait exister sur les tags où tu peux réellement te classer — et c\'est là que se trouvent les gens qui achètent.</p>' +
+    '<div class="grille">' +
+      '<div class="champ"><label for="f-villeTag">Ta zone</label><select id="f-villeTag" data-txt="ville">' +
+      Object.keys(GEO).map((v) => '<option value="' + v + '"' + (S.ville === v ? " selected" : "") + ">" + v + "</option>").join("") + "</select></div>" +
+      champTxt("motsTags", "Tes mots-clés produit", S.motsTags, "bazin riche") +
+    "</div>" +
+    '<div class="bloc-tags" style="margin-top:14px">' + t.map((x) => x[0]).join(" ") + "</div>" +
+    '<div class="actions"><button class="btn" data-copier="' + esc(t.map((x) => x[0]).join(" ")) + '">Copier</button>' +
+    '<button class="btn ghost" id="autreTag">Autre combinaison</button></div>' +
+    '<div style="margin-top:16px">' + t.map((x) =>
+      '<div class="ligne"><div><div class="lbl" style="font-family:var(--mono);color:var(--brass-ink)">' + x[0] + "</div>" +
+      '<div class="det">' + x[2] + "</div></div>" +
+      '<div class="det" style="text-transform:uppercase;letter-spacing:.06em;font-size:.7rem">' + noms[x[1]] + "</div></div>").join("") + "</div>" +
+    '<p class="rappel">1 hashtag large pour la portée, 2 moyens pour le contexte, 3 de niche pour te classer réellement. Change de combinaison d\'une vidéo à l\'autre : republier les mêmes tags finit par plafonner ta distribution.</p></div>';
+},
+
+/* ─────────── Revenus ─────────── */
+eco() {
+  const C = [["videos", "Vidéos par semaine", "En dessous de 4, l'algorithme ne te connaît pas assez.", 1],
+    ["vuesMoy", "Vues moyennes par vidéo", "La moyenne de tes 10 dernières, pas ton record.", 10],
+    ["tProfil", "Visites de profil (% des vues)", "Visible dans tes statistiques TikTok.", 0.5],
+    ["tContact", "Prise de contact (% des visiteurs)", "Ceux qui commentent, écrivent ou cliquent sur WhatsApp.", 1],
+    ["tConv", "Conversion en vente (% des contacts)", "Sur 10 personnes qui t'écrivent, combien commandent ?", 1],
+    ["panier", "Panier moyen (F CFA)", "Montant moyen d'une commande.", 1000],
+    ["marge", "Marge nette (%)", "Ce qu'il te reste après le tissu, le transport et ton temps.", 5],
+    ["rachats", "Rachats par an d'une cliente", "Une revendeuse se réapprovisionne. Une particulière achète 1 ou 2 fois.", 1]];
+  return '<div class="carte"><h2>Simulateur de revenus</h2>' +
+    '<p class="aide">Chaque franc vient d\'une multiplication que tu peux vérifier ligne par ligne. Rien n\'est promis. Mets tes vrais chiffres : un simulateur optimiste ne t\'aide pas à décider.</p>' +
+    '<div class="grille">' + C.map(([k, l, a, p]) =>
+      '<div class="champ"><label for="f-' + k + '">' + l + '</label><input id="f-' + k + '" type="number" min="0" step="' + p + '" value="' + S.eco[k] + '" data-eco="' + k + '"><span class="note">' + a + "</span></div>").join("") +
+    "</div></div><div id=\"out\"></div>";
+},
+ecoOut() {
+  const r = simuler(S.eco);
+  let h = '<div class="carte"><h2>Ton entonnoir, mois par mois</h2>' +
+    r.entonnoir.map(([l, v, d]) => ligne(l, d, fr(v))).join("") +
+    '<div class="encadre"><div class="chiffre">' + fcfa(r.total) + '</div><div class="lg">de revenu net par mois · soit ' + fcfa(r.parVideo) + " par vidéo publiée</div></div>" +
+    ligne("Chiffre d'affaires", "", fcfa(r.ca)) + "</div>";
+
+  h += '<div class="carte"><h2>Ce que vaut vraiment une revendeuse</h2>' +
+    '<p class="aide">Le chiffre ci-dessus ne compte que les nouvelles clientes du mois. Or une revendeuse ne commande pas une fois : elle se réapprovisionne. C\'est ce qui change tout entre vendre au détail et vendre en gros.</p>' +
+    ligne("Une revendeuse gagnée ce mois-ci", "te rapporte sur 12 mois, en marge nette", fcfa(r.valeur12), "var(--ok)") +
+    '<div class="encadre"><div class="chiffre">' + fcfa(r.regime) + '</div><div class="lg">par mois en régime établi — au bout d\'environ un an, quand les anciennes revendeuses rachètent pendant que de nouvelles arrivent</div></div>' +
+    '<p class="rappel">Si une revendeuse vaut ' + fcfa(r.valeur12) + " sur l'année, il est rentable de passer du temps à la garder : un message trois semaines après sa commande coûte dix fois moins cher que d'en trouver une nouvelle.</p></div>";
+
+  h += '<div class="carte"><h2>Trois scénarios</h2><p class="aide">Même volume de publication. Ce qui change, c\'est la qualité de ton suivi.</p>' +
+    r.scenarios.map(([n, v, note]) => ligne(n, note, fcfa(v))).join("") + "</div>";
+
+  h += '<div class="carte"><h2>Où mettre ton énergie</h2>' +
+    '<p class="aide">Si tu améliores un seul chiffre de 20 %, voilà ce que ça rapporte en plus par mois en régime établi. Commence par le haut.</p>' +
+    r.leviers.map((l) => '<div class="ligne"><div><div class="lbl">' + l.nom + '</div><div class="det">' + l.conseil + "</div></div>" +
+      '<div class="val" style="color:var(--ok)">+' + fcfa(l.gain) + "</div></div>").join("") + "</div>";
+
+  h += '<p class="rappel">Le Fonds Créateur de TikTok (rémunération aux vues) n\'existe pas au Burkina Faso. L\'argent vient de tes ventes, des partenariats et de l\'affiliation — jamais des vues elles-mêmes. C\'est pourquoi ce simulateur ne compte aucun revenu par vue.</p>';
+  return h;
+},
+};
+
+/* ═══════════════ Fragments ═══════════════ */
+
+function champNum(k, l, v, p) {
+  return '<div class="champ"><label for="f-' + k + '">' + l + '</label><input id="f-' + k + '" type="number" min="0" step="' + p + '" value="' + v + '" data-num="' + k + '"></div>';
+}
+function champTxt(k, l, v, ph) {
+  return '<div class="champ"><label for="f-' + k + '">' + l + '</label><input id="f-' + k + '" type="text" value="' + esc(v) + '" placeholder="' + esc(ph) + '" data-txt="' + k + '"></div>';
+}
+function champAire(k, l, v, ph) {
+  return '<div class="champ"><label for="f-' + k + '">' + l + '</label><textarea id="f-' + k + '" rows="3" placeholder="' + esc(ph) + '" data-txt="' + k + '">' + esc(v) + "</textarea></div>";
+}
+function ligne(l, d, v, couleur) {
+  return '<div class="ligne"><div><div class="lbl">' + l + "</div>" + (d ? '<div class="det">' + d + "</div>" : "") + "</div>" +
+    (v ? '<div class="val"' + (couleur ? ' style="color:' + couleur + '"' : "") + ">" + v + "</div>" : "") + "</div>";
+}
+
+/* ═══════════════ Boucle ═══════════════ */
+
+function maj() {
+  const o = $("#out");
+  if (S.onglet === "diag" && o) o.innerHTML = VUES.diagOut();
+  else if (S.onglet === "analyse" && o) o.innerHTML = VUES.analyseOut();
+  else if (S.onglet === "eco" && o) o.innerHTML = VUES.ecoOut();
+  else if (S.onglet === "profil") VUES.profilOut();
+  sauver();
+}
+
+function rendre() {
+  nav();
+  vue.innerHTML = VUES[S.onglet]();
+  maj();
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+document.addEventListener("input", (ev) => {
+  const t = ev.target;
+  if (t.dataset.num) { S[t.dataset.num] = Number(t.value) || 0; if (t.dataset.num === "rythme") return rendre(); maj(); }
+  else if (t.dataset.txt) { S[t.dataset.txt] = t.value; if (t.dataset.txt === "ville" || t.dataset.txt === "motsTags") return rendre(); maj(); }
+  else if (t.dataset.eco) { S.eco[t.dataset.eco] = Number(t.value) || 0; maj(); }
+});
+
+document.addEventListener("change", (ev) => {
+  const f = ev.target.dataset.frein;
+  if (!f) return;
+  S.freins = ev.target.checked ? S.freins.concat([f]) : S.freins.filter((x) => x !== f);
+  maj();
+});
+
+document.addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button, a");
+  if (!b) return;
+
+  if (b.dataset.o) { S.onglet = b.dataset.o; return rendre(); }
+  if (b.dataset.cat) { S.cat = b.dataset.cat; return rendre(); }
+  if (b.dataset.bio) { S.bio = b.dataset.bio; $("#f-bio").value = S.bio; return maj(); }
+  if (b.id === "autreTag") { S.graine++; return rendre(); }
+  if (b.id === "vider") { S.hook = S.script = S.legende = S.hashtags = ""; S.duree = 25; return rendre(); }
+  if (b.id === "exemple") {
+    S.hook = "Arrête de payer 50 000 F pour un bazin qui se froisse.";
+    S.script = "Plan 1 — je montre le tissu de près\nRegarde bien la trame. Tu vois cette brillance ?\nPlan 2 — comparaison avec un autre tissu\nMais celui-là c'est du getzner. Et là, c'est de l'imitation.\nPlan 3 — je froisse les deux dans ma main\nSauf que la différence, tu la vois seulement après 2 heures.\nPlan 4 — résultat côte à côte, texte à l'écran\nLe vrai revient à sa forme. L'autre non.\nÉcris VRAI en commentaire, je t'envoie ma liste de prix.";
+    S.legende = "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour Ouaga.";
+    S.hashtags = "#pourtoi #bazin #ouaga #bazinriche #getzner #fasodanfani";
+    S.duree = 28;
+    return rendre();
+  }
+  if (b.id === "copierPlan") {
+    const j = genererPlan({ rythme: S.rythme });
+    const txt = ["PLAN TIKTOK 30 JOURS — " + S.produit.toUpperCase(), j.length + " vidéos à publier", ""]
+      .concat(j.map((x) => "── Vidéo " + x.n + " — " + x.date + " — " + x.creneau +
+        "\n   Pilier   : " + x.pilier.nom + "\n   Format   : " + x.format +
+        "\n   Accroche : « " + x.hook + " »\n   " + x.pilier.obj + "\n"))
+      .concat(["RÈGLE : ne saute pas les vidéos « Attirer » pour publier plus d'offres.",
+        "Sans nouvelles vues, il n'y a personne à qui vendre."]).join("\n");
+    return copier(txt, b, "Plan copié");
+  }
+  if (b.dataset.copier) return copier(b.dataset.copier, b, "Copié");
+});
+
+async function copier(texte, bouton, libelle) {
+  const avant = bouton.textContent;
+  try { await navigator.clipboard.writeText(texte); bouton.textContent = libelle; }
+  catch (e) { bouton.textContent = "Copie impossible — sélectionne le texte"; }
+  setTimeout(() => { bouton.textContent = avant; }, 1700);
+}
+
+rendre();
+</script>
+
+</body>
+</html>
