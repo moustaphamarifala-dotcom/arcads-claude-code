@@ -212,9 +212,9 @@ export default function Revenus({ profil }: { profil: Profil }) {
         </div>
 
         <div className={styles.note}>
-          Le Fonds Créateur de TikTok (rémunération aux vues) n&apos;existe pas au Sénégal,
-          au Mali, en Côte d&apos;Ivoire ni dans la plupart des pays d&apos;Afrique de
-          l&apos;Ouest. Ici, l&apos;argent vient de tes ventes, des partenariats avec des
+          Le Fonds Créateur de TikTok (rémunération aux vues) n&apos;existe pas au Burkina
+          Faso, au Sénégal, au Mali, en Côte d&apos;Ivoire ni dans la plupart des pays
+          d&apos;Afrique de l&apos;Ouest. Ici, l&apos;argent vient de tes ventes, des partenariats avec des
           marques et de l&apos;affiliation — jamais des vues elles-mêmes. C&apos;est
           pourquoi ce simulateur ne compte aucun revenu par vue : les vues ne servent
           qu&apos;à remplir le haut de l&apos;entonnoir.

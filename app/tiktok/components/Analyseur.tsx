@@ -16,8 +16,8 @@ Plan 4 — résultat côte à côte, texte à l'écran
 Le vrai revient à sa forme. L'autre, non.
 Écris VRAI en commentaire, je t'envoie la liste de mes fournisseurs.`,
   legende:
-    "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour Dakar.",
-  hashtags: "#pourtoi #bazin #dakar #bazinriche #getzner #coutureDakar",
+    "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour Ouaga.",
+  hashtags: "#pourtoi #bazin #ouaga #bazinriche #getzner #fasodanfani",
   dureeSec: 28,
 };
 

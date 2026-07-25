@@ -9,7 +9,7 @@ export interface Profil {
 export const PROFIL_DEFAUT: Profil = {
   produit: "bazin brodé homme",
   prix: "35000",
-  ville: "Dakar",
+  ville: "Ouagadougou",
   client: "ma cliente",
 };
 

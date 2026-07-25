@@ -46,6 +46,16 @@ const NICHES: Tag[] = [
 ];
 
 const GEO: Record<string, Tag[]> = {
+  Ouagadougou: [
+    { tag: "#ouaga", taille: "moyen", note: "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent." },
+    { tag: "#burkinafaso", taille: "moyen", note: "Élargit au pays entier et touche la diaspora burkinabè." },
+    { tag: "#fasodanfani", taille: "niche", note: "Le tissu tissé national : audience très attachée, forte intention d'achat." },
+  ],
+  "Bobo-Dioulasso": [
+    { tag: "#bobodioulasso", taille: "moyen", note: "Trafic local sur la deuxième ville du pays." },
+    { tag: "#burkinafaso", taille: "moyen", note: "Élargit au pays entier." },
+    { tag: "#kokodunda", taille: "niche", note: "Le teint de Bobo : très recherché, quasiment aucune concurrence sur TikTok." },
+  ],
   Dakar: [
     { tag: "#dakar", taille: "moyen", note: "Trafic local : ceux qui peuvent venir en boutique." },
     { tag: "#senegal", taille: "moyen", note: "Élargit au pays entier." },

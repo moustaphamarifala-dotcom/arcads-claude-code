@@ -29,7 +29,9 @@ Le **Studio TikTok** (page `/tiktok`) sert à **transformer des vues en commande
 
 Le plan, l'analyse, les hashtags et les revenus sont calculés **sur l'appareil**, sans réseau ni clé API. Seuls les scripts appellent une IA.
 
-> ⚠️ Le Fonds Créateur de TikTok (rémunération aux vues) n'existe pas au Sénégal, au Mali, en Côte d'Ivoire ni dans la plupart des pays d'Afrique de l'Ouest. Le simulateur ne compte donc **aucun revenu par vue** : l'argent vient des ventes, des partenariats et de l'affiliation.
+Zones couvertes par le moteur de hashtags : **Ouagadougou**, **Bobo-Dioulasso**, Dakar, Bamako, Abidjan, Conakry et Paris (diaspora). Les créneaux de publication sont valables pour tout le bloc UTC+0.
+
+> ⚠️ Le Fonds Créateur de TikTok (rémunération aux vues) n'existe pas au Burkina Faso, au Sénégal, au Mali, en Côte d'Ivoire ni dans la plupart des pays d'Afrique de l'Ouest. Le simulateur ne compte donc **aucun revenu par vue** : l'argent vient des ventes, des partenariats et de l'affiliation.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 

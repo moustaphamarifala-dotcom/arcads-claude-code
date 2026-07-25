@@ -175,7 +175,8 @@ export const PILIERS: Pilier[] = [
 ];
 
 /**
- * Créneaux de publication — heure locale GMT (Dakar, Bamako, Abidjan, Conakry).
+ * Créneaux de publication — heure locale GMT, valable pour tout le bloc UTC+0 :
+ * Ouagadougou, Bobo-Dioulasso, Bamako, Dakar, Abidjan, Conakry.
  * Logique : on publie quand l'audience a du temps libre, pas quand on a le temps.
  */
 export const CRENEAUX = [

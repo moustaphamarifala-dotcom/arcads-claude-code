@@ -6,8 +6,8 @@
  * ligne par ligne. Aucun revenu n'est inventé.
  *
  * Note importante sur le Fonds Créateur / Creator Rewards : il n'est PAS
- * disponible au Sénégal, au Mali, en Côte d'Ivoire ni dans la plupart des pays
- * d'Afrique de l'Ouest. Sur ce marché, l'argent vient de la vente de tes
+ * disponible au Burkina Faso, au Sénégal, au Mali, en Côte d'Ivoire ni dans la
+ * plupart des pays d'Afrique de l'Ouest. Sur ce marché, l'argent vient de la vente de tes
  * produits, des partenariats marques (UGC) et de l'affiliation — pas des vues.
  */
 
