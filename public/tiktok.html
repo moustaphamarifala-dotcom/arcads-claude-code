@@ -586,7 +586,12 @@ function analyser(e) {
     if (!e.script.trim()) {
       C.push({ id: "ret", nom: "Rétention", p: 22, s: 0, role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.", o: [], f: ["Écris le script plan par plan pour contrôler le rythme."] });
     } else {
-      const parle = nbMots(e.script) / 2.5;
+      const lignes0 = e.script.split(/\n+/).filter((l) => l.trim());
+      // Une ligne « Plan 3 — macro sur la trame » est une indication de tournage,
+      // pas du texte à dire : la compter fausserait le débit de parole.
+      const estIndication = (l) => /^\s*(plan\s*\d|séquence|sequence|scène|scene)\b/i.test(l);
+      const repliques = lignes0.filter((l) => !estIndication(l));
+      const parle = nbMots((repliques.length ? repliques : lignes0).join(" ")) / 2.5;
       const r = e.duree > 0 ? parle / e.duree : 1;
       if (r > 1.2) { s -= 12; f.push("Trop de texte pour " + e.duree + " s (il en faudrait ~" + Math.round(parle) + "). Coupe " + Math.round((r - 1) * 100) + " % ou allonge la vidéo."); }
       else if (r < 0.5) { s -= 6; f.push("Beaucoup de silence pour cette durée. Raccourcis la vidéo ou ajoute du contenu : les temps morts font scroller."); }
@@ -595,11 +600,11 @@ function analyser(e) {
       if (b.length >= 3) { s += 16; o.push(b.length + " relances de tension détectées."); }
       else if (b.length) { s += 8; o.push("Quelques relances présentes."); f.push("Ajoute une relance toutes les 5 secondes : « mais attends », « sauf que… », « et le pire »."); }
       else f.push("Aucune relance : le spectateur décroche vers la 5ᵉ seconde. Place un « mais » ou un « sauf que » régulièrement.");
-      const lignes = e.script.split(/\n+/).filter((l) => l.trim());
+      const lignes = lignes0;
       if (lignes.length >= 4) { s += 12; o.push(lignes.length + " plans — le changement d'image relance l'attention."); }
       else f.push("Découpe en au moins 4 plans. Un plan fixe de 30 s perd la moitié de l'audience.");
       if (/\b(avant|après|apres)\b/i.test(e.script)) { s += 8; o.push("Structure avant/après — format à très forte rétention."); }
-      if (/\b(1|2|3|premier|deuxième|troisième|étape|etape)\b/i.test(e.script)) { s += 7; o.push("Progression numérotée : on reste pour connaître la suite."); }
+      if (trouve(e.script, ["premier", "deuxième", "deuxieme", "troisième", "troisieme", "étape", "etape"]).length > 0 || /\b[123]\b/.test(e.script)) { s += 7; o.push("Progression numérotée : on reste pour connaître la suite."); }
       C.push({ id: "ret", nom: "Rétention", p: 22, s: borne(s), role: "Fait regarder jusqu'au bout — c'est ce qui déclenche la vague de vues.", o, f });
     }
   }
@@ -628,7 +633,7 @@ function analyser(e) {
     if (c.length) { s += 28; o.push("Appel à l'action présent : « " + c[0] + " »."); }
     else f.push("Aucun appel à l'action. Une vue sans instruction ne rapporte rien : termine par « écris PRIX en commentaire ».");
     if (c.length > 3) { s -= 12; f.push("Trop d'appels à l'action différents. Un seul par vidéo, sinon personne n'en fait aucun."); }
-    if (/\b(commente|commentez|écris|ecris|écrivez|ecrivez)\b/i.test(tout)) { s += 16; o.push("Commentaire demandé — conversion et signal algorithmique en même temps."); }
+    if (trouve(tout, ["commente", "commentaire", "écris", "ecris", "écrivez", "ecrivez"]).length > 0) { s += 16; o.push("Commentaire demandé — conversion et signal algorithmique en même temps."); }
     else f.push("Demande un mot-clé en commentaire. Ça déclenche l'algorithme ET remplit tes messages.");
     if (trouve(tout, MOTS.urgence).length) { s += 14; o.push("Notion d'urgence ou de rareté présente."); }
     else f.push("Ajoute une raison d'agir maintenant : stock limité, prix jusqu'à dimanche, arrivage qui part.");
@@ -684,7 +689,7 @@ function analyser(e) {
     else if (d > 34 && d <= 60) { s += 10; o.push(d + " s — jouable, mais chaque seconde doit être justifiée."); f.push("Au-delà de 34 s, coupe tout ce qui n'est pas indispensable."); }
     else if (d > 60) { s -= 15; f.push(d + " s, c'est long : le taux de complétion s'effondre. Découpe en 2 vidéos."); }
     else f.push("Moins de 7 s : pas le temps de vendre. Vise 15 à 30 s.");
-    if (/\b(texte|sous-titre|à l'écran|a l'ecran)\b/i.test(tout)) { s += 10; o.push("Texte à l'écran prévu — la majorité regarde sans le son."); }
+    if (trouve(tout, ["texte", "sous-titre", "sous titre", "à l'écran", "a l'ecran", "overlay"]).length > 0) { s += 10; o.push("Texte à l'écran prévu — la majorité regarde sans le son."); }
     else f.push("Prévois un texte à l'écran sur chaque plan : beaucoup regardent sans le son.");
     if (/\b(son|musique|audio|tendance)\b/i.test(tout)) { s += 10; o.push("Un son est prévu."); }
     else f.push("Choisis un son tendance (moins de 10 000 vidéos) : c'est un accélérateur gratuit.");

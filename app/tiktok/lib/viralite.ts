@@ -211,7 +211,6 @@ function analyserRetention(e: EntreeAnalyse): Critere {
   let score = 45;
 
   const script = e.script.trim();
-  const mots = compterMots(script);
 
   if (!script) {
     return {
@@ -225,8 +224,15 @@ function analyserRetention(e: EntreeAnalyse): Critere {
     };
   }
 
+  const lignes = script.split(/\n+/).filter((l) => l.trim().length > 0);
+
+  // Une ligne comme « Plan 3 — macro sur la trame » est une indication de
+  // tournage, pas du texte à dire : la compter fausserait le débit de parole.
+  const estIndication = (l: string) => /^\s*(plan\s*\d|séquence|sequence|scène|scene)\b/i.test(l);
+  const repliques = lignes.filter((l) => !estIndication(l));
+
   // Débit de parole confortable en français : ~2,5 mots/seconde.
-  const dureeParlee = mots / 2.5;
+  const dureeParlee = compterMots((repliques.length ? repliques : lignes).join(" ")) / 2.5;
   const ratio = e.dureeSec > 0 ? dureeParlee / e.dureeSec : 1;
 
   if (ratio > 1.2) {
@@ -258,7 +264,6 @@ function analyserRetention(e: EntreeAnalyse): Critere {
     );
   }
 
-  const lignes = script.split(/\n+/).filter((l) => l.trim().length > 0);
   if (lignes.length >= 4) {
     score += 12;
     constats.push(`${lignes.length} plans/scènes — le changement d'image relance l'attention.`);
@@ -273,7 +278,10 @@ function analyserRetention(e: EntreeAnalyse): Critere {
     constats.push("Structure avant/après — format à très forte rétention.");
   }
 
-  if (/\b(1|2|3|premier|deuxième|deuxieme|troisième|troisieme|étape|etape)\b/i.test(script)) {
+  if (
+    contient(script, ["premier", "deuxième", "deuxieme", "troisième", "troisieme", "étape", "etape"]).length ||
+    /\b[123]\b/.test(script)
+  ) {
     score += 7;
     constats.push("Progression numérotée : le spectateur reste pour connaître la suite.");
   }
@@ -370,7 +378,7 @@ function analyserConversion(e: EntreeAnalyse): Critere {
     );
   }
 
-  if (/\b(commente|commentez|écris|ecris|écrivez|ecrivez)\b/i.test(tout)) {
+  if (contient(tout, ["commente", "commentaire", "écris", "ecris", "écrivez", "ecrivez"]).length > 0) {
     score += 16;
     constats.push("Commentaire demandé — double effet : conversion + signal algorithmique.");
   } else {
@@ -558,7 +566,7 @@ function analyserFormat(e: EntreeAnalyse): Critere {
   }
 
   const tout = `${e.script}\n${e.legende}`;
-  if (/\b(texte|sous-titre|sous titre|à l'écran|a l'ecran|overlay)\b/i.test(tout)) {
+  if (contient(tout, ["texte", "sous-titre", "sous titre", "à l'écran", "a l'ecran", "overlay"]).length) {
     score += 10;
     constats.push("Texte à l'écran prévu — indispensable, la majorité regarde sans le son.");
   } else {
