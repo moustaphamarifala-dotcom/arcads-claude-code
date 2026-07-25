@@ -47,7 +47,7 @@ export default function Hashtags({ profil }: { profil: Profil }) {
 
       <div className={styles.grille2}>
         <div className={styles.champ}>
-          <label htmlFor="ht-ville">Ta zone</label>
+          <label htmlFor="ht-ville">Où tu vends</label>
           <select id="ht-ville" value={ville} onChange={(e) => setVille(e.target.value)}>
             {VILLES.map((v) => (
               <option key={v}>{v}</option>

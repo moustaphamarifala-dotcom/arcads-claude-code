@@ -96,12 +96,12 @@ export default function StudioTikTok() {
             />
           </div>
           <div className={styles.champ}>
-            <label htmlFor="pr-ville">Ta ville</label>
+            <label htmlFor="pr-ville">Où tu vends</label>
             <input
               id="pr-ville"
               type="text"
               value={profil.ville}
-              placeholder="Ouagadougou"
+              placeholder="Burkina Faso"
               onChange={(e) => modifier("ville", e.target.value)}
             />
           </div>

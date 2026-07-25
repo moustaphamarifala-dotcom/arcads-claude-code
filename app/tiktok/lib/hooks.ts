@@ -84,7 +84,7 @@ export const HOOKS: ModeleHook[] = [
   { texte: "J'ai commencé avec un seul mètre de tissu.", categorie: "histoire", pourquoi: "Origine humble : déclenche l'attachement et les abonnements." },
   { texte: "Ma pire commande, c'était il y a deux ans.", categorie: "histoire", pourquoi: "Vulnérabilité assumée : très fort taux de complétion." },
   { texte: "Cette cliente m'a fait pleurer. Dans le bon sens.", categorie: "histoire", pourquoi: "Émotion annoncée dès la première seconde." },
-  { texte: "On m'a dit que ça ne marcherait jamais à {ville}.", categorie: "histoire", pourquoi: "Doute extérieur + revanche : structure narrative universelle." },
+  { texte: "On m'a dit que ça ne marcherait jamais chez nous.", categorie: "histoire", pourquoi: "Doute extérieur + revanche : structure narrative universelle." },
   { texte: "Il y a un an, je n'avais aucun client. Aujourd'hui, regarde.", categorie: "histoire", pourquoi: "Contraste temporel visible en une phrase." },
   { texte: "J'ai perdu de l'argent sur cette commande. Je la referais.", categorie: "histoire", pourquoi: "Paradoxe qui oblige à écouter l'explication." },
 

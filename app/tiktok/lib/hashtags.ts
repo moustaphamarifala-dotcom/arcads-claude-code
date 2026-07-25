@@ -46,6 +46,12 @@ const NICHES: Tag[] = [
 ];
 
 const GEO: Record<string, Tag[]> = {
+  "Burkina Faso": [
+    { tag: "#burkinafaso", taille: "moyen", note: "Ton marché entier, plus la diaspora burkinabè qui commande à distance." },
+    { tag: "#burkina", taille: "moyen", note: "Forme courte, souvent plus tapée que le nom complet." },
+    { tag: "#fasodanfani", taille: "niche", note: "Le tissu tissé national : audience très attachée, forte intention d'achat." },
+    { tag: "#bazinburkina", taille: "niche", note: "Croise ton produit et ton marché : quasiment aucune concurrence." },
+  ],
   Ouagadougou: [
     { tag: "#ouaga", taille: "moyen", note: "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent." },
     { tag: "#burkinafaso", taille: "moyen", note: "Élargit au pays entier et touche la diaspora burkinabè." },
@@ -117,23 +123,31 @@ export function composer(
       ? []
       : Array.from({ length: Math.min(n, liste.length) }, (_, i) => liste[(decalage + i) % liste.length]);
 
-  const perso: Tag[] = motsCles
-    .map(enTag)
-    .filter(Boolean)
-    .map((tag) => ({
-      tag,
-      taille: "niche" as Taille,
-      note: "Ton mot-clé : c'est ce que tapent les gens qui cherchent exactement ton produit.",
-    }));
+  // Les mots-clés forment UN seul tag : « bazin riche » donne #bazinriche, pas #bazin + #riche.
+  const motCle = enTag(motsCles.join(""));
+  const perso: Tag[] = motCle.length > 3
+    ? [{
+        tag: motCle,
+        taille: "niche",
+        note: "Ton mot-clé : c'est ce que tapent les gens qui cherchent exactement ton produit.",
+      }]
+    : [];
 
-  const moyens = [...rotation(MOYENS, 1, graine), ...rotation(geo.filter((t) => t.taille === "moyen"), 1, graine)];
-  const niches = [
-    ...perso.slice(0, 1),
+  const candidats: Tag[] = [
+    ...perso,
+    ...rotation(LARGES, 1, graine),
+    ...rotation(MOYENS, 1, graine),
+    ...rotation(geo.filter((t) => t.taille === "moyen"), 1, graine),
     ...rotation(NICHES, perso.length ? 1 : 2, graine),
     ...rotation(geo.filter((t) => t.taille === "niche"), 1, graine),
   ];
 
-  const tags = [...rotation(LARGES, 1, graine), ...moyens, ...niches].filter(Boolean).slice(0, 6);
+  // Un même tag peut venir de deux sources : on ne le garde qu'une fois.
+  const vus = new Set<string>();
+  const uniques = candidats.filter((t) => !vus.has(t.tag) && vus.add(t.tag) !== undefined);
+
+  const ordre: Record<Taille, number> = { large: 0, moyen: 1, niche: 2 };
+  const tags = uniques.slice(0, 6).sort((a, b) => ordre[a.taille] - ordre[b.taille]);
 
   return {
     tags,

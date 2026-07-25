@@ -16,8 +16,8 @@ Plan 4 — résultat côte à côte, texte à l'écran
 Le vrai revient à sa forme. L'autre, non.
 Écris VRAI en commentaire, je t'envoie la liste de mes fournisseurs.`,
   legende:
-    "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour Ouaga.",
-  hashtags: "#pourtoi #bazin #ouaga #bazinriche #getzner #fasodanfani",
+    "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour le Burkina.",
+  hashtags: "#pourtoi #bazin #burkinafaso #bazinriche #getzner #fasodanfani",
   dureeSec: 28,
 };
 
@@ -85,7 +85,7 @@ export default function Analyseur() {
               id="an-tags"
               rows={3}
               value={entree.hashtags}
-              placeholder="#pourtoi #bazin #dakar"
+              placeholder="#pourtoi #bazin #burkinafaso"
               onChange={(e) => modifier("hashtags", e.target.value)}
             />
           </div>

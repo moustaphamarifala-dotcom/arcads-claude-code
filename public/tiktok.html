@@ -362,7 +362,7 @@
   <main id="vue"></main>
 
   <footer>
-    Bazin en gros · Ouagadougou · francs CFA<br>
+    Bazin en gros · Burkina Faso · francs CFA<br>
     Aucune donnée envoyée. Tes chiffres restent enregistrés sur cet appareil.
   </footer>
 </div>
@@ -436,7 +436,7 @@ const HOOKS = [
   ["Ma première revendeuse a commencé avec 3 mètres.", "histoire", "Rend le premier pas accessible à celle qui hésite à se lancer."],
   ["J'ai commencé avec un seul mètre de tissu.", "histoire", "Origine humble : déclenche l'attachement et les abonnements."],
   ["Ma pire commande, c'était il y a deux ans.", "histoire", "Vulnérabilité assumée : très fort taux de complétion."],
-  ["On m'a dit que ça ne marcherait jamais à {v}.", "histoire", "Doute extérieur puis revanche : structure narrative universelle."],
+  ["On m'a dit que ça ne marcherait jamais chez nous.", "histoire", "Doute extérieur puis revanche : structure narrative universelle."],
   ["J'ai perdu de l'argent sur cette commande. Je la referais.", "histoire", "Paradoxe qui oblige à écouter l'explication."],
 
   ["3 choses à vérifier avant de choisir ton fournisseur de bazin.", "liste", "Contenu utile qui te positionne en expert au lieu de vendeur."],
@@ -490,6 +490,10 @@ const CRENEAUX = [
 ];
 
 const GEO = {
+  "Burkina Faso": [["#burkinafaso", "moyen", "Ton marché entier, plus la diaspora burkinabè qui commande à distance."],
+    ["#burkina", "moyen", "Forme courte, souvent plus tapée que le nom complet."],
+    ["#fasodanfani", "niche", "Le tissu tissé national : audience très attachée, forte intention d'achat."],
+    ["#bazinburkina", "niche", "Croise ton produit et ton marché : quasiment aucune concurrence."]],
   "Ouagadougou": [["#ouaga", "moyen", "Bien plus utilisé que #ouagadougou : c'est le mot que les gens tapent."],
     ["#burkinafaso", "moyen", "Élargit au pays entier et touche la diaspora burkinabè."],
     ["#fasodanfani", "niche", "Le tissu tissé national : audience très attachée, forte intention d'achat."]],
@@ -775,18 +779,25 @@ function simuler(e) {
 function composerTags(ville, motsCles, graine) {
   const geo = GEO[ville] || [];
   const rot = (l, n, d) => l.length ? Array.from({ length: Math.min(n, l.length) }, (_, i) => l[(d + i) % l.length]) : [];
-  const perso = motsCles.map((m) => "#" + m.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase())
-    .filter((t) => t.length > 1)
-    .map((t) => [t, "niche", "Ton mot-clé : c'est ce que tapent les gens qui cherchent exactement ton produit."]);
-  const out = [].concat(
+  // Les mots-clés forment UN seul tag : « bazin riche » donne #bazinriche, pas #bazin + #riche.
+  const brut = motsCles.join("").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+  const perso = brut.length > 2
+    ? [["#" + brut, "niche", "Ton mot-clé : c'est ce que tapent les gens qui cherchent exactement ton produit."]]
+    : [];
+  const brut2 = [].concat(
+    perso,
     rot(LARGES, 1, graine),
     rot(MOYENS, 1, graine),
     rot(geo.filter((t) => t[1] === "moyen"), 1, graine),
-    perso.slice(0, 1),
     rot(NICHES, perso.length ? 1 : 2, graine),
     rot(geo.filter((t) => t[1] === "niche"), 1, graine)
-  ).filter(Boolean).slice(0, 6);
-  return out;
+  ).filter(Boolean);
+  // Un même tag peut venir de deux sources : on ne le garde qu'une fois.
+  const vus = Object.create(null);
+  const uniques = brut2.filter((t) => (vus[t[0]] ? false : (vus[t[0]] = true)));
+  // Le tag large passe en tête à l'affichage, mais la niche perso est prioritaire au remplissage.
+  const ordre = { large: 0, moyen: 1, niche: 2 };
+  return uniques.slice(0, 6).sort((a, b) => ordre[a[1]] - ordre[b[1]]);
 }
 
 function genererPlan(o) {
@@ -813,7 +824,7 @@ function genererPlan(o) {
 
 const DEFAUT = {
   onglet: "diag",
-  produit: "bazin riche", prix: "10000", ville: "Ouagadougou",
+  produit: "bazin riche", prix: "10000", ville: "Burkina Faso",
   abonnes: 51400, vuesMoy: 836, freins: [],
   nom: "", bio: "", indicatif: "226", numero: "", msg: "Bonjour, je viens de TikTok. Je voudrais les prix du bazin.",
   hook: "", script: "", legende: "", hashtags: "", duree: 25,
@@ -1052,12 +1063,12 @@ plan() {
 
 /* ─────────── Hashtags ─────────── */
 tags() {
-  const t = composerTags(S.ville in GEO ? S.ville : "Ouagadougou", S.motsTags.split(/[\s,]+/).filter(Boolean), S.graine);
+  const t = composerTags(S.ville in GEO ? S.ville : "Burkina Faso", S.motsTags.split(/[\s,]+/).filter(Boolean), S.graine);
   const noms = { large: "Large", moyen: "Moyen", niche: "Niche" };
   return '<div class="carte"><h2>Hashtags</h2>' +
     '<p class="aide">L\'erreur classique : mettre quinze hashtags énormes. Sur #mode tu es en concurrence avec des millions de vidéos et tu n\'apparais nulle part. Le mélange ci-dessous te fait exister sur les tags où tu peux réellement te classer — et c\'est là que se trouvent les gens qui achètent.</p>' +
     '<div class="grille">' +
-      '<div class="champ"><label for="f-villeTag">Ta zone</label><select id="f-villeTag" data-txt="ville">' +
+      '<div class="champ"><label for="f-villeTag">Où tu vends</label><select id="f-villeTag" data-txt="ville">' +
       Object.keys(GEO).map((v) => '<option value="' + v + '"' + (S.ville === v ? " selected" : "") + ">" + v + "</option>").join("") + "</select></div>" +
       champTxt("motsTags", "Tes mots-clés produit", S.motsTags, "bazin riche") +
     "</div>" +
@@ -1173,8 +1184,8 @@ document.addEventListener("click", async (ev) => {
   if (b.id === "exemple") {
     S.hook = "Arrête de payer 50 000 F pour un bazin qui se froisse.";
     S.script = "Plan 1 — je montre le tissu de près\nRegarde bien la trame. Tu vois cette brillance ?\nPlan 2 — comparaison avec un autre tissu\nMais celui-là c'est du getzner. Et là, c'est de l'imitation.\nPlan 3 — je froisse les deux dans ma main\nSauf que la différence, tu la vois seulement après 2 heures.\nPlan 4 — résultat côte à côte, texte à l'écran\nLe vrai revient à sa forme. L'autre non.\nÉcris VRAI en commentaire, je t'envoie ma liste de prix.";
-    S.legende = "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour Ouaga.";
-    S.hashtags = "#pourtoi #bazin #ouaga #bazinriche #getzner #fasodanfani";
+    S.legende = "Comment reconnaître un vrai bazin riche avant d'acheter — guide rapide pour le Burkina.";
+    S.hashtags = "#pourtoi #bazin #burkinafaso #bazinriche #getzner #fasodanfani";
     S.duree = 28;
     return rendre();
   }
