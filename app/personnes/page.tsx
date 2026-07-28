@@ -225,6 +225,12 @@ export default function Personnes() {
                   >
                     {favoris.includes(fiche.titre) ? "★ Enregistrée" : "☆ Enregistrer"}
                   </button>
+                  <a
+                    className={styles.favoriBtn}
+                    href={`/intel?nom=${encodeURIComponent(fiche.titre)}`}
+                  >
+                    ⚡ Analyser l&apos;actualité
+                  </a>
                 </div>
 
                 {fiche.liens.length > 0 && (
