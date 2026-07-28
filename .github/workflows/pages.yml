@@ -6,20 +6,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  publier:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,14 +25,17 @@ jobs:
           cp public/personnes.html site/index.html
           cp public/personnes.html site/personnes.html
           cp public/business.html site/business.html
+          touch site/.nojekyll
 
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # GitHub publie la branche gh-pages. On y pousse le dossier site/ tel quel.
+      - name: Publier sur la branche gh-pages
+        env:
+          JETON: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd site
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Site statique — ${GITHUB_SHA:0:7}"
+          git push -f "https://x-access-token:${JETON}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
