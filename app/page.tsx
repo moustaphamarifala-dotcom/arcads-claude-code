@@ -132,6 +132,21 @@ export default function Home() {
         >
           📊 Mon Business (gestion) →
         </a>
+        <a
+          href="/secret.html"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🔮 Le Révélateur (jeu) →
+        </a>
       </p>
 
       <footer className="footer">

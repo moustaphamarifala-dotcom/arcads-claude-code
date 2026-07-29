@@ -25,6 +25,7 @@ jobs:
           cp public/personnes.html site/index.html
           cp public/personnes.html site/personnes.html
           cp public/business.html site/business.html
+          cp public/secret.html site/secret.html
           touch site/.nojekyll
 
       # GitHub publie la branche gh-pages. On y pousse le dossier site/ tel quel.

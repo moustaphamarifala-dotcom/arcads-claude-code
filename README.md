@@ -12,12 +12,15 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
 | 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
 | 📷 **Studio Photo** (`/photo`) | FLUX ultra-réaliste (Pollinations) | FLUX 1.1 Pro (Replicate) |
+| 🔮 **Le Révélateur** (`secret.html`) | Jeu autonome, hors ligne, sans clé | — (identique) |
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
 | 🗂️ **Dossier** (`/dossier`) | Wikipédia + Wikidata + presse recoupée | idem, synthèse par Claude |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
+
+**Le Révélateur** (fichier `public/secret.html`) est un jeu de divertissement pensé pour être filmé : quatre questions anodines (prénom, chiffre, symbole, domaine), une « lecture d'empreinte » avec jauge animée, puis une révélation en trois temps qui se termine par un « secret » et un pourcentage de correspondance. C'est un numéro de mentalisme, pas une analyse réelle : les textes sont choisis dans des banques de phrases volontairement universelles (effet Barnum), et le tirage est déterministe — les mêmes réponses redonnent toujours le même résultat, ce qui compte si quelqu'un refait le test devant la caméra. Aucun appel réseau, aucune donnée conservée : tout tourne dans le navigateur, ce qui le rend fiable même sans connexion, en tournage.
 
 **Qui est qui ?** (fichier `public/personnes.html`) est la version **autonome** des fiches personnalités, sur le même principe que *Mon Business* : **un seul fichier HTML**, aucune installation, aucun serveur. Ouvrez-le d'un double-clic et il interroge Wikipédia et Wikidata directement depuis le navigateur (thème clair/sombre, fiches enregistrées en local). Seule une connexion internet est nécessaire.
 
