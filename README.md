@@ -15,6 +15,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+| 🗂️ **Dossier** (`/dossier`) | Wikipédia + Wikidata + presse recoupée | idem, synthèse par Claude |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -32,6 +33,16 @@ Les **Fiches Personnalités** (page `/personnes`) permettent de **chercher des i
 L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claude** si `ANTHROPIC_API_KEY` est présente. Chaque fiche personnalité propose un bouton « ⚡ Analyser l'actualité » qui ouvre directement Intel sur la bonne personne.
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
+
+**Dossier** (page `/dossier`) est la version la plus complète : elle répond à la question « qu'est-ce qu'on sait déjà, publiquement, sur ce sujet ? ». Une information dispersée dans quarante articles est publique, mais personne ne va la lire à la main — l'outil la rassemble et surtout la **hiérarchise** :
+
+- **Trois angles interrogés systématiquement** — presse francophone, mention en phrase exacte (qui écarte les homonymes), et presse internationale. Un quatrième angle ciblé peut être ajouté (« contrat », « procès »…). Les résultats sont fusionnés et dédoublonnés.
+- **Comptage des médias distincts** — chaque sujet est étiqueté **Convergent** (3 médias ou plus), **Rapporté** (2) ou **Source unique** (1). Ce comptage est calculé dans le code à partir des sources listées, *pas* produit par l'IA : c'est un fait vérifiable, pas une appréciation.
+- **Chronologie** des articles datés, du plus récent au plus ancien.
+- **Signaux à vérifier** — quand certains titres démentent ce que d'autres affirment, le sujet est marqué comme disputé. C'est une alerte de lecture, jamais un verdict.
+- **Fiche d'identité** Wikipédia/Wikidata en tête de dossier, quand le sujet en a une.
+
+> Le dossier ne dispose d'**aucune source non publique** : ni fuite de données, ni registre privé, ni réseau social aspiré. Quand un nom ne correspond à aucune page encyclopédique **et** à aucune couverture de presse, la route répond `422` et refuse de constituer un dossier plutôt que de spéculer — c'est exactement le cas d'une personne privée. L'outil n'a de sens que pour des personnalités publiques et des organisations.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
@@ -65,11 +76,19 @@ app/
 ├── page.tsx                     # Page principale (onglets)
 ├── layout.tsx                   # Layout global
 ├── globals.css                  # Styles
+├── lib/                         # Logique partagée entre les routes
+│   ├── dates.ts                 # Formatage des dates (RSS et Wikidata)
+│   ├── encyclopedie.ts          # Wikipédia + Wikidata : recherche et fiches
+│   └── presse.ts                # Collecte multi-angles, recoupement, signaux
 ├── components/
+│   ├── Markdown.tsx             # Rendu Markdown minimal, partagé
 │   ├── TextGenerator.tsx        # Interface génération de texte
 │   ├── ImageGenerator.tsx       # Interface génération d'image
 │   └── VideoGenerator.tsx       # Interface génération de vidéo
 └── api/
+    ├── dossier/route.ts         # Dossier : identité + presse recoupée
+    ├── intel/route.ts           # Revue de presse analysée
+    ├── personnes/route.ts       # Fiches personnalités
     ├── generate-text/route.ts   # API Claude en streaming
     ├── generate-image/route.ts  # API Replicate (FLUX)
     └── generate-video/route.ts  # API Replicate (WAN) + suivi d'état

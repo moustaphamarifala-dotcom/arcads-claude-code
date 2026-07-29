@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./intel.module.css";
+import Markdown from "../components/Markdown";
 
 type Article = {
   titre: string;
@@ -28,62 +29,6 @@ const GRILLES: { id: Grille; label: string; resume: string }[] = [
 ];
 
 const EXEMPLES = ["Fabrizio Romano", "Romain Molina", "Kylian Mbappé", "FSF Sénégal"];
-
-/** Rendu Markdown minimal : titres, listes, gras et paragraphes. */
-function Markdown({ texte }: { texte: string }) {
-  const lignes = texte.split("\n");
-  const blocs: React.ReactNode[] = [];
-  let liste: string[] = [];
-
-  const gras = (s: string) =>
-    s.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-      part.startsWith("**") && part.endsWith("**") ? (
-        <strong key={i}>{part.slice(2, -2)}</strong>
-      ) : (
-        <span key={i}>{part}</span>
-      ),
-    );
-
-  const viderListe = () => {
-    if (liste.length === 0) return;
-    blocs.push(
-      <ul key={`l${blocs.length}`} className={styles.mdListe}>
-        {liste.map((item, i) => (
-          <li key={i}>{gras(item)}</li>
-        ))}
-      </ul>,
-    );
-    liste = [];
-  };
-
-  for (const brute of lignes) {
-    const ligne = brute.trim();
-
-    if (!ligne) {
-      viderListe();
-    } else if (ligne.startsWith("#")) {
-      viderListe();
-      const titre = ligne.replace(/^#+\s*/, "");
-      blocs.push(
-        <h3 key={`h${blocs.length}`} className={styles.mdTitre}>
-          {titre}
-        </h3>,
-      );
-    } else if (/^[-*]\s+/.test(ligne) || /^\d+\.\s+/.test(ligne)) {
-      liste.push(ligne.replace(/^[-*]\s+/, "").replace(/^\d+\.\s+/, ""));
-    } else {
-      viderListe();
-      blocs.push(
-        <p key={`p${blocs.length}`} className={styles.mdPara}>
-          {gras(ligne)}
-        </p>,
-      );
-    }
-  }
-  viderListe();
-
-  return <>{blocs}</>;
-}
 
 export default function Intel() {
   const [nom, setNom] = useState("");
@@ -213,7 +158,10 @@ export default function Intel() {
             </div>
 
             <div className={styles.md}>
-              <Markdown texte={analyse} />
+              <Markdown
+                texte={analyse}
+                classes={{ titre: styles.mdTitre, para: styles.mdPara, liste: styles.mdListe }}
+              />
             </div>
 
             <section className={styles.sources}>

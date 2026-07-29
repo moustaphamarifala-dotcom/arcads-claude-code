@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { type Article, chercherActualite } from "@/app/lib/presse";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -10,91 +11,10 @@ export const maxDuration = 300;
  * Les faits viennent uniquement d'articles réels récupérés via Google Actualités.
  * L'IA ne fait que lire, trier et questionner ces articles : elle n'invente rien
  * et ne signe jamais au nom d'un journaliste existant.
+ *
+ * Pour un recoupement plus poussé (plusieurs angles de recherche, comptage des
+ * médias concordants, chronologie), voir la route /api/dossier.
  */
-
-const UA = "StudioContenuIA/1.0 (revue de presse; contact via depot GitHub)";
-
-type Article = {
-  titre: string;
-  source: string;
-  date: string | null;
-  url: string;
-};
-
-const ENTITES: Record<string, string> = {
-  "&amp;": "&",
-  "&lt;": "<",
-  "&gt;": ">",
-  "&quot;": '"',
-  "&#39;": "'",
-  "&apos;": "'",
-  "&nbsp;": " ",
-};
-
-function decoder(texte: string): string {
-  let sortie = texte.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1");
-
-  // Google échappe parfois deux fois (« &amp;#39; ») : on repasse jusqu'à stabilité.
-  for (let passe = 0; passe < 3; passe++) {
-    const avant = sortie;
-    sortie = sortie
-      .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
-      .replace(/&[a-z]+;/gi, (e) => ENTITES[e.toLowerCase()] ?? e);
-    if (sortie === avant) break;
-  }
-
-  return sortie.trim();
-}
-
-function extraire(bloc: string, balise: string): string | null {
-  const m = new RegExp(`<${balise}[^>]*>([\\s\\S]*?)</${balise}>`).exec(bloc);
-  return m ? decoder(m[1]) : null;
-}
-
-const MOIS = [
-  "janvier", "février", "mars", "avril", "mai", "juin",
-  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
-];
-
-/** « Mon, 27 Jul 2026 18:04:00 GMT » → « 27 juillet 2026 ». */
-function formaterDate(brute: string | null): string | null {
-  if (!brute) return null;
-  const d = new Date(brute);
-  if (Number.isNaN(d.getTime())) return brute;
-  return `${d.getDate()} ${MOIS[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-/** Google Actualités : flux RSS public, gratuit et sans clé. */
-async function chercherActualite(nom: string): Promise<Article[]> {
-  const url = new URL("https://news.google.com/rss/search");
-  url.searchParams.set("q", nom);
-  url.searchParams.set("hl", "fr");
-  url.searchParams.set("gl", "FR");
-  url.searchParams.set("ceid", "FR:fr");
-
-  const res = await fetch(url, {
-    headers: { "User-Agent": UA },
-    next: { revalidate: 900 },
-  });
-  if (!res.ok) throw new Error(`Google Actualités a répondu ${res.status}`);
-
-  const xml = await res.text();
-  const blocs = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
-
-  return blocs.slice(0, 14).map((bloc) => {
-    const titreBrut = extraire(bloc, "title") ?? "";
-    const source = extraire(bloc, "source") ?? "Source inconnue";
-    // Google suffixe le titre par « - Nom du média » : on l'enlève, il fait doublon.
-    const titre = titreBrut.replace(new RegExp(`\\s+-\\s+${source}$`), "");
-
-    return {
-      titre,
-      source,
-      date: formaterDate(extraire(bloc, "pubDate")),
-      url: extraire(bloc, "link") ?? "",
-    };
-  });
-}
 
 /* ------------------------------------------------------------------ */
 /* Grilles de lecture                                                  */
