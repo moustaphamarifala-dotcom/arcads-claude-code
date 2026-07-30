@@ -58,6 +58,21 @@ export default function Home() {
           📷 Studio Photo ultra-réaliste →
         </a>
         <a
+          href="/clip"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🎬 Studio Clip — vidéos gratuites →
+        </a>
+        <a
           href="/couture"
           style={{
             display: "inline-block",

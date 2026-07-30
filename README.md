@@ -11,6 +11,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | ✍️ **Textes** | Pollinations.ai | Claude (Anthropic), streaming temps réel |
 | 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
 | 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
+| 🎬 **Studio Clip** (`/clip`) | Montage 100 % gratuit, dans le navigateur | — (identique) |
 | 📷 **Studio Photo** (`/photo`) | FLUX ultra-réaliste (Pollinations) | FLUX 1.1 Pro (Replicate) |
 | 🔮 **Le Révélateur** (`secret.html`) | Jeu autonome, hors ligne, sans clé | — (identique) |
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
@@ -47,6 +48,8 @@ L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claud
 
 > Le dossier ne dispose d'**aucune source non publique** : ni fuite de données, ni registre privé, ni réseau social aspiré. Quand un nom ne correspond à aucune page encyclopédique **et** à aucune couverture de presse, la route répond `422` et refuse de constituer un dossier plutôt que de spéculer — c'est exactement le cas d'une personne privée. L'outil n'a de sens que pour des personnalités publiques et des organisations.
 
+Le **Studio Clip** (page `/clip`) compose une vraie vidéo téléchargeable à partir d'un script, **entièrement gratuit et sans clé** : le texte est découpé en scènes, chacune reçoit une image IA (Pollinations, gratuite) ou un fond animé de repli, puis le montage — panoramique-zoom, fondus enchaînés, sous-titres incrustés, musique optionnelle (ton propre fichier) — est calculé sur un `<canvas>` et enregistré avec `MediaRecorder`, directement dans le navigateur. Aucun serveur de rendu, aucun coût, aucune limite d'usage — la seule contrainte est que l'enregistrement se fait en temps réel : une vidéo de 20 secondes prend 20 secondes à produire.
+
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
 \* Il n'existe à ce jour aucune API de génération vidéo réellement gratuite et fiable.
@@ -82,7 +85,9 @@ app/
 ├── lib/                         # Logique partagée entre les routes
 │   ├── dates.ts                 # Formatage des dates (RSS et Wikidata)
 │   ├── encyclopedie.ts          # Wikipédia + Wikidata : recherche et fiches
-│   └── presse.ts                # Collecte multi-angles, recoupement, signaux
+│   ├── presse.ts                # Collecte multi-angles, recoupement, signaux
+│   └── clip.ts                  # Studio Clip : scènes, easing, Ken Burns, sous-titres
+├── clip/page.tsx                # Studio Clip : montage vidéo gratuit dans le navigateur
 ├── components/
 │   ├── Markdown.tsx             # Rendu Markdown minimal, partagé
 │   ├── TextGenerator.tsx        # Interface génération de texte
