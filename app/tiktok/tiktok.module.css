@@ -73,6 +73,11 @@
   gap: 10px;
   margin-bottom: 26px;
 }
+/* En nombre impair, la dernière carte prend toute la largeur plutôt que de
+   rester seule sur sa ligne. */
+.modes > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
 @media (max-width: 560px) {
   .modes {
     grid-template-columns: 1fr;
@@ -111,6 +116,99 @@
 .modeActif {
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+/* Profil de la boutique --------------------------------------------- */
+
+.profil {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+.profilFerme {
+  border-color: var(--line);
+}
+.profilTete {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.profilTete:hover {
+  background: var(--surface-2);
+}
+.profilTete > span:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.profilTete strong {
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+.profilTete em {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profilFleche {
+  color: var(--muted);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.profilCorps {
+  padding: 4px 18px 20px;
+  border-top: 1px solid var(--line);
+}
+.profilIntro {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 16px 0 20px;
+}
+.profilChamp {
+  margin-bottom: 16px;
+}
+.profilAide {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.avertissement {
+  margin-bottom: 20px;
+  padding: 13px 15px;
+  border-left: 3px solid var(--warn);
+  background: rgba(255, 190, 61, 0.08);
+  border-radius: 0 10px 10px 0;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.lienBouton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--warn);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* Formulaire -------------------------------------------------------- */
@@ -248,6 +346,175 @@
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.62;
+}
+
+.blocTitre {
+  font-size: 1.24rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+.blocIntro {
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  margin-bottom: 22px;
+  max-width: 68ch;
+}
+.sousTitre {
+  margin: 32px 0 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* Diagnostic des vues ----------------------------------------------- */
+
+.mesures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 16px;
+}
+/* Les libellés n'ont pas tous le même nombre de lignes : on les laisse
+   occuper la place restante pour que les champs restent alignés entre eux. */
+.mesures > div {
+  display: flex;
+  flex-direction: column;
+}
+.mesures .champLabel {
+  margin-top: 0;
+  flex: 1;
+}
+
+.constats {
+  list-style: none;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.constats li {
+  padding: 15px 17px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: 0 12px 12px 0;
+}
+.constats li strong {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.constats li p {
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.62;
+}
+.constat_bon {
+  border-left-color: var(--ok);
+}
+.constat_bon strong {
+  color: var(--ok);
+}
+.constat_moyen {
+  border-left-color: var(--warn);
+}
+.constat_moyen strong {
+  color: var(--warn);
+}
+.constat_probleme {
+  border-left-color: var(--accent);
+}
+.constat_probleme strong {
+  color: var(--accent);
+}
+
+/* Calendrier des ventes --------------------------------------------- */
+
+.phase {
+  --teinte: var(--cyan);
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--teinte);
+}
+.phase_tot {
+  --teinte: var(--muted);
+}
+.phase_ouverture {
+  --teinte: var(--cyan);
+}
+.phase_pic {
+  --teinte: var(--ok);
+}
+.phase_fin {
+  --teinte: var(--warn);
+}
+.phase_passe {
+  --teinte: var(--accent);
+}
+.phaseHaut {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+.phaseHaut strong {
+  color: var(--teinte);
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+.phaseHaut span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.phase p {
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.pics {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pic {
+  padding: 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.pic h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.picQuand {
+  color: var(--cyan);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.pic p {
+  font-size: 0.95rem;
+  line-height: 1.62;
+  color: var(--muted);
+}
+.pic ul {
+  margin-top: 12px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.pic ul li::marker {
+  color: var(--accent);
 }
 
 /* Accroches --------------------------------------------------------- */

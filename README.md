@@ -16,6 +16,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
 | 🎬 **Studio TikTok** (`/tiktok`) | Pollinations.ai | Claude |
+| 📊 **Diagnostic des vues, calendrier, accroches** | Sans IA — immédiat | — (identique) |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -34,14 +35,25 @@ L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claud
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
 
-Le **Studio TikTok** (page `/tiktok`) aide à préparer des vidéos courtes qu'on regarde jusqu'au bout. Quatre outils :
+Le **Studio TikTok** (page `/tiktok`) est pensé pour un **vendeur** qui filme sa marchandise avec son téléphone — pas pour un créateur de divertissement. La différence tient en une phrase : la vue ne rapporte rien, la commande si. Cent mille vues venues d'un pays où vous ne livrez pas ne valent rien ; deux mille vues chez les bonnes personnes remplissent une semaine.
 
-- 💡 **Idées de vidéos** — 5 concepts complets pour votre niche : la phrase d'accroche exacte, le texte à l'écran, un déroulé minuté seconde par seconde, le plan de fin qui boucle sur le début, la question qui fait commenter, et les hashtags.
-- 🎯 **Score de viralité** — collez votre script : il est noté sur 100 (accroche, rétention, émotion, partage, commentaires), avec ce qui bloque, les corrections à faire et trois réécritures de l'accroche.
-- 📅 **Plan 7 jours** — une semaine de publication cohérente autour d'un seul fil rouge, plus les trois chiffres à regarder dans les statistiques au bout d'une semaine.
-- 🪝 **Accroches** — 40 structures d'accroches classées par mécanique (curiosité, erreur, contradiction, avant/après…), à remplir avec votre sujet. Cette partie fonctionne **sans IA et sans réseau** : c'est instantané.
+Tout part d'un **profil de boutique** (ce que vous vendez, où vous livrez, vos prix, comment on commande) rempli une seule fois et conservé dans le navigateur. Il est repris dans chaque vidéo écrite : sans lui, les conseils resteraient des généralités inutilisables.
 
-> Aucun outil ne peut garantir une vidéo virale, et celui-ci ne le prétend pas. Il travaille les trois choses sur lesquelles vous avez la main — l'accroche, le déroulé et la fin — le reste vient de la régularité. Les propositions de l'IA sont des points de départ à adapter à votre voix : une vidéo qui sonne faux se voit immédiatement. Et rien ici n'encourage à tromper le spectateur ou à acheter des vues, ce que les règles de TikTok interdisent.
+Sept outils :
+
+- 🎬 **Vidéo produit** — décrivez une pièce, obtenez la vidéo complète prête à tourner : accroche exacte, texte à l'écran, plan par plan minuté, les gestes qui prouvent la qualité à l'image, où placer le prix, l'appel à commander, la légende et les hashtags.
+- 💡 **Idées de vidéos** — 5 concepts variés pour la boutique (arrivage, preuve de qualité, rendu porté, coulisses, objection, client servi), avec pour chacun ce que la vidéo prouve à l'acheteur.
+- 🎯 **Score de la vidéo** — collez votre script : noté sur 100 sur cinq critères de vendeur (accroche, rétention, **confiance**, envie d'acheter, appel à commander), avec les corrections prioritaires et trois réécritures de l'accroche.
+- 📊 **Pourquoi je n'ai pas de vues** — recopiez les statistiques d'une vidéo : le calcul de rétention dit si ça casse à l'accroche ou au milieu, si la vidéo est trop longue, et pourquoi beaucoup de vues peuvent ne produire aucun message. **Sans IA, immédiat.**
+- 📅 **Plan 7 jours** — une semaine qui alterne se faire connaître et vendre, car un compte qui ne fait que vendre cesse d'être montré à de nouvelles personnes.
+- 🗓️ **Calendrier des ventes** — les saisons (Ramadan et Korité, Tabaski, mariages, baptêmes, fin d'année) et, à partir de la date que vous saisissez, la consigne du moment. **Sans IA, immédiat.**
+- 🪝 **Accroches** — 45 accroches classées par mécanique : six familles de vendeur (arrivage, prix, preuve de qualité, rendu porté, confiance, occasion) et trois pour se faire connaître. **Sans IA et sans réseau.**
+
+L'idée qui structure le calendrier mérite d'être soulignée, parce que c'est l'erreur la plus coûteuse : **le pic de commandes ne tombe pas la semaine de la fête, mais plusieurs semaines avant.** L'acheteur doit encore trouver un tailleur, et les tailleurs saturent puis refusent bien avant le jour J. Vendre la semaine de la fête, c'est arriver quand tout est déjà joué.
+
+Les dates des fêtes musulmanes suivent le calendrier lunaire : elles avancent d'environ onze jours par an et dépendent de l'observation de la lune, donc elles varient d'un pays à l'autre. L'application n'en code aucune — vous saisissez la vôtre et tout se calcule à partir d'elle.
+
+> Aucun outil ne peut garantir une vidéo virale, et celui-ci ne le prétend pas. Les seuils du diagnostic sont des repères d'usage, pas des chiffres officiels : TikTok ne publie pas le fonctionnement de son algorithme. Les vidéos écrites par l'IA sont des points de départ à relire avant de tourner — vérifiez que chaque phrase est vraie pour votre marchandise. Une promesse que la livraison ne tient pas coûte un client définitivement, alors qu'une vente ratée ne coûte qu'une vente. L'application refuse par construction de conseiller d'inventer une rupture de stock, d'annoncer une marque ou une qualité que vous n'avez pas, d'inventer un témoignage client ou d'acheter des vues.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 

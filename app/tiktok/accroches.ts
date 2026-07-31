@@ -3,126 +3,154 @@
  * d'aucune IA ni d'aucun réseau : ces structures marchent parce qu'elles
  * ouvrent une boucle que le spectateur veut refermer.
  *
+ * Les six premières familles sont propres à la vente : elles ne cherchent pas
+ * la vue pour la vue, mais la commande. Les trois dernières servent à se faire
+ * connaître de gens qui ne connaissent pas encore la boutique — un compte qui
+ * ne fait que vendre finit par ne plus être montré à personne de nouveau.
+ *
  * Chaque modèle contient {sujet}, remplacé par ce que l'utilisateur tape.
  */
 
 export type FamilleAccroches = {
   id: string;
   titre: string;
+  vendeur: boolean;
   pourquoi: string;
   modeles: string[];
 };
 
 export const FAMILLES: FamilleAccroches[] = [
   {
-    id: "curiosite",
-    titre: "🕳️ La curiosité",
+    id: "arrivage",
+    titre: "📦 L'arrivage",
+    vendeur: true,
     pourquoi:
-      "Tu annonces qu'il manque quelque chose au spectateur. Tant qu'il ne l'a pas, il reste. C'est la structure la plus fiable, et la plus vite usée : ne l'utilise que si tu as vraiment une réponse à donner.",
+      "C'est la seule urgence que tu n'as pas besoin d'inventer : la marchandise vient vraiment d'arriver, et elle partira vraiment. Filme le carton ou le rouleau que tu ouvres, pas un stock déjà rangé — l'ouverture est ce qui retient.",
     modeles: [
-      "Personne ne te dira ça sur {sujet}, alors je le fais.",
-      "J'ai mis deux ans à comprendre ça sur {sujet}. Toi, deux minutes.",
-      "Il y a une raison pour laquelle {sujet} ne marche pas chez toi.",
-      "Ce que je vais te montrer sur {sujet}, je ne l'ai jamais dit ici.",
-      "Regarde bien : c'est le détail que tout le monde rate sur {sujet}.",
+      "Ça vient d'arriver. Je te montre avant de tout ranger.",
+      "J'ouvre le carton avec toi. Je n'ai pas encore vu les couleurs.",
+      "Nouvel arrivage de {sujet}. Regarde cette couleur à la lumière.",
+      "Ce {sujet} est arrivé ce matin. Il ne fera pas la semaine.",
+      "Je n'ai pris que quelques pièces de celui-là. Voilà pourquoi.",
+    ],
+  },
+  {
+    id: "prix",
+    titre: "💰 Le prix annoncé",
+    vendeur: true,
+    pourquoi:
+      "Annoncer ton prix te fait perdre ceux qui voulaient négocier et gagner tous les autres — et les autres sont bien plus nombreux. « Prix en privé » fait fuir les gens sérieux, qui n'ont pas envie de discuter pour connaître un tarif.",
+    modeles: [
+      "Le prix est dans la vidéo, pas besoin de m'écrire pour le demander.",
+      "Voilà ce que tu as pour ce budget en {sujet}.",
+      "Combien coûte un complet de {sujet} ? Je te le dis franchement.",
+      "Je te montre trois prix, du moins cher au plus cher.",
+      "Ce n'est pas le moins cher du marché. Je t'explique pourquoi.",
+    ],
+  },
+  {
+    id: "preuve",
+    titre: "✋ La preuve de qualité",
+    vendeur: true,
+    pourquoi:
+      "C'est ta meilleure famille d'accroches, parce qu'elle règle la vraie peur : recevoir autre chose que ce qu'on a vu. Un geste qui prouve la qualité à l'image vaut mieux que dix phrases qui l'affirment.",
+    modeles: [
+      "Écoute le bruit. C'est ça, la différence.",
+      "Regarde ce qui se passe quand je le froisse.",
+      "Voilà comment reconnaître un vrai {sujet} en dix secondes.",
+      "Deux tissus côte à côte. Devine lequel coûte le double.",
+      "Si le tien ne fait pas ça, on t'a vendu autre chose.",
+      "Je le teste devant toi, sans coupure.",
+    ],
+  },
+  {
+    id: "porte",
+    titre: "👗 Le rendu porté",
+    vendeur: true,
+    pourquoi:
+      "Personne n'achète un rouleau, on achète le vêtement qu'on imagine. Tant que ton client doit faire cet effort d'imagination tout seul, il hésite. Montre-le porté et tu supprimes l'hésitation.",
+    modeles: [
+      "Voilà ce que ça donne une fois cousu.",
+      "Le rouleau, puis le résultat. Regarde la différence.",
+      "Ma cliente a choisi ce {sujet}. Voilà ce qu'elle en a fait.",
+      "Tu hésites sur la couleur ? Regarde-la sur quelqu'un.",
+      "Le même {sujet}, sur trois personnes différentes.",
+    ],
+  },
+  {
+    id: "confiance",
+    titre: "🚚 La confiance",
+    vendeur: true,
+    pourquoi:
+      "Ce qui bloque une commande à distance n'est presque jamais le prix : c'est la peur de ne rien recevoir, ou de recevoir autre chose. Montrer l'emballage, l'envoi et les clients servis débloque plus de ventes que n'importe quelle remise.",
+    modeles: [
+      "J'emballe la commande d'aujourd'hui avec toi.",
+      "Tu es à l'étranger et tu hésites à commander ? Regarde comment ça se passe.",
+      "Voilà ce que ma cliente a reçu, et ce qu'elle avait vu dans ma vidéo.",
+      "Comment je t'envoie ton {sujet}, étape par étape.",
+      "Je réponds au message que tout le monde m'envoie avant de commander.",
+    ],
+  },
+  {
+    id: "fete",
+    titre: "🎉 L'occasion",
+    vendeur: true,
+    pourquoi:
+      "Le tissu s'achète pour une date. Rappeler la date, et surtout le temps qu'il faut au tailleur, crée une urgence vraie — celle qui fait décider ceux qui hésitent depuis des semaines. Ne l'utilise que quand c'est réellement vrai.",
+    modeles: [
+      "Si tu attends la semaine de la fête, ton tailleur ne pourra plus.",
+      "Il te reste combien de temps avant la fête ? Compte à l'envers avec moi.",
+      "Ce que je conseille pour habiller toute la famille sans exploser le budget.",
+      "Les couleurs qui partent en premier chaque année. Prends-les maintenant.",
+      "Commande maintenant, ton tailleur te dira merci.",
     ],
   },
   {
     id: "erreur",
     titre: "🚫 L'erreur",
+    vendeur: false,
     pourquoi:
-      "Le spectateur a peur de faire partie de ceux qui se trompent. Il reste pour vérifier. Bonus : ça déclenche énormément de commentaires de gens qui se défendent — et le commentaire est le signal qui relance ta vidéo.",
+      "Le spectateur a peur de faire partie de ceux qui se trompent, alors il reste pour vérifier. Ça déclenche beaucoup de commentaires de gens qui se défendent — et le commentaire est le signal qui relance ta vidéo auprès de nouvelles personnes.",
     modeles: [
-      "Arrête de faire ça avec {sujet}.",
-      "Si tu fais ça avec {sujet}, tu perds ton temps.",
-      "3 erreurs sur {sujet} que je vois tous les jours.",
-      "Tu ne rates pas {sujet}. Tu t'y prends juste à l'envers.",
-      "Ce que tout le monde t'a appris sur {sujet} est faux.",
-      "L'erreur numéro 1 sur {sujet}, et je l'ai faite pendant des années.",
+      "Arrête d'acheter ton {sujet} comme ça.",
+      "3 erreurs que je vois tous les jours chez mes clients.",
+      "Si on t'a vendu ça à ce prix, tu t'es fait avoir.",
+      "Ce que tout le monde croit sur {sujet} est faux.",
+      "L'erreur que j'ai faite pendant des années avant d'ouvrir ma boutique.",
     ],
   },
   {
-    id: "contradiction",
-    titre: "⚡ La contradiction",
+    id: "utile",
+    titre: "🎁 Le conseil utile",
+    vendeur: false,
     pourquoi:
-      "Tu prends le contre-pied d'une idée admise. Le spectateur reste pour te contredire ou pour te donner raison. Attention : ne dis ça que si tu peux vraiment le défendre, sinon tu te fais démonter en commentaire.",
+      "C'est ce qui te fait découvrir par des gens qui ne cherchaient pas à acheter aujourd'hui. Ils enregistrent, ils te suivent, et ils reviennent au moment de la fête. Sans ces vidéos-là, tu ne parles qu'à ceux qui te connaissent déjà.",
     modeles: [
-      "{sujet} ne sert à rien. Voilà pourquoi.",
-      "Opinion impopulaire : {sujet} est surestimé.",
-      "Tout le monde te dit de faire {sujet}. Moi je te dis l'inverse.",
-      "J'ai arrêté {sujet} et ça a été la meilleure décision.",
-      "Le conseil le plus donné sur {sujet} est le pire de tous.",
-    ],
-  },
-  {
-    id: "resultat",
-    titre: "📈 L'avant / après",
-    pourquoi:
-      "Tu montres le point d'arrivée dès la première seconde. Le spectateur reste pour le chemin. Le résultat doit être visible à l'image, pas juste raconté — sinon l'accroche tombe à plat.",
-    modeles: [
-      "Voilà ce que ça donne. Je te montre comment j'y suis arrivé avec {sujet}.",
-      "30 jours de {sujet}. Le résultat en 20 secondes.",
-      "Avant / après sur {sujet} — et je n'ai changé qu'une seule chose.",
-      "J'ai testé {sujet} pendant un mois pour que tu n'aies pas à le faire.",
-      "Regarde la différence. Tout est parti de {sujet}.",
-    ],
-  },
-  {
-    id: "liste",
-    titre: "🔢 La liste",
-    pourquoi:
-      "Le spectateur sait combien de temps ça va durer, donc il accepte de rester. Chaque numéro relance l'attention. Garde-les courtes : trois ou quatre points, pas dix.",
-    modeles: [
-      "3 choses que j'aurais aimé savoir sur {sujet}.",
-      "{sujet} en 4 étapes, sans rien acheter.",
-      "Les 3 seules choses qui comptent vraiment dans {sujet}.",
-      "Du pire au meilleur : je classe tout ce qui existe en {sujet}.",
-      "5 secondes par astuce sur {sujet}. C'est parti.",
+      "Comment entretenir ton {sujet} pour qu'il tienne des années.",
+      "Enregistre ça avant d'acheter ton prochain {sujet}.",
+      "Combien de mètres il te faut vraiment, selon ta taille.",
+      "Envoie ça à quelqu'un qui va bientôt acheter du {sujet}.",
+      "Ce qu'il faut demander à ton tailleur pour ne pas gâcher ton tissu.",
     ],
   },
   {
     id: "histoire",
     titre: "💬 L'histoire vraie",
+    vendeur: false,
     pourquoi:
-      "Une histoire personnelle crée un attachement que l'astuce pure ne crée jamais. C'est ce qui transforme une vue en abonné. Une seule règle : elle doit être vraie.",
+      "Une histoire personnelle crée un attachement qu'un argument de vente ne crée jamais : c'est ce qui transforme un spectateur en client fidèle. Une seule règle, et elle n'est pas négociable : elle doit être vraie.",
     modeles: [
-      "Je n'ai jamais raconté ce qui s'est passé avec {sujet}.",
-      "Le jour où {sujet} m'a coûté très cher.",
-      "On m'a dit que je n'y arriverais jamais avec {sujet}. Voilà où j'en suis.",
-      "J'ai failli tout arrêter à cause de {sujet}.",
-      "Ça fait des mois que j'hésite à parler de {sujet} ici.",
-    ],
-  },
-  {
-    id: "utile",
-    titre: "🎁 L'utile immédiat",
-    pourquoi:
-      "Tu promets quelque chose que le spectateur peut utiliser aujourd'hui. C'est la structure qui génère le plus d'enregistrements et de partages en privé — le signal le plus fort pour l'algorithme.",
-    modeles: [
-      "Enregistre ça avant de te lancer dans {sujet}.",
-      "Garde cette vidéo, tu en auras besoin le jour où tu feras {sujet}.",
-      "Tout ce qu'il faut savoir sur {sujet}, en une vidéo.",
-      "Envoie ça à quelqu'un qui galère avec {sujet}.",
-      "La méthode gratuite que j'utilise pour {sujet}.",
-    ],
-  },
-  {
-    id: "question",
-    titre: "❓ La question directe",
-    pourquoi:
-      "Tu t'adresses à une seule personne, pas à une audience. Celui qui se reconnaît reste, les autres passent — et c'est très bien : l'algorithme apprend plus vite à qui te montrer.",
-    modeles: [
-      "Tu galères avec {sujet} ? Regarde ça.",
-      "Pourquoi personne ne parle de ça quand on parle de {sujet} ?",
-      "Tu fais partie de ceux qui pensent que {sujet} est compliqué ?",
-      "Combien de temps tu perds encore sur {sujet} ?",
-      "Sérieusement, qui t'a dit de faire {sujet} comme ça ?",
+      "Le jour où j'ai perdu une commande entière à cause de ça.",
+      "Comment j'ai commencé à vendre du {sujet}, sans rien connaître.",
+      "Ma pire cliente m'a appris la chose la plus utile.",
+      "On m'a dit que je n'y arriverais jamais. Voilà où j'en suis.",
+      "Je n'ai jamais raconté ce qui s'est passé à mon premier arrivage.",
     ],
   },
 ];
 
 /** Remplace {sujet} par ce que l'utilisateur a tapé, ou par un repère lisible. */
 export function remplir(modele: string, sujet: string): string {
-  const valeur = sujet.trim() || "ton sujet";
+  const valeur = sujet.trim() || "ton produit";
   return modele.replaceAll("{sujet}", valeur);
 }
