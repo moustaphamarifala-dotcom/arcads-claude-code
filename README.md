@@ -15,6 +15,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+| 🎬 **Studio TikTok** (`/tiktok`) | Pollinations.ai | Claude |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -32,6 +33,15 @@ Les **Fiches Personnalités** (page `/personnes`) permettent de **chercher des i
 L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claude** si `ANTHROPIC_API_KEY` est présente. Chaque fiche personnalité propose un bouton « ⚡ Analyser l'actualité » qui ouvre directement Intel sur la bonne personne.
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
+
+Le **Studio TikTok** (page `/tiktok`) aide à préparer des vidéos courtes qu'on regarde jusqu'au bout. Quatre outils :
+
+- 💡 **Idées de vidéos** — 5 concepts complets pour votre niche : la phrase d'accroche exacte, le texte à l'écran, un déroulé minuté seconde par seconde, le plan de fin qui boucle sur le début, la question qui fait commenter, et les hashtags.
+- 🎯 **Score de viralité** — collez votre script : il est noté sur 100 (accroche, rétention, émotion, partage, commentaires), avec ce qui bloque, les corrections à faire et trois réécritures de l'accroche.
+- 📅 **Plan 7 jours** — une semaine de publication cohérente autour d'un seul fil rouge, plus les trois chiffres à regarder dans les statistiques au bout d'une semaine.
+- 🪝 **Accroches** — 40 structures d'accroches classées par mécanique (curiosité, erreur, contradiction, avant/après…), à remplir avec votre sujet. Cette partie fonctionne **sans IA et sans réseau** : c'est instantané.
+
+> Aucun outil ne peut garantir une vidéo virale, et celui-ci ne le prétend pas. Il travaille les trois choses sur lesquelles vous avez la main — l'accroche, le déroulé et la fin — le reste vient de la régularité. Les propositions de l'IA sont des points de départ à adapter à votre voix : une vidéo qui sonne faux se voit immédiatement. Et rien ici n'encourage à tromper le spectateur ou à acheter des vues, ce que les règles de TikTok interdisent.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
