@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio TikTok — vendre sa marchandise en vidéo</title>
+<meta name="description" content="Outils pour un vendeur qui filme sa marchandise : vidéos prêtes à tourner, diagnostic des vues, calendrier des ventes et accroches.">
+<style>
+  /* Palette tirée du sujet : l'indigo est la couleur de la teinture, le laiton
+     rappelle le brillant du bazin riche. Aucune police n'est téléchargée —
+     l'application doit s'ouvrir vite en données mobiles. */
+  :root {
+    --bg: #f4f5f8; --surface: #ffffff; --surface-2: #eceef4; --sunk: #e3e6ef;
+    --ink: #171a2b; --muted: #5f6478; --line: #d9dce7;
+    --accent: #2f3b8f; --accent-ink: #ffffff; --accent-soft: rgba(47, 59, 143, 0.09);
+    --laiton: #9a6f14; --laiton-soft: rgba(154, 111, 20, 0.12);
+    --bon: #0f7a55; --bon-soft: rgba(15, 122, 85, 0.11);
+    --moyen: #a8630c; --moyen-soft: rgba(168, 99, 12, 0.11);
+    --mauvais: #b5342a; --mauvais-soft: rgba(181, 52, 42, 0.10);
+    --ombre: 0 1px 2px rgba(23, 26, 43, 0.05), 0 8px 24px rgba(23, 26, 43, 0.07);
+    --r: 14px;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1020; --surface: #171a2e; --surface-2: #1e2238; --sunk: #0a0c18;
+      --ink: #e8eaf4; --muted: #969db8; --line: #2b3050;
+      --accent: #8fa0ff; --accent-ink: #10142a; --accent-soft: rgba(143, 160, 255, 0.14);
+      --laiton: #dcae55; --laiton-soft: rgba(220, 174, 85, 0.14);
+      --bon: #3ecb92; --bon-soft: rgba(62, 203, 146, 0.13);
+      --moyen: #e5a54a; --moyen-soft: rgba(229, 165, 74, 0.13);
+      --mauvais: #f4776c; --mauvais-soft: rgba(244, 119, 108, 0.13);
+      --ombre: 0 1px 2px rgba(0, 0, 0, 0.32), 0 12px 30px rgba(0, 0, 0, 0.42);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f5f8; --surface: #ffffff; --surface-2: #eceef4; --sunk: #e3e6ef;
+    --ink: #171a2b; --muted: #5f6478; --line: #d9dce7;
+    --accent: #2f3b8f; --accent-ink: #ffffff; --accent-soft: rgba(47, 59, 143, 0.09);
+    --laiton: #9a6f14; --laiton-soft: rgba(154, 111, 20, 0.12);
+    --bon: #0f7a55; --bon-soft: rgba(15, 122, 85, 0.11);
+    --moyen: #a8630c; --moyen-soft: rgba(168, 99, 12, 0.11);
+    --mauvais: #b5342a; --mauvais-soft: rgba(181, 52, 42, 0.10);
+    --ombre: 0 1px 2px rgba(23, 26, 43, 0.05), 0 8px 24px rgba(23, 26, 43, 0.07);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1020; --surface: #171a2e; --surface-2: #1e2238; --sunk: #0a0c18;
+    --ink: #e8eaf4; --muted: #969db8; --line: #2b3050;
+    --accent: #8fa0ff; --accent-ink: #10142a; --accent-soft: rgba(143, 160, 255, 0.14);
+    --laiton: #dcae55; --laiton-soft: rgba(220, 174, 85, 0.14);
+    --bon: #3ecb92; --bon-soft: rgba(62, 203, 146, 0.13);
+    --moyen: #e5a54a; --moyen-soft: rgba(229, 165, 74, 0.13);
+    --mauvais: #f4776c; --mauvais-soft: rgba(244, 119, 108, 0.13);
+    --ombre: 0 1px 2px rgba(0, 0, 0, 0.32), 0 12px 30px rgba(0, 0, 0, 0.42);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    min-height: 100vh;
+  }
+  .page { max-width: 780px; margin: 0 auto; padding: 22px 16px 80px; }
+
+  /* En-tête ------------------------------------------------------- */
+  .haut { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .eyebrow {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); background: var(--accent-soft);
+    padding: 5px 11px; border-radius: 999px;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(1.8rem, 6vw, 2.5rem); font-weight: 700;
+    line-height: 1.12; letter-spacing: -0.015em; text-wrap: balance; margin: 14px 0 12px;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .chapo { color: var(--muted); font-size: 1rem; max-width: 62ch; }
+  .theme {
+    flex-shrink: 0; background: var(--surface); border: 1px solid var(--line);
+    color: var(--muted); border-radius: 999px; width: 38px; height: 38px;
+    font-size: 1rem; cursor: pointer; line-height: 1;
+  }
+  .theme:hover { color: var(--ink); border-color: var(--accent); }
+
+  /* Boutique ------------------------------------------------------ */
+  .boutique {
+    margin-top: 26px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r); box-shadow: var(--ombre); overflow: hidden;
+  }
+  .boutiqueTete {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 15px 17px; background: none; border: 0; color: var(--ink);
+    font: inherit; text-align: left; cursor: pointer;
+  }
+  .boutiqueTete:hover { background: var(--surface-2); }
+  .boutiqueTete b { display: block; font-size: 0.97rem; }
+  .boutiqueTete small {
+    display: block; color: var(--muted); font-size: 0.85rem; margin-top: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52ch;
+  }
+  .boutiqueTete .fleche { color: var(--muted); font-size: 0.7rem; }
+  .boutiqueCorps { padding: 6px 17px 20px; border-top: 1px solid var(--line); display: grid; gap: 16px; }
+  .intro { color: var(--muted); font-size: 0.9rem; margin-top: 14px; }
+
+  /* Champs -------------------------------------------------------- */
+  label.lbl { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+  input[type="text"], input[type="date"], input[type="number"], textarea, select {
+    width: 100%; background: var(--sunk); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px;
+    font: inherit; font-size: 1rem;
+  }
+  textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  .aide { color: var(--muted); font-size: 0.82rem; margin-top: 6px; }
+
+  button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Onglets ------------------------------------------------------- */
+  .onglets { display: grid; grid-template-columns: repeat(auto-fit, minmax(228px, 1fr)); gap: 9px; margin: 26px 0 22px; }
+  .onglet {
+    display: flex; flex-direction: column; gap: 4px; text-align: left;
+    padding: 13px 15px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); font: inherit; cursor: pointer;
+  }
+  .onglet:hover { border-color: var(--accent); }
+  .onglet b { font-size: 0.94rem; }
+  .onglet span { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+  .onglet[aria-current="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+  .onglets > .onglet:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* Blocs --------------------------------------------------------- */
+  .carte {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+    box-shadow: var(--ombre); padding: 20px; margin-bottom: 20px;
+  }
+  .carte h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 9px; }
+  .carte h3 { font-size: 1.02rem; font-weight: 700; margin: 26px 0 12px; }
+  .carte > p { color: var(--muted); font-size: 0.95rem; max-width: 64ch; }
+  .pile { display: grid; gap: 16px; margin-top: 18px; }
+  .duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .duo > div { display: flex; flex-direction: column; }
+  .duo label.lbl { flex: 1; }
+
+  .puces { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .puce {
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--muted);
+    border-radius: 999px; padding: 7px 13px; font: inherit; font-size: 0.86rem; cursor: pointer;
+  }
+  .puce:hover { border-color: var(--accent); color: var(--ink); }
+  .puce[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+  .btn {
+    margin-top: 20px; width: 100%; background: var(--accent); color: var(--accent-ink);
+    border: 0; border-radius: 11px; padding: 14px 22px;
+    font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer;
+  }
+  .btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .copier {
+    flex-shrink: 0; border: 1px solid var(--line); background: var(--surface);
+    color: var(--muted); border-radius: 8px; padding: 6px 11px;
+    font: inherit; font-size: 0.8rem; cursor: pointer;
+  }
+  .copier:hover { border-color: var(--accent); color: var(--accent); }
+
+  .alerte { margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 0.92rem; border-left: 3px solid; }
+  .alerte.err { background: var(--mauvais-soft); border-color: var(--mauvais); color: var(--ink); }
+  .alerte.info { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+  .alerte.attention { background: var(--moyen-soft); border-color: var(--moyen); color: var(--ink); }
+  .alerte a, .alerte button.lien { color: var(--accent); font-weight: 600; }
+  button.lien { background: none; border: 0; padding: 0; font: inherit; text-decoration: underline; cursor: pointer; }
+  .note { color: var(--muted); font-size: 0.84rem; margin-top: 16px; }
+
+  /* Jauge --------------------------------------------------------- */
+  .jauge { --t: var(--accent); margin-top: 18px; padding: 17px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+  .jauge.bon { --t: var(--bon); } .jauge.moyen { --t: var(--moyen); } .jauge.mauvais { --t: var(--mauvais); }
+  .jaugeNb { display: flex; align-items: baseline; gap: 5px; color: var(--t); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .jaugeNb b { font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
+  .jaugeNb span { font-size: 0.95rem; opacity: 0.8; font-family: var(--sans); }
+  .barre { margin-top: 11px; height: 8px; border-radius: 999px; background: var(--sunk); overflow: hidden; }
+  .barre > i { display: block; height: 100%; border-radius: 999px; background: var(--t); transition: width 0.45s ease; }
+  .jauge p { margin-top: 9px; color: var(--t); font-weight: 600; font-size: 0.93rem; }
+
+  /* Listes de résultats ------------------------------------------- */
+  ul.propre { list-style: none; display: grid; gap: 9px; }
+  .phrase {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 11px; font-size: 0.97rem;
+  }
+  .constat { padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--line); border-left-width: 3px; border-radius: 0 11px 11px 0; }
+  .constat b { display: block; margin-bottom: 6px; font-size: 0.96rem; }
+  .constat p { color: var(--muted); font-size: 0.92rem; }
+  .constat.bon { border-left-color: var(--bon); } .constat.bon b { color: var(--bon); }
+  .constat.moyen { border-left-color: var(--moyen); } .constat.moyen b { color: var(--moyen); }
+  .constat.probleme { border-left-color: var(--mauvais); } .constat.probleme b { color: var(--mauvais); }
+
+  .critere { padding: 13px 15px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 11px; }
+  .critereHaut { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .critereHaut b { font-size: 0.95rem; }
+  .critereHaut span { color: var(--muted); font-size: 0.88rem; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .critere .barre { margin-top: 8px; height: 5px; }
+  .critere .barre > i { background: var(--accent); }
+  .critere p { margin-top: 9px; color: var(--muted); font-size: 0.9rem; }
+
+  .phase { --t: var(--accent); margin-top: 18px; padding: 17px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--t); }
+  .phase.tot { --t: var(--muted); } .phase.ouverture { --t: var(--accent); }
+  .phase.pic { --t: var(--bon); } .phase.fin { --t: var(--moyen); } .phase.passe { --t: var(--laiton); }
+  .phaseHaut { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .phaseHaut b { color: var(--t); font-size: 1.08rem; }
+  .phaseHaut span { color: var(--muted); font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+
+  .saison { padding: 17px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+  .saison h4 { font-size: 1.02rem; margin-bottom: 7px; }
+  .saison .quand { color: var(--laiton); font-size: 0.86rem; margin-bottom: 9px; }
+  .saison p { color: var(--muted); font-size: 0.93rem; }
+  .saison ul { margin-top: 11px; padding-left: 19px; display: grid; gap: 6px; font-size: 0.91rem; }
+  .saison ul li::marker { color: var(--accent); }
+
+  .pourquoi { margin-top: 14px; padding: 13px 15px; border-left: 3px solid var(--laiton); background: var(--laiton-soft); border-radius: 0 10px 10px 0; color: var(--ink); font-size: 0.91rem; }
+
+  /* Sortie de l'IA ------------------------------------------------ */
+  .sortie { line-height: 1.68; }
+  .sortie h3 { font-family: var(--serif); color: var(--accent); font-size: 1.12rem; margin: 24px 0 9px; }
+  .sortie h3:first-child { margin-top: 0; }
+  .sortie p { margin-bottom: 10px; }
+  .sortie ul { margin: 0 0 13px; padding-left: 20px; display: grid; gap: 6px; }
+  .sortie ul li::marker { color: var(--laiton); }
+  .resTete { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .resTete h2 { margin: 0; }
+
+  .caché { display: none; }
+  footer { margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  footer p { max-width: 70ch; margin-top: 10px; }
+  footer a { color: var(--accent); }
+
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent-ink); border-radius: 50%; animation: t 0.8s linear infinite; vertical-align: -2px; margin-right: 7px; }
+  @keyframes t { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="haut">
+    <div>
+      <span class="eyebrow">Studio TikTok — vendeur</span>
+      <h1>Des vidéos qui <em>font commander</em></h1>
+      <p class="chapo">
+        Personne ne peut te garantir une vidéo virale, et cette application ne le prétend pas.
+        Elle vise ce qui te rapporte vraiment : la vue ne paye pas, la commande si.
+        Cent mille vues venues d'un pays où tu ne livres pas ne valent rien ;
+        deux mille vues chez les bonnes personnes remplissent ta semaine.
+      </p>
+    </div>
+    <button class="theme" id="theme" title="Changer le thème" aria-label="Changer le thème">◐</button>
+  </div>
+
+  <!-- Boutique -->
+  <section class="boutique">
+    <button class="boutiqueTete" id="boutiqueTete" aria-expanded="true" aria-controls="boutiqueCorps">
+      <span><b>Ta boutique</b><small id="boutiqueResume">à compléter — sans ça, les vidéos resteront vagues</small></span>
+      <span class="fleche" id="boutiqueFleche">▲</span>
+    </button>
+    <div class="boutiqueCorps" id="boutiqueCorps">
+      <p class="intro">
+        Ces quatre réponses sont reprises dans chaque vidéo que l'application écrit pour toi.
+        Elles restent dans ce téléphone ou cet ordinateur, tu ne les tapes qu'une fois.
+      </p>
+      <div>
+        <label class="lbl" for="p_produit">Ce que tu vends</label>
+        <input type="text" id="p_produit" placeholder="bazin riche Getzner, et du bazin teint à la main">
+        <p class="aide">Sois précis : la qualité et la provenance changent complètement les arguments.</p>
+      </div>
+      <div>
+        <label class="lbl" for="p_zone">Où tu livres</label>
+        <input type="text" id="p_zone" placeholder="Bamako en main propre, tout le Mali, et envoi vers la France">
+        <p class="aide">C'est ce qui décide si une vue vaut quelque chose ou rien du tout.</p>
+      </div>
+      <div>
+        <label class="lbl" for="p_prix">Tes prix</label>
+        <input type="text" id="p_prix" placeholder="complet de 6 yards à partir de 25 000 F CFA">
+        <p class="aide">Donne au moins un repère. Sans prix, tes vidéos resteront vagues.</p>
+      </div>
+      <div>
+        <label class="lbl" for="p_commande">Comment on commande chez toi</label>
+        <input type="text" id="p_commande" placeholder="WhatsApp au 00 000 00 00, ou en message privé ici">
+        <p class="aide">La phrase qui finira chacune de tes vidéos.</p>
+      </div>
+    </div>
+  </section>
+
+  <nav class="onglets" id="onglets" aria-label="Outil"></nav>
+
+  <main id="zone"></main>
+
+  <footer>
+    <p><strong>À relire avant de tourner.</strong> Les vidéos et analyses sont écrites par une IA : ce sont des points de départ, pas des vérités. Vérifie que chaque phrase est vraie pour ta marchandise. Une promesse que la livraison ne tient pas te coûte un client définitivement, alors qu'une vente ratée ne coûte qu'une vente.</p>
+    <p>N'annonce jamais une marque ou une qualité que tu n'as pas, n'invente pas de rupture de stock ni de témoignage client, et n'achète pas de vues : les règles de TikTok l'interdisent et tes clients s'en aperçoivent.</p>
+    <p>Les seuils du diagnostic sont des repères tirés de l'usage, pas des chiffres officiels — TikTok ne publie pas le fonctionnement de son algorithme.</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ================================================================
+   Données — accroches, saisons de vente
+   ================================================================ */
+
+const FAMILLES = [
+  { id: "arrivage", titre: "📦 L'arrivage", pourquoi: "C'est la seule urgence que tu n'as pas besoin d'inventer : la marchandise vient vraiment d'arriver, et elle partira vraiment. Filme le carton ou le rouleau que tu ouvres, pas un stock déjà rangé — l'ouverture est ce qui retient.", modeles: [
+    "Ça vient d'arriver. Je te montre avant de tout ranger.",
+    "J'ouvre le carton avec toi. Je n'ai pas encore vu les couleurs.",
+    "Nouvel arrivage de {sujet}. Regarde cette couleur à la lumière.",
+    "Ce {sujet} est arrivé ce matin. Il ne fera pas la semaine.",
+    "Je n'ai pris que quelques pièces de celui-là. Voilà pourquoi." ] },
+  { id: "prix", titre: "💰 Le prix annoncé", pourquoi: "Annoncer ton prix te fait perdre ceux qui voulaient négocier et gagner tous les autres — et les autres sont bien plus nombreux. « Prix en privé » fait fuir les gens sérieux, qui n'ont pas envie de discuter pour connaître un tarif.", modeles: [
+    "Le prix est dans la vidéo, pas besoin de m'écrire pour le demander.",
+    "Voilà ce que tu as pour ce budget en {sujet}.",
+    "Combien coûte un complet de {sujet} ? Je te le dis franchement.",
+    "Je te montre trois prix, du moins cher au plus cher.",
+    "Ce n'est pas le moins cher du marché. Je t'explique pourquoi." ] },
+  { id: "preuve", titre: "✋ La preuve de qualité", pourquoi: "C'est ta meilleure famille d'accroches, parce qu'elle règle la vraie peur : recevoir autre chose que ce qu'on a vu. Un geste qui prouve la qualité à l'image vaut mieux que dix phrases qui l'affirment.", modeles: [
+    "Écoute le bruit. C'est ça, la différence.",
+    "Regarde ce qui se passe quand je le froisse.",
+    "Voilà comment reconnaître un vrai {sujet} en dix secondes.",
+    "Deux tissus côte à côte. Devine lequel coûte le double.",
+    "Si le tien ne fait pas ça, on t'a vendu autre chose.",
+    "Je le teste devant toi, sans coupure." ] },
+  { id: "porte", titre: "👗 Le rendu porté", pourquoi: "Personne n'achète un rouleau, on achète le vêtement qu'on imagine. Tant que ton client doit faire cet effort d'imagination tout seul, il hésite. Montre-le porté et tu supprimes l'hésitation.", modeles: [
+    "Voilà ce que ça donne une fois cousu.",
+    "Le rouleau, puis le résultat. Regarde la différence.",
+    "Ma cliente a choisi ce {sujet}. Voilà ce qu'elle en a fait.",
+    "Tu hésites sur la couleur ? Regarde-la sur quelqu'un.",
+    "Le même {sujet}, sur trois personnes différentes." ] },
+  { id: "confiance", titre: "🚚 La confiance", pourquoi: "Ce qui bloque une commande à distance n'est presque jamais le prix : c'est la peur de ne rien recevoir, ou de recevoir autre chose. Montrer l'emballage, l'envoi et les clients servis débloque plus de ventes que n'importe quelle remise.", modeles: [
+    "J'emballe la commande d'aujourd'hui avec toi.",
+    "Tu es à l'étranger et tu hésites à commander ? Regarde comment ça se passe.",
+    "Voilà ce que ma cliente a reçu, et ce qu'elle avait vu dans ma vidéo.",
+    "Comment je t'envoie ton {sujet}, étape par étape.",
+    "Je réponds au message que tout le monde m'envoie avant de commander." ] },
+  { id: "fete", titre: "🎉 L'occasion", pourquoi: "Le tissu s'achète pour une date. Rappeler la date, et surtout le temps qu'il faut au tailleur, crée une urgence vraie — celle qui fait décider ceux qui hésitent depuis des semaines. Ne l'utilise que quand c'est réellement vrai.", modeles: [
+    "Si tu attends la semaine de la fête, ton tailleur ne pourra plus.",
+    "Il te reste combien de temps avant la fête ? Compte à l'envers avec moi.",
+    "Ce que je conseille pour habiller toute la famille sans exploser le budget.",
+    "Les couleurs qui partent en premier chaque année. Prends-les maintenant.",
+    "Commande maintenant, ton tailleur te dira merci." ] },
+  { id: "erreur", titre: "🚫 L'erreur", pourquoi: "Le spectateur a peur de faire partie de ceux qui se trompent, alors il reste pour vérifier. Ça déclenche beaucoup de commentaires de gens qui se défendent — et le commentaire est le signal qui relance ta vidéo auprès de nouvelles personnes.", modeles: [
+    "Arrête d'acheter ton {sujet} comme ça.",
+    "3 erreurs que je vois tous les jours chez mes clients.",
+    "Si on t'a vendu ça à ce prix, tu t'es fait avoir.",
+    "Ce que tout le monde croit sur {sujet} est faux.",
+    "L'erreur que j'ai faite pendant des années avant d'ouvrir ma boutique." ] },
+  { id: "utile", titre: "🎁 Le conseil utile", pourquoi: "C'est ce qui te fait découvrir par des gens qui ne cherchaient pas à acheter aujourd'hui. Ils enregistrent, ils te suivent, et ils reviennent au moment de la fête. Sans ces vidéos-là, tu ne parles qu'à ceux qui te connaissent déjà.", modeles: [
+    "Comment entretenir ton {sujet} pour qu'il tienne des années.",
+    "Enregistre ça avant d'acheter ton prochain {sujet}.",
+    "Combien de mètres il te faut vraiment, selon ta taille.",
+    "Envoie ça à quelqu'un qui va bientôt acheter du {sujet}.",
+    "Ce qu'il faut demander à ton tailleur pour ne pas gâcher ton tissu." ] },
+  { id: "histoire", titre: "💬 L'histoire vraie", pourquoi: "Une histoire personnelle crée un attachement qu'un argument de vente ne crée jamais : c'est ce qui transforme un spectateur en client fidèle. Une seule règle, et elle n'est pas négociable : elle doit être vraie.", modeles: [
+    "Le jour où j'ai perdu une commande entière à cause de ça.",
+    "Comment j'ai commencé à vendre du {sujet}, sans rien connaître.",
+    "Ma pire cliente m'a appris la chose la plus utile.",
+    "On m'a dit que je n'y arriverais jamais. Voilà où j'en suis.",
+    "Je n'ai jamais raconté ce qui s'est passé à mon premier arrivage." ] }
+];
+
+const SAISONS = [
+  { nom: "🌙 Ramadan et Korité", quand: "Le mois de Ramadan, puis la Korité (Aïd el-Fitr) qui le clôt. Les dates avancent d'environ onze jours chaque année — vérifie-les pour ton pays.",
+    pourquoi: "C'est la plus grosse saison de l'année pour le tissu : toute la famille s'habille en neuf le jour de la fête, enfants compris. Les commandes se prennent pendant le Ramadan, pas à la fin : dès la deuxième semaine, les tailleurs sont pleins.",
+    filmer: ["Un arrivage complet dès le début du Ramadan, en montrant toute la gamme de couleurs d'un coup.", "Une vidéo « combien de mètres pour habiller toute la famille », avec le calcul fait à voix haute.", "Le rappel du délai : à partir de quelle date il devient trop tard pour qu'un tailleur ait le temps.", "Les couleurs qui partent le plus vite cette année, filmées côte à côte."] },
+  { nom: "🐏 Tabaski", quand: "L'Aïd el-Kébir, environ deux mois et dix jours après la Korité. Là aussi, date lunaire à vérifier localement.",
+    pourquoi: "Deuxième grosse saison, avec une différence : le budget des familles est partagé entre le mouton et l'habillement. Les acheteurs comparent davantage les prix et décident plus tard, ce qui rend la clarté des prix décisive.",
+    filmer: ["Une gamme par budget : ce qu'on peut avoir à chaque prix, annoncé franchement.", "Le complet homme et le complet femme côte à côte, avec le métrage nécessaire pour chacun.", "Une vidéo qui répond à « c'est trop cher » sans se justifier : montre ce qui explique le prix.", "Ce qu'il te reste en stock à une semaine de la fête, pour les retardataires."] },
+  { nom: "💍 La saison des mariages", quand: "Elle se concentre généralement en saison sèche et pendant les vacances, quand la diaspora rentre au pays.",
+    pourquoi: "Ce sont les plus grosses commandes de l'année : une famille entière s'habille assortie, souvent dans le même tissu. Une seule commande de mariage peut valoir plusieurs semaines de ventes normales, et elle se décide des mois à l'avance.",
+    filmer: ["Un même tissu décliné sur plusieurs personnes, pour montrer le rendu d'une famille assortie.", "Ce que tu peux garantir sur une grosse quantité : même bain de teinture, même arrivage.", "Une commande de mariage que tu as livrée, du rouleau jusqu'au jour J, si le client est d'accord.", "Le délai à respecter pour une commande de groupe, dit clairement."] },
+  { nom: "👶 Baptêmes et cérémonies", quand: "Toute l'année, sans saison marquée.",
+    pourquoi: "C'est ton chiffre d'affaires régulier entre les grosses fêtes, celui qui te fait tenir les mois creux. Les commandes sont petites mais fréquentes, et souvent urgentes : un baptême se prépare en une semaine.",
+    filmer: ["Ce qui est disponible tout de suite et livrable dans la journée.", "Les tissus qui conviennent à une cérémonie sans être trop habillés.", "Une réponse rapide à un message client, filmée en direct, pour montrer ta réactivité."] },
+  { nom: "🎉 Fêtes de fin d'année", quand: "Décembre et le nouvel an.",
+    pourquoi: "La diaspora rentre et achète beaucoup, souvent pour rapporter du tissu à la famille restée au pays ou en ramener à l'étranger. C'est aussi le moment où l'envoi international se vend le mieux.",
+    filmer: ["Un message clair sur l'envoi à l'étranger : pays desservis, délai, coût.", "L'emballage d'un colis pour la diaspora, du pliage jusqu'à l'étiquette.", "Ce qui voyage bien : les tissus qui ne se froissent pas ou ne déteignent pas au transport."] }
+];
+
+/* ================================================================
+   Calendrier — la phase se calcule à partir de la date saisie.
+   Les fêtes musulmanes suivent la lune : aucune date n'est codée ici.
+   ================================================================ */
+
+function phasePour(jours) {
+  const sem = jours / 7;
+  if (jours < 0) return { ton: "passe", titre: "La fête est passée", conseil: "Ne range pas ton téléphone : c'est maintenant que tes clients portent ce qu'ils t'ont acheté. Demande-leur une photo ou une vidéo, republie-les avec leur accord. Ce sont ces preuves qui feront vendre à la prochaine fête, et tu ne pourras plus les obtenir dans un mois." };
+  if (sem < 1) return { ton: "fin", titre: "Dernière semaine", conseil: "Les commandes de tissu à coudre sont terminées : plus aucun tailleur ne prend de nouvelle pièce. Arrête de pousser à la vente, tu parlerais dans le vide. Montre plutôt ce qui est prêt à porter ou livrable dans la journée, et occupe-toi des clients déjà servis." };
+  if (sem < 3) return { ton: "fin", titre: "Ça se termine", conseil: "Les tailleurs saturent. Dis-le franchement dans tes vidéos : « après telle date, ton tailleur ne pourra plus. » Ce n'est pas une fausse urgence, c'est la vérité, et c'est ce qui fait décider ceux qui hésitent depuis trois semaines." };
+  if (sem < 7) return { ton: "pic", titre: "Le pic — c'est maintenant", conseil: "C'est la fenêtre où se prennent la majorité des commandes : l'acheteur a le temps de choisir son tissu et son tailleur a encore de la place. Publie tous les jours si tu peux, montre chaque arrivage, et réponds vite aux messages. Ce que tu ne vends pas maintenant, tu ne le vendras pas." };
+  if (sem < 11) return { ton: "ouverture", titre: "La saison s'ouvre", conseil: "Les gens commencent à regarder sans encore commander. C'est le bon moment pour montrer tes arrivages et laisser le temps aux hésitants de te repérer. Ne force pas la vente tout de suite : construis l'envie, les commandes viendront dans quelques semaines." };
+  return { ton: "tot", titre: "Encore loin", conseil: "Trop tôt pour vendre cette fête : personne n'achète du tissu deux mois et demi à l'avance. Sers-toi de cette période pour te faire connaître, montrer ta boutique et tes clients satisfaits. L'objectif est d'être déjà suivi quand la saison s'ouvrira — un compte créé la veille de la fête n'a aucune chance." };
+}
+
+function joursAvant(iso) {
+  const cible = new Date(iso + "T00:00:00");
+  if (isNaN(cible.getTime())) return null;
+  const auj = new Date(); auj.setHours(0, 0, 0, 0);
+  return Math.round((cible - auj) / 86400000);
+}
+
+/* ================================================================
+   Diagnostic des vues — seuils tirés de l'usage, pas de TikTok.
+   ================================================================ */
+
+function diagnostiquer(m) {
+  if (!(m.dureeVideo > 0) || !(m.dureeMoyenne > 0)) return { retention: null, constats: [] };
+  const r = (m.dureeMoyenne / m.dureeVideo) * 100;
+  const vues = Math.max(0, m.vues), abos = Math.max(0, m.abonnes), msg = Math.max(0, m.messages);
+  const out = [];
+
+  if (r >= 100) out.push({ n: "bon", t: "Rétention " + Math.round(r) + " % — ta boucle fonctionne", p: "Au-dessus de 100 %, ça veut dire que des gens ont regardé ta vidéo plusieurs fois de suite. C'est le meilleur signal qui existe pour TikTok. Garde exactement cette structure de fin et réutilise-la sur tes prochaines vidéos." });
+  else if (r >= 65) out.push({ n: "bon", t: "Rétention " + Math.round(r) + " % — très bonne", p: "Les gens restent jusqu'au bout. La vidéo est bonne : s'il te manque des vues, le problème est ailleurs — dans la fréquence de publication ou dans le sujet, pas dans le montage." });
+  else if (r >= 45) out.push({ n: "moyen", t: "Rétention " + Math.round(r) + " % — correcte", p: "C'est un niveau honnête, mais il reste de la marge. Cherche le moment précis où la courbe chute dans tes statistiques : c'est presque toujours un temps mort, une phrase de transition ou une explication trop longue. Coupe-le." });
+  else if (r >= 25) out.push({ n: "moyen", t: "Rétention " + Math.round(r) + " % — le milieu décroche", p: "Ton accroche fait son travail puisque les gens entrent, mais ils partent en cours de route. Le problème n'est pas le début : c'est qu'il ne se passe plus rien après. Relance l'attention toutes les trois ou quatre secondes avec un nouveau plan, un nouveau geste ou une nouvelle information." });
+  else out.push({ n: "probleme", t: "Rétention " + Math.round(r) + " % — c'est l'accroche", p: "En moyenne les gens partent avant la " + Math.max(1, Math.round((r / 100) * m.dureeVideo)) + "e seconde. Ils ne voient donc jamais ta marchandise. Tant que ce chiffre ne monte pas, rien d'autre ne sert à rien : c'est la seule chose à travailler." });
+
+  if (m.dureeVideo > 45 && r < 45) out.push({ n: "probleme", t: Math.round(m.dureeVideo) + " secondes, c'est trop long", p: "À ce niveau de rétention, la durée joue contre toi : TikTok compare ce qui est regardé à ce qui est proposé. La même vidéo en deux fois moins de temps aurait une bien meilleure rétention pour exactement le même contenu. Coupe les salutations, la présentation et tous les silences." });
+  else if (m.dureeVideo < 8 && r >= 65) out.push({ n: "moyen", t: "Très courte, et bien regardée", p: "La rétention est bonne, mais une vidéo aussi courte laisse peu de place pour convaincre. Tu peux tenter d'allonger de quelques secondes pour montrer davantage la marchandise : tant que la rétention reste haute, tu gagnes sur les deux tableaux." });
+
+  if (vues < 300) {
+    if (r >= 55) out.push({ n: "moyen", t: vues + " vues, mais une bonne rétention", p: "C'est la situation la plus frustrante et la plus facile à corriger : ta vidéo est bonne, elle n'a simplement pas encore été montrée à assez de monde. C'est normal sur un compte jeune ou irrégulier. La réponse est la fréquence, pas le montage — publie plusieurs fois par semaine sur le même univers et laisse l'algorithme trouver ton audience." });
+    else out.push({ n: "probleme", t: vues + " vues — la vidéo a été testée et écartée", p: "TikTok montre chaque vidéo à un premier petit groupe. Le tien n'est pas resté, donc la diffusion s'est arrêtée là. Ce n'est pas une punition ni un problème de compte : c'est la rétention. Retravaille l'accroche avant de publier autre chose." });
+  } else if (vues < 3000) {
+    out.push({ n: "moyen", t: vues + " vues — diffusion normale", p: "Tu es sorti de ton cercle d'abonnés, ce qui est déjà bien. Pour un vendeur, l'important maintenant n'est plus ce chiffre mais la provenance : regarde dans tes statistiques d'où viennent ces vues. Celles qui arrivent d'un pays où tu ne livres pas ne te rapporteront jamais rien." });
+  } else {
+    out.push({ n: "bon", t: vues + " vues — la vidéo est sortie", p: "L'algorithme t'a poussé largement. Deux réflexes tout de suite : réponds à tous les commentaires pendant que c'est chaud, et republie très vite une vidéo du même genre — c'est le moment où les nouveaux venus décident de te suivre ou non." });
+  }
+
+  if (vues >= 300) {
+    if (abos === 0) out.push({ n: "probleme", t: "Aucun nouvel abonné", p: "Les gens ont regardé mais n'ont aucune raison de revenir. C'est ce qui se passe quand une vidéo montre un produit sans jamais montrer la boutique ni la personne qui vend. Donne-leur une raison de te suivre : dis en une phrase ce qu'ils verront la prochaine fois." });
+    else if ((abos / vues) * 100 < 0.3) out.push({ n: "moyen", t: abos + " abonnés gagnés — peu par rapport aux vues", p: "Ta vidéo plaît sur le moment mais ne donne pas envie de suivre la suite. C'est typique des vidéos qui présentent une seule pièce : une fois vue, il n'y a plus rien à attendre. Annonce ce qui arrive ensuite, ou fais des séries que les gens veulent suivre." });
+    else out.push({ n: "bon", t: abos + " abonnés gagnés", p: "Bon rapport aux vues : cette vidéo ne fait pas que divertir, elle donne envie de te suivre. Note ce qui la différencie de tes autres vidéos et refais-en du même genre." });
+  }
+
+  if (msg === 0) {
+    out.push({ n: vues >= 1000 ? "probleme" : "moyen", t: "Aucun message reçu",
+      p: vues >= 1000
+        ? "C'est le vrai problème de cette vidéo, et il est invisible si tu ne regardes que le compteur de vues. Beaucoup de monde a regardé et personne n'a écrit. Deux causes possibles : soit tu n'as pas dit clairement comment commander, soit ces vues viennent de gens que tu ne peux pas livrer. Vérifie la provenance avant de changer quoi que ce soit."
+        : "Trop tôt pour conclure avec ce nombre de vues. Assure-toi simplement que la façon de commander apparaît clairement dans la vidéo, pas seulement dans la légende que peu de gens lisent." });
+  } else {
+    out.push({ n: "bon", t: msg + " message" + (msg > 1 ? "s" : "") + " reçu" + (msg > 1 ? "s" : ""),
+      p: "C'est le seul chiffre qui paye, et c'est celui à suivre semaine après semaine. Il te faut environ " + Math.round(vues / msg) + " vues pour déclencher un message. Garde ce repère : une vidéo à moitié moins de vues mais deux fois plus de messages est une meilleure vidéo, même si le compteur est plus petit." });
+  }
+
+  return { retention: r, constats: out };
+}
+
+/* ================================================================
+   Le cadrage donné au modèle
+   ================================================================ */
+
+const CADRE = `Tu conseilles un commerçant francophone qui vend ses produits en filmant avec son téléphone, sur TikTok. Tu as fait tourner des centaines de vidéos courtes et tu as vu ce qui remplit un carnet de commandes.
+
+Ce que tu sais du format :
+- Tout se joue dans les 2 premières secondes. Si le spectateur ne comprend pas immédiatement ce qu'il gagne à rester, il glisse. L'accroche n'est jamais négociable.
+- L'algorithme récompense le temps de visionnage rapporté à la durée. Une vidéo de 18 secondes vue en entier bat une vidéo de 60 secondes abandonnée au milieu.
+- Les commentaires pèsent plus lourd que les likes, et chez un vendeur ils font double emploi : ils relancent la vidéo et ils révèlent la demande.
+- Les partages en message privé sont le signal le plus fort. On envoie une vidéo de tissu à sa sœur, sa femme, son tailleur : c'est le geste qui précède une commande.
+- Une boucle propre (la fin donne envie de revoir le début) augmente la rétention sans effort.
+- Le texte à l'écran de la première seconde est lu même son coupé. C'est souvent lui qui retient.
+- Un compte qui ne fait que vendre cesse d'être montré à de nouvelles personnes. Il faut aussi des vidéos utiles, qui n'ont rien à vendre.
+
+Ce que tu sais de la vente, et qui prime sur tout le reste :
+- Le but n'est pas le nombre de vues, c'est le nombre de commandes. Cent mille vues venues d'un pays où le vendeur ne livre pas ne valent rien ; deux mille vues chez les bonnes personnes remplissent une semaine.
+- La confiance est le vrai frein, pas le prix. L'acheteur a peur de recevoir autre chose que ce qu'il a vu. Montrer la marchandise réelle dans ses mains, l'emballage, l'envoi et les clients qui ont reçu débloque plus de commandes que n'importe quelle remise.
+- Le prix annoncé clairement convertit mieux que « prix en privé ».
+- Chaque vidéo doit dire comment commander, simplement et une seule fois.
+
+Ce que tu sais de la vente de tissu (bazin, wax, dentelle, brodé) :
+- Un tissu ne se juge pas sur une photo. La brillance, la raideur et le tombé n'apparaissent qu'en mouvement : il faut le filmer qu'on le déplie, qu'on le secoue, qu'on le fait glisser.
+- Le bazin a un son. Le froissement d'un bazin riche bien amidonné est reconnaissable, et c'est un argument que seule la vidéo permet. Filmer près du micro, sans musique par-dessus.
+- La lumière du jour est obligatoire. Un néon fausse les couleurs, et un client déçu à la livraison ne recommande jamais.
+- Le vêtement porté vend plus que le tissu plié.
+- Un arrivage crée une urgence vraie, sans mentir. Chaque nouvelle arrivée est une vidéo.
+- La diaspora achète beaucoup et commande sur vidéo. Dire qu'on envoie à l'étranger ouvre un marché entier.
+- La demande est saisonnière, et l'acheteur doit acheter assez tôt pour que son tailleur ait le temps de coudre : le pic de commandes tombe plusieurs semaines avant la fête, pas la semaine même. C'est l'erreur la plus fréquente et la plus coûteuse.
+
+Règles d'écriture :
+- Français simple et direct, tutoiement. Pas de jargon marketing.
+- Concret et tournable aujourd'hui avec un téléphone : décris ce qu'on voit et ce qu'on dit.
+- Tu utilises le profil du vendeur qu'on te donne. Tu ne parles jamais d'un produit, d'un prix ou d'une zone de livraison qu'il ne t'a pas indiqués. Si une information manque, tu écris ce qu'il doit compléter entre crochets plutôt que de l'inventer.
+
+Ce que tu refuses de conseiller, même si on te le demande :
+- Inventer une rareté quand c'est faux, annoncer une marque ou une qualité que le vendeur n'a pas, promettre un délai qu'il ne peut pas tenir.
+- Acheter des vues ou des abonnés, inventer un témoignage client.
+- Promettre un résultat chiffré ou une « technique secrète ».
+- Tu réponds sans préambule ni conclusion sur toi-même.`;
+
+const OBJECTIFS = {
+  commandes: "déclencher des commandes tout de suite",
+  connaitre: "se faire connaître de nouveaux acheteurs dans sa zone",
+  confiance: "rassurer ceux qui hésitent encore à commander",
+  fidele: "faire revenir les clients qui ont déjà acheté"
+};
+
+function blocProfil(p) {
+  return "Profil du vendeur :\n- Ce qu'il vend : " + (p.produit || "[non précisé]") +
+    "\n- Où il livre : " + (p.zone || "[non précisé]") +
+    "\n- Ses prix : " + (p.prix || "[non précisé]") +
+    "\n- Comment on commande chez lui : " + (p.commande || "[non précisé]");
+}
+
+function prompt(mode, p, champs) {
+  const profil = blocProfil(p);
+  if (mode === "produit") return profil + "\n\nLa pièce à mettre en avant aujourd'hui : " + champs.texte +
+    "\nComment il peut filmer : " + champs.format + `
+
+Écris **la vidéo qui vend cette pièce précise**. Une seule vidéo, complète, prête à tourner. Respecte cette structure :
+
+## L'accroche (0-2s)
+La phrase exacte à dire, entre guillemets. Elle doit donner envie de rester sans mentir sur la marchandise.
+
+## Le texte à l'écran
+Ce qui s'affiche pendant ces 2 secondes. 6 mots maximum, lisibles son coupé.
+
+## Plan par plan
+4 à 6 plans minutés, format « 0-3s : … ». Pour chacun, dis ce qu'on voit, comment tenir le téléphone, et ce qu'on dit par-dessus.
+
+## Ce qu'il faut montrer de la qualité
+Les deux ou trois gestes précis qui prouvent la qualité à l'image, sans avoir à le dire.
+
+## Le prix
+Où le placer dans la vidéo et comment le formuler, à partir des prix du profil. Si le profil ne les donne pas, dis-le clairement.
+
+## L'appel à commander
+Une seule phrase, à partir de la façon de commander indiquée dans le profil.
+
+## La légende
+Deux lignes maximum.
+
+## Les hashtags
+5 maximum : 2 larges, 2 liés au produit, 1 lié à la zone de livraison.
+
+## L'erreur à éviter sur cette vidéo
+Une phrase, franche.`;
+
+  if (mode === "idees") return profil + "\n\nSujet ou angle du moment : " + champs.sujet +
+    "\nObjectif principal : " + (OBJECTIFS[champs.objectif] || OBJECTIFS.commandes) +
+    "\nComment il peut filmer : " + champs.format + `
+
+Donne **5 concepts de vidéos** différents pour cette boutique. Varie vraiment les angles : arrivage, preuve de qualité, rendu porté, coulisses, réponse à une objection, client servi.
+
+Pour chacun :
+
+## 1. [Titre court du concept]
+
+**L'accroche (0-2s)** — la phrase exacte, entre guillemets.
+**Le texte à l'écran** — 6 mots maximum.
+**Le déroulé** — 3 à 5 étapes minutées, format « 0-3s : … ».
+**Ce que ça prouve à l'acheteur** — quelle peur ou quelle question cette vidéo lève.
+**L'appel à commander** — une phrase, cohérente avec le profil.
+**Les hashtags** — 5 maximum.
+**Pourquoi ça peut marcher** — une phrase franche. Si le concept est risqué, dis-le.
+
+Termine par « ## Par lequel commencer » : un seul concept recommandé, et pourquoi celui-là d'abord.`;
+
+  if (mode === "plan") return profil + "\n\nAngle du moment : " + champs.sujet +
+    "\nObjectif principal : " + (OBJECTIFS[champs.objectif] || OBJECTIFS.commandes) +
+    "\nComment il peut filmer : " + champs.format + `
+
+Construis un **plan de publication sur 7 jours** pour un vendeur qui tient déjà sa boutique et n'a pas des heures par jour.
+
+Commence par « ## Le fil rouge de la semaine » : en trois phrases, l'angle qui relie les 7 vidéos.
+
+Puis une section par jour :
+
+## Jour 1 — [type de vidéo]
+**Sujet** — en une phrase.
+**Accroche** — la phrase exacte, entre guillemets.
+**À filmer** — concrètement.
+**Ce que cette vidéo doit produire** — faire découvrir, lever une objection, faire commenter, ou déclencher une commande.
+
+Alterne les intentions : toutes les vidéos ne doivent pas vendre.
+
+Termine par « ## Ce qu'il faut regarder au bout d'une semaine » : les 3 chiffres à observer, dont le nombre de messages reçus et la provenance des vues. Reste honnête : une semaine ne suffit pas à conclure.`;
+
+  return profil + `
+
+Voici le script ou l'accroche d'une vidéo de vente, à évaluer :
+
+"""
+` + champs.texte + `
+"""
+
+Évalue-la honnêtement, du point de vue d'un vendeur : ce qui compte est qu'elle déclenche des commandes, pas qu'elle fasse des vues. Un mauvais score utile vaut mieux qu'un bon score complaisant.
+
+Réponds **uniquement** avec un objet JSON valide, sans texte avant ni après, sans bloc de code markdown :
+
+{
+  "note": 0,
+  "verdict": "Deux phrases franches : ce que vaut cette vidéo en l'état, et ce qui la bloque le plus.",
+  "criteres": [
+    { "nom": "Accroche", "note": 0, "commentaire": "Une phrase précise sur ce script." },
+    { "nom": "Rétention", "note": 0, "commentaire": "..." },
+    { "nom": "Confiance", "note": 0, "commentaire": "Ce que la vidéo prouve, ou ne prouve pas, à un acheteur méfiant." },
+    { "nom": "Envie d'acheter", "note": 0, "commentaire": "..." },
+    { "nom": "Appel à commander", "note": 0, "commentaire": "Clarté et placement de la façon de commander." }
+  ],
+  "corrections": ["Correction concrète et applicable.", "...", "..."],
+  "hooks": ["Réécriture complète de l'accroche, prête à être dite.", "...", "..."]
+}
+
+Contraintes : chaque note de critère entre 0 et 20, la note globale est leur somme ; exactement ces 5 critères dans cet ordre ; 3 corrections ; 3 accroches toutes différentes.`;
+}
+
+/* Lecture tolérante du JSON du mode « score » : le modèle l'entoure parfois
+   de texte ou d'un bloc de code, et oublie parfois un champ. */
+function lireAnalyse(brut) {
+  const a = brut.indexOf("{"), b = brut.lastIndexOf("}");
+  if (a === -1 || b <= a) return null;
+  let d;
+  try { d = JSON.parse(brut.slice(a, b + 1)); } catch (e) { return null; }
+  if (!d || typeof d !== "object") return null;
+
+  const borne = (v, max) => { const n = Number(v); return isFinite(n) ? Math.min(Math.max(Math.round(n), 0), max) : 0; };
+  const textes = (v) => Array.isArray(v) ? v.filter(x => typeof x === "string" && x.trim()) : [];
+
+  const criteres = (Array.isArray(d.criteres) ? d.criteres : [])
+    .filter(c => c && typeof c === "object")
+    .map(c => ({ nom: (typeof c.nom === "string" && c.nom.trim()) ? c.nom : "Critère", note: borne(c.note, 20), commentaire: typeof c.commentaire === "string" ? c.commentaire : "" }))
+    .slice(0, 6);
+  if (!criteres.length) return null;
+
+  // La note annoncée et la somme des critères divergent souvent : les critères
+  // sont argumentés un par un, donc c'est leur somme qui fait foi.
+  const somme = criteres.reduce((t, c) => t + c.note, 0);
+  return {
+    note: Math.min(somme, 100),
+    verdict: typeof d.verdict === "string" ? d.verdict : "",
+    criteres: criteres,
+    corrections: textes(d.corrections).slice(0, 5),
+    hooks: textes(d.hooks).slice(0, 5)
+  };
+}
+
+async function ecrire(texteSysteme, texteUtilisateur) {
+  let res;
+  try {
+    res = await fetch("https://text.pollinations.ai/openai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "openai", messages: [
+        { role: "system", content: texteSysteme },
+        { role: "user", content: texteUtilisateur }
+      ] })
+    });
+  } catch (e) {
+    // La requête n'est même pas partie : soit il n'y a pas de réseau, soit la
+    // page est ouverte dans un aperçu qui interdit d'appeler un service externe.
+    throw new Error("Impossible de joindre le service d'écriture. Si tu es hors ligne, reconnecte-toi. Si tu lis cette page dans un aperçu, ouvre-la depuis son adresse web : les quatre outils instantanés (accroches, calendrier, diagnostic) fonctionnent partout, mais l'écriture des vidéos a besoin d'internet.");
+  }
+  if (!res.ok) throw new Error("Le service d'écriture est saturé pour le moment. Réessaie dans quelques instants.");
+  const data = await res.json();
+  const t = data && data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "";
+  if (!t || !t.trim()) throw new Error("Le service a renvoyé une réponse vide. Réessaie.");
+  return t;
+}
+
+/* ================================================================
+   Petites aides
+   ================================================================ */
+
+const $ = (s) => document.querySelector(s);
+const el = (t, cls, txt) => { const n = document.createElement(t); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+const echapper = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* Rendu Markdown minimal : titres, listes, gras, paragraphes. */
+function markdown(texte) {
+  const out = [];
+  let liste = [];
+  const gras = (s) => echapper(s).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  const vider = () => { if (liste.length) { out.push("<ul>" + liste.map(x => "<li>" + gras(x) + "</li>").join("") + "</ul>"); liste = []; } };
+  texte.split("\n").forEach(brute => {
+    const l = brute.trim();
+    if (!l) { vider(); }
+    else if (l.startsWith("#")) { vider(); out.push("<h3>" + gras(l.replace(/^#+\s*/, "")) + "</h3>"); }
+    else if (/^[-*]\s+/.test(l) || /^\d+\.\s+/.test(l)) { liste.push(l.replace(/^[-*]\s+/, "").replace(/^\d+\.\s+/, "")); }
+    else { vider(); out.push("<p>" + gras(l) + "</p>"); }
+  });
+  vider();
+  return out.join("");
+}
+
+function boutonCopier(texte, libelle) {
+  const b = el("button", "copier", libelle || "Copier");
+  b.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(texte); b.textContent = "✓ Copié"; setTimeout(() => { b.textContent = libelle || "Copier"; }, 1600); }
+    catch (e) { b.textContent = "Copie refusée"; setTimeout(() => { b.textContent = libelle || "Copier"; }, 1600); }
+  });
+  return b;
+}
+
+/* ================================================================
+   État
+   ================================================================ */
+
+const CLE = "studio-tiktok-vendeur";
+const ETAT = {
+  mode: "produit",
+  profil: { produit: "", zone: "", prix: "", commande: "" },
+  sujet: "", objectif: "commandes", format: "au téléphone, à la boutique, en lumière du jour",
+  texte: "", famille: "arrivage", date: "",
+  mesures: { dureeVideo: "", dureeMoyenne: "", vues: "", abonnes: "", messages: "" },
+  charge: false, erreur: "", resultat: "", analyse: null
+};
+
+function sauver() {
+  try { localStorage.setItem(CLE, JSON.stringify(ETAT.profil)); } catch (e) { /* stockage refusé */ }
+}
+function relire() {
+  try {
+    const b = localStorage.getItem(CLE);
+    if (b) Object.assign(ETAT.profil, JSON.parse(b));
+  } catch (e) { /* profil illisible */ }
+}
+
+const OUTILS = [
+  { id: "produit", nom: "🎬 Vidéo produit", res: "Une pièce, une vidéo complète : accroche, plan par plan, prix, appel à commander." },
+  { id: "idees", nom: "💡 Idées de vidéos", res: "5 concepts variés pour ta boutique, pas cinq fois la même vidéo." },
+  { id: "score", nom: "🎯 Score de la vidéo", res: "Colle ton script : est-ce qu'il fait commander, ou juste regarder ?" },
+  { id: "vues", nom: "📊 Pourquoi je n'ai pas de vues", res: "Entre tes chiffres TikTok : le diagnostic dit si ça casse à l'accroche ou au milieu. Immédiat." },
+  { id: "plan", nom: "📅 Plan 7 jours", res: "Une semaine qui alterne se faire connaître et vendre." },
+  { id: "calendrier", nom: "🗓️ Calendrier des ventes", res: "Quand publier avant chaque fête. Immédiat." },
+  { id: "accroches", nom: "🪝 Accroches", res: "45 accroches de vendeur à remplir avec ton produit. Immédiat." }
+];
+const AVEC_IA = ["produit", "idees", "score", "plan"];
+const ACTION = { produit: "Écrire la vidéo", idees: "Trouver 5 idées", score: "Analyser mon script", plan: "Construire ma semaine" };
+
+/* ================================================================
+   Rendu
+   ================================================================ */
+
+function majBoutique() {
+  const p = ETAT.profil;
+  $("#boutiqueResume").textContent = p.produit.trim() ? p.produit : "à compléter — sans ça, les vidéos resteront vagues";
+}
+
+function rendreOnglets() {
+  const nav = $("#onglets");
+  nav.textContent = "";
+  OUTILS.forEach(o => {
+    const b = el("button", "onglet");
+    b.setAttribute("aria-current", ETAT.mode === o.id ? "true" : "false");
+    b.appendChild(el("b", null, o.nom));
+    b.appendChild(el("span", null, o.res));
+    b.addEventListener("click", () => { ETAT.mode = o.id; ETAT.erreur = ""; ETAT.resultat = ""; ETAT.analyse = null; rendreOnglets(); rendre(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+    nav.appendChild(b);
+  });
+}
+
+function champ(id, label, valeur, surSaisie, placeholder, aide, type) {
+  const box = el("div");
+  const l = el("label", "lbl", label); l.setAttribute("for", id);
+  const i = document.createElement(type === "zone" ? "textarea" : "input");
+  if (type !== "zone") i.type = type || "text";
+  i.id = id; i.value = valeur; if (placeholder) i.placeholder = placeholder;
+  if (type === "zone") i.rows = 6;
+  i.addEventListener("input", (e) => surSaisie(e.target.value));
+  box.appendChild(l); box.appendChild(i);
+  if (aide) box.appendChild(el("p", "aide", aide));
+  return box;
+}
+
+function jauge(valeur, max, unite, classe, verdict) {
+  const j = el("div", "jauge " + classe);
+  const nb = el("div", "jaugeNb");
+  nb.appendChild(el("b", null, String(Math.round(valeur))));
+  nb.appendChild(el("span", null, unite));
+  j.appendChild(nb);
+  const barre = el("div", "barre");
+  const i = el("i"); i.style.width = Math.min(100, (valeur / max) * 100) + "%";
+  barre.appendChild(i); j.appendChild(barre);
+  j.appendChild(el("p", null, verdict));
+  return j;
+}
+
+function rendre() {
+  const zone = $("#zone");
+  zone.textContent = "";
+  const m = ETAT.mode;
+
+  /* ---- Accroches ---- */
+  if (m === "accroches") {
+    const c = el("div", "carte");
+    c.appendChild(champ("acc_sujet", "Ton produit — il remplace le trou dans chaque accroche", ETAT.sujet,
+      v => { ETAT.sujet = v; rendre(); }, ETAT.profil.produit || "le bazin riche, le wax, la dentelle…"));
+    const puces = el("div", "puces");
+    FAMILLES.forEach(f => {
+      const b = el("button", "puce", f.titre);
+      b.setAttribute("aria-pressed", ETAT.famille === f.id ? "true" : "false");
+      b.addEventListener("click", () => { ETAT.famille = f.id; rendre(); });
+      puces.appendChild(b);
+    });
+    c.appendChild(puces);
+    const fam = FAMILLES.find(f => f.id === ETAT.famille) || FAMILLES[0];
+    c.appendChild(el("p", "pourquoi", fam.pourquoi));
+    const ul = el("ul", "propre"); ul.style.marginTop = "16px";
+    const sujet = (ETAT.sujet || ETAT.profil.produit || "ton produit").trim();
+    fam.modeles.forEach(mod => {
+      const phrase = mod.split("{sujet}").join(sujet);
+      const li = el("li", "phrase");
+      li.appendChild(el("span", null, phrase));
+      li.appendChild(boutonCopier(phrase));
+      ul.appendChild(li);
+    });
+    c.appendChild(ul);
+    c.appendChild(el("p", "note", "Une bonne accroche sur une vidéo vide fait juste partir les gens un peu plus tard. Choisis celle qui correspond à ce que tu as vraiment à montrer — et ne promets jamais dans l'accroche ce que la marchandise ne tient pas."));
+    zone.appendChild(c);
+    return;
+  }
+
+  /* ---- Calendrier ---- */
+  if (m === "calendrier") {
+    const c = el("div", "carte");
+    c.appendChild(el("h2", null, "Quand publier avant une fête"));
+    c.appendChild(el("p", null, "L'erreur qui coûte le plus cher est de pousser la vente la semaine de la fête. À ce moment-là, ton client ne trouve plus de tailleur disponible, donc il n'achète plus de tissu à coudre. Ton pic de commandes tombe plusieurs semaines avant."));
+    const pile = el("div", "pile");
+    pile.appendChild(champ("cal_date", "Date de ta prochaine grosse échéance", ETAT.date,
+      v => { ETAT.date = v; rendre(); }, "", "Les dates des fêtes musulmanes suivent la lune : elles avancent d'environ onze jours chaque année et varient d'un pays à l'autre. C'est pour ça que l'application ne les devine pas — vérifie la tienne et saisis-la ici.", "date"));
+    c.appendChild(pile);
+
+    if (ETAT.date) {
+      const j = joursAvant(ETAT.date);
+      if (j !== null) {
+        const ph = phasePour(j);
+        const box = el("div", "phase " + ph.ton);
+        const haut = el("div", "phaseHaut");
+        haut.appendChild(el("b", null, ph.titre));
+        haut.appendChild(el("span", null, j < 0 ? "il y a " + Math.abs(j) + " jour" + (Math.abs(j) > 1 ? "s" : "") : (j === 0 ? "c'est aujourd'hui" : "dans " + j + " jour" + (j > 1 ? "s" : ""))));
+        box.appendChild(haut);
+        box.appendChild(el("p", null, ph.conseil));
+        c.appendChild(box);
+      }
+    }
+
+    c.appendChild(el("h3", null, "Tes saisons de vente"));
+    const liste = el("div", "pile");
+    SAISONS.forEach(s => {
+      const a = el("article", "saison");
+      a.appendChild(el("h4", null, s.nom));
+      a.appendChild(el("p", "quand", s.quand));
+      a.appendChild(el("p", null, s.pourquoi));
+      const ul = el("ul");
+      s.filmer.forEach(f => ul.appendChild(el("li", null, f)));
+      a.appendChild(ul);
+      liste.appendChild(a);
+    });
+    c.appendChild(liste);
+    zone.appendChild(c);
+    return;
+  }
+
+  /* ---- Diagnostic des vues ---- */
+  if (m === "vues") {
+    const c = el("div", "carte");
+    c.appendChild(el("h2", null, "Pourquoi cette vidéo n'a pas marché"));
+    c.appendChild(el("p", null, "Le compteur de vues ne dit jamais pourquoi. Le chiffre qui le dit, c'est la rétention : la part de ta vidéo réellement regardée. Très basse, le problème est ton accroche. Moyenne, c'est le milieu qui décroche. Ouvre une de tes vidéos dans TikTok, va dans ses statistiques, et recopie les chiffres ici."));
+    const duo = el("div", "duo"); duo.style.marginTop = "18px";
+    const champs = [
+      ["dureeVideo", "Durée de la vidéo (secondes)", "28"],
+      ["dureeMoyenne", "Durée moyenne de visionnage (secondes)", "7"],
+      ["vues", "Vues", "240"],
+      ["abonnes", "Abonnés gagnés", "3"],
+      ["messages", "Messages reçus après la vidéo", "0"]
+    ];
+    champs.forEach(([cle, lbl, ph]) => {
+      duo.appendChild(champ("mes_" + cle, lbl, ETAT.mesures[cle], v => { ETAT.mesures[cle] = v; rendre(); }, ph));
+    });
+    c.appendChild(duo);
+    c.appendChild(el("p", "aide", "Les deux premiers chiffres suffisent pour lancer le diagnostic. Les autres l'affinent — surtout le dernier, qui est le seul qui te paye."));
+
+    const nb = (v) => { const n = Number(String(v).replace(",", ".")); return isFinite(n) && n > 0 ? n : 0; };
+    const d = diagnostiquer({
+      dureeVideo: nb(ETAT.mesures.dureeVideo), dureeMoyenne: nb(ETAT.mesures.dureeMoyenne),
+      vues: nb(ETAT.mesures.vues), abonnes: nb(ETAT.mesures.abonnes), messages: nb(ETAT.mesures.messages)
+    });
+
+    if (d.retention !== null) {
+      const cl = d.retention >= 65 ? "bon" : (d.retention >= 35 ? "moyen" : "mauvais");
+      const verdict = d.retention >= 65 ? "Les gens restent jusqu'au bout" : (d.retention >= 35 ? "Ils partent en cours de route" : "Ils partent presque tout de suite");
+      c.appendChild(jauge(d.retention, 100, "% regardés", cl, verdict));
+      const ul = el("ul", "propre"); ul.style.marginTop = "18px";
+      d.constats.forEach(x => {
+        const li = el("li", "constat " + x.n);
+        li.appendChild(el("b", null, x.t));
+        li.appendChild(el("p", null, x.p));
+        ul.appendChild(li);
+      });
+      c.appendChild(ul);
+    }
+    zone.appendChild(c);
+    return;
+  }
+
+  /* ---- Outils IA ---- */
+  if (AVEC_IA.indexOf(m) !== -1) {
+    const c = el("div", "carte");
+
+    if (!ETAT.profil.produit.trim() || !ETAT.profil.zone.trim()) {
+      const av = el("div", "alerte attention");
+      av.appendChild(document.createTextNode("Ta boutique n'est pas encore renseignée. L'application va écrire des vidéos passe-partout, avec des trous entre crochets à compléter à la main. "));
+      const b = el("button", "lien", "Compléter maintenant");
+      b.addEventListener("click", () => { ouvrirBoutique(true); window.scrollTo({ top: 0, behavior: "smooth" }); });
+      av.appendChild(b);
+      c.appendChild(av);
+      av.style.marginTop = "0"; av.style.marginBottom = "18px";
+    }
+
+    const pile = el("div", "pile");
+    if (m === "produit") {
+      pile.appendChild(champ("f_piece", "La pièce que tu veux vendre aujourd'hui", ETAT.texte, v => { ETAT.texte = v; },
+        "Décris-la comme au téléphone. Exemple : bazin riche bleu nuit, teinture à la main avec motifs blancs, arrivé hier, il m'en reste 12 complets de 6 yards.", null, "zone"));
+      pile.appendChild(champ("f_format", "Comment tu peux filmer", ETAT.format, v => { ETAT.format = v; }, "au téléphone, à la boutique, mains seulement…"));
+    } else if (m === "score") {
+      pile.appendChild(champ("f_script", "Ton script, ou juste ton accroche", ETAT.texte, v => { ETAT.texte = v; },
+        "Colle ici ce que tu comptes dire. Exemple : « Bonjour à tous, bienvenue sur ma page, aujourd'hui je vous présente mes nouveaux bazins, prix en privé. »", null, "zone"));
+    } else {
+      pile.appendChild(champ("f_sujet", "L'angle ou le sujet du moment", ETAT.sujet, v => { ETAT.sujet = v; }, "mon nouvel arrivage, la saison des mariages, mes prix…"));
+      const box = el("div");
+      box.appendChild(el("label", "lbl", "Ce que tu cherches en priorité"));
+      const puces = el("div", "puces"); puces.style.marginTop = "0";
+      [["commandes", "Des commandes maintenant"], ["connaitre", "Me faire connaître"], ["confiance", "Rassurer ceux qui hésitent"], ["fidele", "Faire revenir mes clients"]].forEach(([id, lbl]) => {
+        const b = el("button", "puce", lbl);
+        b.setAttribute("aria-pressed", ETAT.objectif === id ? "true" : "false");
+        b.addEventListener("click", () => { ETAT.objectif = id; rendre(); });
+        puces.appendChild(b);
+      });
+      box.appendChild(puces);
+      pile.appendChild(box);
+      pile.appendChild(champ("f_format2", "Comment tu peux filmer", ETAT.format, v => { ETAT.format = v; }, "au téléphone, à la boutique, mains seulement…"));
+    }
+    c.appendChild(pile);
+
+    const btn = el("button", "btn");
+    if (ETAT.charge) { btn.appendChild(el("span", "spin")); btn.appendChild(document.createTextNode("Écriture en cours…")); btn.disabled = true; }
+    else { btn.textContent = ACTION[m]; }
+    btn.addEventListener("click", lancer);
+    c.appendChild(btn);
+
+    if (ETAT.erreur) c.appendChild(el("div", "alerte err", ETAT.erreur));
+    if (ETAT.charge) c.appendChild(el("div", "alerte info", "Compte une trentaine de secondes. Ne ferme pas la page."));
+    zone.appendChild(c);
+  }
+
+  /* ---- Résultat : score ---- */
+  if (ETAT.analyse && !ETAT.charge) {
+    const a = ETAT.analyse;
+    const c = el("div", "carte");
+    const tete = el("div", "resTete");
+    tete.appendChild(el("h2", null, "Analyse de ton script"));
+    c.appendChild(tete);
+    const cl = a.note >= 75 ? "bon" : (a.note >= 50 ? "moyen" : "mauvais");
+    const verdict = a.note >= 75 ? "Prête à tourner" : (a.note >= 50 ? "Bonne base, l'accroche à retravailler" : "À réécrire avant de tourner");
+    c.appendChild(jauge(a.note, 100, "/100", cl, verdict));
+    if (a.verdict) { const p = el("p", null, a.verdict); p.style.marginTop = "16px"; p.style.color = "var(--ink)"; c.appendChild(p); }
+
+    const ul = el("ul", "propre"); ul.style.marginTop = "20px";
+    a.criteres.forEach(cr => {
+      const li = el("li", "critere");
+      const h = el("div", "critereHaut");
+      h.appendChild(el("b", null, cr.nom));
+      h.appendChild(el("span", null, cr.note + "/20"));
+      li.appendChild(h);
+      const barre = el("div", "barre"); const i = el("i"); i.style.width = (cr.note / 20 * 100) + "%";
+      barre.appendChild(i); li.appendChild(barre);
+      li.appendChild(el("p", null, cr.commentaire));
+      ul.appendChild(li);
+    });
+    c.appendChild(ul);
+
+    if (a.corrections.length) {
+      c.appendChild(el("h3", null, "À corriger en priorité"));
+      const ol = el("ol"); ol.style.paddingLeft = "20px"; ol.style.display = "grid"; ol.style.gap = "9px";
+      a.corrections.forEach(x => ol.appendChild(el("li", null, x)));
+      c.appendChild(ol);
+    }
+    if (a.hooks.length) {
+      c.appendChild(el("h3", null, "Trois accroches de remplacement"));
+      const u2 = el("ul", "propre");
+      a.hooks.forEach(h => { const li = el("li", "phrase"); li.appendChild(el("span", null, h)); li.appendChild(boutonCopier(h)); u2.appendChild(li); });
+      c.appendChild(u2);
+    }
+    zone.appendChild(c);
+  }
+
+  /* ---- Résultat : texte ---- */
+  if (ETAT.resultat && !ETAT.charge) {
+    const c = el("div", "carte");
+    const tete = el("div", "resTete");
+    tete.appendChild(el("h2", null, m === "plan" ? "Ta semaine" : (m === "produit" ? "Ta vidéo" : "Tes idées")));
+    tete.appendChild(boutonCopier(ETAT.resultat, "Tout copier"));
+    c.appendChild(tete);
+    const s = el("div", "sortie");
+    s.innerHTML = markdown(ETAT.resultat);
+    c.appendChild(s);
+    zone.appendChild(c);
+  }
+}
+
+async function lancer() {
+  if (ETAT.charge) return;
+  const m = ETAT.mode;
+  if ((m === "produit" || m === "score") && !ETAT.texte.trim()) {
+    ETAT.erreur = m === "produit" ? "Décris la pièce que tu veux vendre : couleur, qualité, quantité." : "Colle d'abord le script ou l'accroche à analyser.";
+    rendre(); return;
+  }
+  if ((m === "idees" || m === "plan") && !ETAT.sujet.trim()) {
+    ETAT.erreur = "Indique l'angle ou le sujet du moment."; rendre(); return;
+  }
+
+  ETAT.charge = true; ETAT.erreur = ""; ETAT.resultat = ""; ETAT.analyse = null; rendre();
+
+  try {
+    const brut = await ecrire(CADRE, prompt(m, ETAT.profil, { texte: ETAT.texte, sujet: ETAT.sujet, objectif: ETAT.objectif, format: ETAT.format }));
+    if (m === "score") {
+      const a = lireAnalyse(brut);
+      // Si le JSON est illisible, on affiche quand même le texte : l'analyse
+      // reste utile, elle s'affiche simplement sans la jauge.
+      if (a) ETAT.analyse = a; else ETAT.resultat = brut;
+    } else {
+      ETAT.resultat = brut;
+    }
+  } catch (e) {
+    ETAT.erreur = (e && e.message) ? e.message : "L'écriture a échoué. Vérifie ta connexion et réessaie.";
+  } finally {
+    ETAT.charge = false; rendre();
+  }
+}
+
+/* ================================================================
+   Démarrage
+   ================================================================ */
+
+function ouvrirBoutique(ouvert) {
+  $("#boutiqueCorps").style.display = ouvert ? "grid" : "none";
+  $("#boutiqueTete").setAttribute("aria-expanded", ouvert ? "true" : "false");
+  $("#boutiqueFleche").textContent = ouvert ? "▲" : "▼";
+}
+
+(function demarrer() {
+  relire();
+  [["produit", "#p_produit"], ["zone", "#p_zone"], ["prix", "#p_prix"], ["commande", "#p_commande"]].forEach(([cle, sel]) => {
+    const i = $(sel);
+    i.value = ETAT.profil[cle];
+    i.addEventListener("input", (e) => { ETAT.profil[cle] = e.target.value; sauver(); majBoutique(); });
+  });
+  majBoutique();
+  ouvrirBoutique(!ETAT.profil.produit.trim());
+  $("#boutiqueTete").addEventListener("click", () => {
+    ouvrirBoutique($("#boutiqueTete").getAttribute("aria-expanded") !== "true");
+  });
+
+  const racine = document.documentElement;
+  try {
+    const t = localStorage.getItem(CLE + "-theme");
+    if (t) racine.setAttribute("data-theme", t);
+  } catch (e) { /* stockage refusé */ }
+  $("#theme").addEventListener("click", () => {
+    const actuel = racine.getAttribute("data-theme");
+    const sombreParDefaut = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const suivant = actuel ? (actuel === "dark" ? "light" : "dark") : (sombreParDefaut ? "light" : "dark");
+    racine.setAttribute("data-theme", suivant);
+    try { localStorage.setItem(CLE + "-theme", suivant); } catch (e) { /* stockage refusé */ }
+  });
+
+  rendreOnglets();
+  rendre();
+})();
+</script>
+</body>
+</html>
