@@ -1,0 +1,37 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_getzner.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Collection Getzner Siri Siri",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/99e32f90-5f4b874d73d342e6821b45a91044319f.jpeg",
+      "durationInSeconds": 10.5,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.15},
+      "to": {"zoom": 1.3, "x": 0.5, "y": 0.55},
+      "title": "BRONZE CUIVRÉ",
+      "subtitle": "Bazin Getzner Siri Siri"
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e6d2c894-e23950b5168c43d0923cd6861536319d.jpeg",
+      "durationInSeconds": 10.5,
+      "from": {"zoom": 1.25, "x": 0.5, "y": 0.2},
+      "to": {"zoom": 1.05, "x": 0.5, "y": 0.6},
+      "title": "VIOLET ROYAL",
+      "subtitle": "5 mètres, teinture artisanale"
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e6670760-12cf1dd94d4443caab78f796419b0f7f.jpeg",
+      "durationInSeconds": 13.8,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.3},
+      "to": {"zoom": 1.2, "x": 0.5, "y": 0.55},
+      "title": "NOIR DORÉ",
+      "subtitle": "Bazin Mari Falah — l'élégance qui vous distingue"
+    }
+  ],
+  "captions": []
+}
