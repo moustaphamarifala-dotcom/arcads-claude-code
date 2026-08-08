@@ -14,8 +14,21 @@ const {
 
 const easeInOut = Easing.bezier(0.45, 0, 0.55, 1);
 
+// ───────────────────────── Handheld camera shake ─────────────────────────
+// Smooth pseudo-random drift (layered sine waves, not white noise) that reads
+// as "held in the hand" rather than a glitch. `amount` in pixels at 1080-wide.
+const useHandheldShake = (fps, amount = 0) => {
+	const frame = useCurrentFrame();
+	if (!amount) return {x: 0, y: 0, rotate: 0};
+	const t = frame / fps;
+	const x = amount * (Math.sin(t * 1.3) * 0.6 + Math.sin(t * 2.7 + 1.1) * 0.4);
+	const y = amount * (Math.cos(t * 1.7 + 0.6) * 0.6 + Math.sin(t * 3.1) * 0.4);
+	const rotate = (amount / 90) * Math.sin(t * 1.1 + 0.3);
+	return {x, y, rotate};
+};
+
 // ───────────────────────── Ken Burns photo pan ─────────────────────────
-const KenBurnsShot = ({photo, from, to, durationInFrames}) => {
+const KenBurnsShot = ({photo, from, to, durationInFrames, fps, shake = 0}) => {
 	const frame = useCurrentFrame();
 	const k = easeInOut(Math.min(1, Math.max(0, frame / durationInFrames)));
 	const lerp = (a, b) => a + (b - a) * k;
@@ -29,20 +42,29 @@ const KenBurnsShot = ({photo, from, to, durationInFrames}) => {
 	const boxPct = scale * 100;
 	const leftPct = clamp(50 - cx * boxPct, 100 - boxPct, 0);
 	const topPct = clamp(50 - cy * boxPct, 100 - boxPct, 0);
+	const {x, y, rotate} = useHandheldShake(fps, shake);
 
 	return (
 		<AbsoluteFill style={{overflow: 'hidden', backgroundColor: '#000'}}>
-			<Img
-				src={photo.startsWith('http') ? photo : staticFile(photo)}
+			<div
 				style={{
 					position: 'absolute',
-					width: `${boxPct}%`,
-					height: `${boxPct}%`,
-					left: `${leftPct}%`,
-					top: `${topPct}%`,
-					objectFit: 'cover',
+					inset: shake ? -60 : 0,
+					transform: shake ? `translate(${x}px, ${y}px) rotate(${rotate}deg)` : undefined,
 				}}
-			/>
+			>
+				<Img
+					src={photo.startsWith('http') ? photo : staticFile(photo)}
+					style={{
+						position: 'absolute',
+						width: `${boxPct}%`,
+						height: `${boxPct}%`,
+						left: `${leftPct}%`,
+						top: `${topPct}%`,
+						objectFit: 'cover',
+					}}
+				/>
+			</div>
 		</AbsoluteFill>
 	);
 };
@@ -149,6 +171,50 @@ const CaptionBar = ({text, speaker, accent}) => (
 	</div>
 );
 
+// ───────────────────────── Karaoke caption bar (word-by-word highlight) ─────────────────────────
+const KaraokeCaptionBar = ({words, accent, fps, groupStart}) => {
+	const frame = useCurrentFrame();
+	const t = groupStart + frame / fps;
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				bottom: 260,
+				left: 60,
+				right: 60,
+				background: 'rgba(10,10,25,0.82)',
+				borderRadius: 28,
+				padding: '24px 30px',
+				display: 'flex',
+				flexWrap: 'wrap',
+				gap: '0 14px',
+				justifyContent: 'center',
+			}}
+		>
+			{words.map((w, i) => {
+				const active = t >= w.start && t < w.end;
+				const spoken = t >= w.end;
+				return (
+					<span
+						key={i}
+						style={{
+							fontFamily: 'sans-serif',
+							fontWeight: 800,
+							fontSize: 42,
+							color: active ? accent : spoken ? '#fff' : 'rgba(255,255,255,0.45)',
+							transform: active ? 'scale(1.08)' : 'scale(1)',
+							display: 'inline-block',
+							transition: 'none',
+						}}
+					>
+						{w.text}
+					</span>
+				);
+			})}
+		</div>
+	);
+};
+
 // ───────────────────────── CTA end card ─────────────────────────
 const CtaCard = ({brand, accent, dark, dark2, phone, tagline}) => {
 	const frame = useCurrentFrame();
@@ -239,7 +305,14 @@ const AdVideo = (props) => {
 						volume={s.volume ?? 0}
 					/>
 				) : (
-					<KenBurnsShot photo={s.photo} from={s.from} to={s.to} durationInFrames={durationInFrames} />
+					<KenBurnsShot
+						photo={s.photo}
+						from={s.from}
+						to={s.to}
+						durationInFrames={durationInFrames}
+						fps={fps}
+						shake={s.shake ?? 0}
+					/>
 				)}
 				{s.title ? (
 					<TitleOverlay title={s.title} subtitle={s.subtitle} accent={accent} durationInFrames={durationInFrames} />
@@ -255,7 +328,11 @@ const AdVideo = (props) => {
 		const durationInFrames = Math.round((c.end - c.start) * fps);
 		return (
 			<Sequence key={`cap-${i}`} from={from} durationInFrames={durationInFrames}>
-				<CaptionBar text={c.text} speaker={c.speaker} accent={accent} />
+				{c.words ? (
+					<KaraokeCaptionBar words={c.words} accent={accent} fps={fps} groupStart={c.start} />
+				) : (
+					<CaptionBar text={c.text} speaker={c.speaker} accent={accent} />
+				)}
 			</Sequence>
 		);
 	});
