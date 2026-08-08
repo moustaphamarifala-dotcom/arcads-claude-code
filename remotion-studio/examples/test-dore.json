@@ -1,0 +1,29 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/home/user/arcads-claude-code/higgsfield-studio/audios/pub-dioula.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "L'élégance qui vous distingue",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/c8fc6c7a-85601eda71fd4a8099183894a5cfb30a.jpeg",
+      "durationInSeconds": 6,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.3},
+      "to": {"zoom": 1.25, "x": 0.5, "y": 0.55},
+      "title": "OR LIQUIDE",
+      "subtitle": "Un fond doré glacé, profond et brillant"
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/c8fc6c7a-85601eda71fd4a8099183894a5cfb30a.jpeg",
+      "durationInSeconds": 6,
+      "from": {"zoom": 1.4, "x": 0.42, "y": 0.45},
+      "to": {"zoom": 1.75, "x": 0.55, "y": 0.5},
+      "title": "ROSACES TIE-DYE",
+      "subtitle": "Violet & carmin, teints à la main"
+    }
+  ],
+  "captions": []
+}
