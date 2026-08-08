@@ -43,6 +43,22 @@ export default function Home() {
 
       <p style={{ textAlign: "center", marginTop: 28 }}>
         <a
+          href="/ugc"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            background: "var(--accent-soft)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🎬 Studio UGC — vidéos pour ton produit →
+        </a>
+        <a
           href="/photo"
           style={{
             display: "inline-block",

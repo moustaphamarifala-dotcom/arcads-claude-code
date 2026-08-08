@@ -24,6 +24,7 @@ Puis ouvrez **http://localhost:3000**
 | Adresse | Ce que ça fait |
 |---|---|
 | `/` | Le studio : textes, images, vidéos |
+| `/ugc` | **Studio UGC** — script, storyboard, visuels, voix off et vidéo pour vendre un produit |
 | `/personnes` | **Fiches personnalités** — biographie, parcours, œuvres, comptes officiels (Wikipédia + Wikidata) |
 | `/intel` | **Intel** — revue de presse analysée, grille mercato ou grille investigation |
 | `/photo` | Studio photo ultra-réaliste |
@@ -38,6 +39,7 @@ Créez un fichier `.env.local` à côté de ce fichier pour activer les moteurs 
 ANTHROPIC_API_KEY=votre-clé     # analyses Intel et textes rédigés par Claude
 REPLICATE_API_TOKEN=votre-jeton # images et vidéos haute qualité
 GOOGLE_API_KEY=votre-clé        # Studio Couture Bazin
+ELEVENLABS_API_KEY=votre-clé    # voix off IA du Studio UGC
 ```
 
 Sans ces clés, tout fonctionne quand même — en version gratuite.

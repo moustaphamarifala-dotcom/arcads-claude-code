@@ -8,6 +8,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 
 | Onglet / Page | Mode gratuit (sans clé) | Mode premium (avec clés) |
 |---|---|---|
+| 🎬 **Studio UGC** (`/ugc`) | Script + visuels (Pollinations) + voix du navigateur | Claude (script), FLUX (visuels), ElevenLabs (voix), WAN (vidéo) |
 | ✍️ **Textes** | Pollinations.ai | Claude (Anthropic), streaming temps réel |
 | 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
 | 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
@@ -15,6 +16,18 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+
+Le **Studio UGC** (page `/ugc`) fabrique des **vidéos UGC** — ces vidéos verticales filmées au smartphone, face caméra, où une personne ordinaire parle d'un produit comme elle en parlerait à une amie. Tu décris ton produit (bénéfices, prix, public, angle, plateforme, durée) et l'application produit :
+
+1. le **script complet** — accroche des 3 premières secondes, scènes minutées (texte dit à voix haute, plan à filmer, sous-titre à incruster), appel à l'action, légende et hashtags ;
+2. le **portrait du créateur** qui parle à l'écran, puis le **visuel de chaque scène** dans le même style et le même format vertical 9:16 ;
+3. la **voix off** — gratuitement avec la voix du navigateur, ou en qualité IA avec une clé ElevenLabs ;
+4. la **vidéo animée de l'accroche** (nécessite un jeton Replicate) ;
+5. l'**export** du script en texte, et le téléchargement de chaque image.
+
+Le script et les visuels fonctionnent **sans aucune clé API**. Avec une clé Anthropic, le script est écrit par Claude ; avec un jeton Replicate, les visuels passent en FLUX 1.1 Pro et la vidéo devient disponible.
+
+> Le studio écrit des scénarios publicitaires : il ne doit pas servir à inventer de faux témoignages présentés comme réels. Relis toujours les affirmations sur ton produit (prix, délais, résultats) avant de publier.
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -63,6 +76,7 @@ Ouvrez ensuite [http://localhost:3000](http://localhost:3000).
 ```
 app/
 ├── page.tsx                     # Page principale (onglets)
+├── ugc/page.tsx                 # Studio UGC (script, storyboard, voix, vidéo)
 ├── layout.tsx                   # Layout global
 ├── globals.css                  # Styles
 ├── components/
@@ -70,6 +84,9 @@ app/
 │   ├── ImageGenerator.tsx       # Interface génération d'image
 │   └── VideoGenerator.tsx       # Interface génération de vidéo
 └── api/
+    ├── ugc-script/route.ts      # Script UGC en JSON (Claude ou moteur gratuit)
+    ├── ugc-visual/route.ts      # Visuels verticaux 9:16 (FLUX ou moteur gratuit)
+    ├── ugc-voice/route.ts       # Voix off ElevenLabs
     ├── generate-text/route.ts   # API Claude en streaming
     ├── generate-image/route.ts  # API Replicate (FLUX)
     └── generate-video/route.ts  # API Replicate (WAN) + suivi d'état
@@ -91,3 +108,4 @@ L'application se déploie en un clic sur [Vercel](https://vercel.com) :
 | **Premium textes** (clé Anthropic) | Facturé par Anthropic selon les tokens utilisés |
 | **Premium images** (jeton Replicate) | ~0,003 $ par image (FLUX Schnell) |
 | **Vidéos** (jeton Replicate requis) | Quelques centimes par vidéo (WAN 2.1) |
+| **Voix off UGC** (clé ElevenLabs, optionnelle) | Facturé par ElevenLabs selon les caractères lus — la voix du navigateur reste gratuite |
