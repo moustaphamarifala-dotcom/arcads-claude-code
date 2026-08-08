@@ -1,0 +1,28 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_viral_collection.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Commandez sur WhatsApp",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 0,
+      "durationInSeconds": 19.5,
+      "zoomTo": 1.1,
+      "volume": 0
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 2.69, "text": "Attends avant de scroller..."},
+    {"start": 2.69, "end": 5.77, "text": "Regarde cette collection de bazins !"},
+    {"start": 5.77, "end": 8.68, "text": "Rouge, bleu, doré, vert, violet..."},
+    {"start": 8.68, "end": 12.44, "text": "Chaque couleur est unique, teinte à la main."},
+    {"start": 12.44, "end": 15.01, "text": "Commente ta couleur préférée !"},
+    {"start": 15.01, "end": 18.34, "text": "Écris-nous sur WhatsApp au 55 13 34 14."}
+  ]
+}

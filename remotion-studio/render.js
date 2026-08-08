@@ -33,9 +33,13 @@ if (spec.audioFile) {
 	spec.audioFile = copyIntoPublic(spec.audioFile, 'audio');
 }
 
-// Copy shot photos
+// Copy shot media (photo or video)
 (spec.shots || []).forEach((s, i) => {
-	s.photo = copyIntoPublic(s.photo, `shot${i}`);
+	if (s.type === 'video') {
+		s.src = copyIntoPublic(s.src, `shot${i}`);
+	} else {
+		s.photo = copyIntoPublic(s.photo, `shot${i}`);
+	}
 });
 
 const tmpProps = path.join(__dirname, `.props-${Date.now()}.json`);

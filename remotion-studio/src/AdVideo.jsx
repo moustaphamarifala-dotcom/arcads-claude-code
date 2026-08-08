@@ -3,6 +3,7 @@ const {
 	AbsoluteFill,
 	Audio,
 	Img,
+	OffthreadVideo,
 	Sequence,
 	useCurrentFrame,
 	useVideoConfig,
@@ -40,6 +41,31 @@ const KenBurnsShot = ({photo, from, to, durationInFrames}) => {
 					left: `${leftPct}%`,
 					top: `${topPct}%`,
 					objectFit: 'cover',
+				}}
+			/>
+		</AbsoluteFill>
+	);
+};
+
+// ───────────────────────── Real footage shot (with slow drift zoom) ─────────────────────────
+const VideoShot = ({fps, src, videoStartFrom = 0, durationInFrames, zoomTo = 1.08, volume = 0}) => {
+	const frame = useCurrentFrame();
+	const k = easeInOut(Math.min(1, Math.max(0, frame / durationInFrames)));
+	const scale = 1 + (zoomTo - 1) * k;
+	return (
+		<AbsoluteFill style={{overflow: 'hidden', backgroundColor: '#000'}}>
+			<OffthreadVideo
+				src={src.startsWith('http') ? src : staticFile(src)}
+				startFrom={Math.round(videoStartFrom * fps)}
+				muted={volume === 0}
+				volume={volume}
+				style={{
+					position: 'absolute',
+					width: '100%',
+					height: '100%',
+					objectFit: 'cover',
+					transform: `scale(${scale})`,
+					transformOrigin: 'center center',
 				}}
 			/>
 		</AbsoluteFill>
@@ -203,12 +229,18 @@ const AdVideo = (props) => {
 		const durationInFrames = Math.round(s.durationInSeconds * fps);
 		const seq = (
 			<Sequence key={`shot-${i}`} from={cursor} durationInFrames={durationInFrames}>
-				<KenBurnsShot
-					photo={s.photo}
-					from={s.from}
-					to={s.to}
-					durationInFrames={durationInFrames}
-				/>
+				{s.type === 'video' ? (
+					<VideoShot
+						fps={fps}
+						src={s.src}
+						videoStartFrom={s.videoStartFrom || 0}
+						durationInFrames={durationInFrames}
+						zoomTo={s.zoomTo ?? 1.08}
+						volume={s.volume ?? 0}
+					/>
+				) : (
+					<KenBurnsShot photo={s.photo} from={s.from} to={s.to} durationInFrames={durationInFrames} />
+				)}
 				{s.title ? (
 					<TitleOverlay title={s.title} subtitle={s.subtitle} accent={accent} durationInFrames={durationInFrames} />
 				) : null}
