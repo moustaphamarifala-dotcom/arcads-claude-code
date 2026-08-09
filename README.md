@@ -15,6 +15,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+| 📸 **Instagram** (`/instagram`) | Jeton d'accès collé à la main | Connexion en un clic (app Meta) |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -32,6 +33,17 @@ Les **Fiches Personnalités** (page `/personnes`) permettent de **chercher des i
 L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claude** si `ANTHROPIC_API_KEY` est présente. Chaque fiche personnalité propose un bouton « ⚡ Analyser l'actualité » qui ouvre directement Intel sur la bonne personne.
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
+
+La page **Instagram** (`/instagram`) relie un **compte Instagram Professionnel ou Créateur** au Studio et **publie directement** photos, Reels et stories — légende comprise.
+
+Deux façons de connecter le compte :
+
+1. **En un clic** — crée une app sur [developers.facebook.com](https://developers.facebook.com) (produit *Instagram* → *Configuration de l'API avec connexion Instagram*), renseigne `INSTAGRAM_APP_ID` et `INSTAGRAM_APP_SECRET`, et déclare l'URL de retour `https://ton-site/api/instagram/callback` dans l'app Meta. Le bouton « Se connecter avec Instagram » fait le reste. *(Meta exige une adresse en `https` : en local, passe par un tunnel type ngrok, ou connecte-toi depuis le site déployé.)*
+2. **Sans app Meta** — colle un jeton d'accès obtenu dans l'[explorateur d'API Meta](https://developers.facebook.com/tools/explorer/), avec les permissions `instagram_business_basic` et `instagram_business_content_publish`.
+
+Le jeton est conservé dans un **cookie httpOnly** de ton navigateur (jamais en base, jamais dans le dépôt) et prolongé automatiquement avant ses 60 jours. Le bouton « Déconnecter » l'efface.
+
+> Instagram télécharge lui-même le fichier à publier : l'**adresse du média doit être publique en `https`** (les images générées par le Studio conviennent). Les fichiers de ton ordinateur ne peuvent pas être envoyés directement. Instagram limite par ailleurs à **25 publications par 24 h**, et les stories n'acceptent pas de légende.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
@@ -69,10 +81,17 @@ app/
 │   ├── TextGenerator.tsx        # Interface génération de texte
 │   ├── ImageGenerator.tsx       # Interface génération d'image
 │   └── VideoGenerator.tsx       # Interface génération de vidéo
+├── instagram/page.tsx           # Connexion du compte + publication
 └── api/
     ├── generate-text/route.ts   # API Claude en streaming
     ├── generate-image/route.ts  # API Replicate (FLUX)
-    └── generate-video/route.ts  # API Replicate (WAN) + suivi d'état
+    ├── generate-video/route.ts  # API Replicate (WAN) + suivi d'état
+    └── instagram/
+        ├── lib.ts               # Jetons, session, erreurs Instagram
+        ├── auth/route.ts        # Départ de la connexion (OAuth)
+        ├── callback/route.ts    # Retour d'Instagram → jeton 60 jours
+        ├── session/route.ts     # État · connexion manuelle · déconnexion
+        └── publish/route.ts     # Photo, Reel ou story
 ```
 
 ## Déploiement

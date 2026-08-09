@@ -1,0 +1,107 @@
+.page {
+  --bg: #0d0a12;
+  --surface: #171021;
+  --surface-2: #1f1629;
+  --ink: #f3eef8;
+  --muted: #a394b5;
+  --line: #2f2340;
+  --accent: #d8478f;
+  --accent-2: #f2a13c;
+  --radius: 16px;
+  min-height: 100vh;
+  background:
+    radial-gradient(85% 55% at 15% -10%, rgba(216, 71, 143, 0.16), transparent 60%),
+    radial-gradient(70% 50% at 95% 0%, rgba(242, 161, 60, 0.1), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.wrap { max-width: 780px; margin: 0 auto; padding: 40px 22px 90px; }
+
+.header { margin-bottom: 26px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 0.74rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+  background: rgba(216, 71, 143, 0.14); padding: 5px 12px; border-radius: 999px; margin-bottom: 14px;
+}
+.header h1 {
+  font-size: clamp(1.9rem, 5vw, 2.7rem); font-weight: 850; letter-spacing: -0.03em;
+  line-height: 1.05; text-wrap: balance;
+}
+.header h1 span {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.header p { margin-top: 12px; color: var(--muted); font-size: 1.03rem; max-width: 58ch; }
+
+.carte {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 22px; margin-bottom: 18px;
+}
+.desactive { opacity: 0.55; }
+
+.titre { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; }
+.muted { color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+.muted a, .retour a, .ok a { color: var(--accent); }
+.muted code {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 1px 6px; font-size: 0.85em;
+}
+
+.compte { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.compte strong { font-size: 1.05rem; }
+.compte > div { flex: 1; min-width: 200px; }
+.avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+
+.principal {
+  display: inline-block; margin-top: 14px; border: none; border-radius: 12px;
+  padding: 13px 22px; font-size: 1rem; font-weight: 800; cursor: pointer;
+  color: #2a0d1c; text-decoration: none; font-family: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+.principal:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.secondaire {
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
+  border-radius: 10px; padding: 9px 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.secondaire:hover { border-color: var(--accent); color: var(--accent); }
+
+.details { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+.details summary { cursor: pointer; font-weight: 700; margin-bottom: 10px; }
+
+.label { display: block; font-weight: 700; margin: 18px 0 8px; font-size: 0.94rem; }
+.compteur { float: right; color: var(--muted); font-weight: 500; font-size: 0.85rem; }
+
+.input, .textarea {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 11px;
+  padding: 12px 14px; color: var(--ink); font-family: inherit; font-size: 1rem; outline: none;
+}
+.textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+.input:focus, .textarea:focus { border-color: var(--accent); }
+
+.formats { display: flex; gap: 8px; flex-wrap: wrap; }
+.formatBtn {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--muted);
+  border-radius: 999px; padding: 9px 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.formatBtn:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+.actif { border-color: var(--accent); color: var(--ink); background: rgba(216, 71, 143, 0.16); }
+
+.aide { color: var(--muted); font-size: 0.85rem; line-height: 1.5; margin-top: 8px; }
+
+.apercu {
+  margin-top: 14px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  background: var(--bg); max-height: 340px; display: grid; place-items: center;
+}
+.apercu img, .apercu video { max-width: 100%; max-height: 340px; display: block; }
+
+.ok, .erreur {
+  border-radius: 12px; padding: 12px 15px; margin-bottom: 16px; font-size: 0.94rem; line-height: 1.5;
+}
+.ok { background: rgba(63, 185, 80, 0.12); border: 1px solid rgba(63, 185, 80, 0.4); color: #7ee08d; }
+.erreur { background: rgba(248, 81, 73, 0.12); border: 1px solid rgba(248, 81, 73, 0.4); color: #ff9b95; }
+
+.retour { text-align: center; margin-top: 26px; }
+.retour a { text-decoration: none; font-weight: 700; }
