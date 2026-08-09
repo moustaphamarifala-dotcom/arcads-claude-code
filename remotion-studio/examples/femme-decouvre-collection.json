@@ -1,0 +1,48 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_femme_collection.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Toute la collection est disponible",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e0bab8e5-F47C7D293090479F848B4778078DA78C.png",
+      "durationInSeconds": 3.16,
+      "from": {"zoom": 1.35, "x": 0.68, "y": 0.22},
+      "to": {"zoom": 1.5, "x": 0.68, "y": 0.2},
+      "shake": 4
+    },
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 1,
+      "durationInSeconds": 2.86,
+      "zoomTo": 1.12,
+      "volume": 0
+    },
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 12,
+      "durationInSeconds": 3.92,
+      "zoomTo": 1.12,
+      "volume": 0
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e0bab8e5-F47C7D293090479F848B4778078DA78C.png",
+      "durationInSeconds": 5.5,
+      "from": {"zoom": 1.05, "x": 0.62, "y": 0.4},
+      "to": {"zoom": 1.15, "x": 0.62, "y": 0.35},
+      "shake": 4
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 3.16, "text": "Attendez... regardez tous ces bazins !"},
+    {"start": 3.16, "end": 6.02, "text": "Je ne savais pas où donner de la tête."},
+    {"start": 6.02, "end": 9.94, "text": "C'est chez Bazin Mari Falah, toute cette collection."},
+    {"start": 9.94, "end": 15.44, "text": "Écrivez-leur sur WhatsApp, au 55 13 34 14."}
+  ]
+}
