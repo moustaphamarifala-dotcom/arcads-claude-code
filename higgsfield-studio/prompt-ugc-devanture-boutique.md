@@ -8,6 +8,14 @@ cette photo (femme devant l'enseigne, tissus sur la table) en référence.
 ## Prompt (à copier-coller)
 
 ```
+Respecte exactement l'image de référence fournie : même femme, même
+visage, mêmes cheveux, même robe et foulard, même enseigne "BAZIN MARI
+FALAH — Meilleur Fournisseur De Bazins", mêmes tissus sur la table, même
+décor (moto, banc, boutique) et même éclairage nocturne. Ne modifie
+aucun détail du visage, de la tenue, des couleurs, du texte de l'enseigne
+ou de l'arrière-plan — anime uniquement le mouvement, tout le reste doit
+rester identique à la photo.
+
 Une jeune femme africaine aux cheveux auburn, portant une robe bazin riche
 vert olive et or à motifs tie-dye violet et rose, avec un foulard assorti
 noué sur la tête, se tient debout devant une boutique de nuit, sous
@@ -41,6 +49,10 @@ Si tu ne crois pas, viens acheter !"
 
 Pas de sous-titres, pas de texte incrusté supplémentaire (l'enseigne
 lumineuse de la boutique reste visible telle quelle, c'est voulu).
+
+Rappel final : aucune modification du visage, de la tenue, de l'enseigne
+ou du décor — respecte l'image de référence à l'identique, seul le
+mouvement doit être ajouté.
 ```
 
 ## Notes
