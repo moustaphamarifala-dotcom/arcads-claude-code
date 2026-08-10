@@ -15,13 +15,15 @@ l'enseigne lumineuse "BAZIN MARI FALAH — Meilleur Fournisseur De Bazins".
 Devant elle, une table couverte de tissus bazin pliés aux couleurs et
 motifs variés.
 
-Elle pose ses mains sur les tissus étalés devant elle, en soulève un pour
-le montrer à la caméra, puis le repose et fait un geste engageant de la
-main vers toute la table, comme si elle invitait le client à venir choisir.
+Elle attrape un tissu bazin sur la table d'un geste vif et assuré, le
+soulève à hauteur de poitrine face à la caméra, le déplie légèrement d'une
+main pour montrer le motif, tout en gardant un contact visuel direct et
+un léger sourire de défi.
 
-Mouvements naturels : elle caresse le tissu du bout des doigts, incline
-légèrement la tête, sourire chaleureux et commercial, regard qui va de la
-table à la caméra, léger balancement en se penchant vers les tissus.
+Mouvements naturels : geste de la main ferme et rapide en attrapant le
+tissu, léger mouvement du poignet pour le faire briller sous la lumière,
+tête qui se penche légèrement en avant sur la dernière phrase (pour
+appuyer le défi), sourcils qui se lèvent légèrement.
 
 Style caméra : filmé au téléphone tenu à la main devant la boutique, léger
 flou de mouvement, cadrage légèrement instable, ambiance nocturne avec les
@@ -32,11 +34,10 @@ Peau réaliste : pores visibles, brillance naturelle du visage sous les
 lumières de nuit, légère variation de teint, pas de peau lissée par un
 filtre.
 
-Elle dit en français, ton chaleureux et commerçant, comme si elle
-accueillait une cliente :
-"Venez voir, j'ai reçu du nouveau ! Chez Bazin Mari Falah, c'est toujours
-la meilleure qualité. Écrivez-nous sur WhatsApp, au cinq cinq, treize,
-trente-quatre, quatorze, et on vous sert tout de suite."
+Elle dit en français, ton assuré, un peu provocateur et fier, comme un
+défi lancé avec le sourire :
+"Ya Bazin Siri dans Bazin Siri... pour Bazin Mari Falah, c'est autre chose.
+Si tu ne crois pas, viens acheter !"
 
 Pas de sous-titres, pas de texte incrusté supplémentaire (l'enseigne
 lumineuse de la boutique reste visible telle quelle, c'est voulu).
