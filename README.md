@@ -15,6 +15,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+| 🎧 **Spotify** (`/spotify`) | Deezer — extraits de 30 s inclus | API Spotify officielle |
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -32,6 +33,17 @@ Les **Fiches Personnalités** (page `/personnes`) permettent de **chercher des i
 L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claude** si `ANTHROPIC_API_KEY` est présente. Chaque fiche personnalité propose un bouton « ⚡ Analyser l'actualité » qui ouvre directement Intel sur la bonne personne.
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
+
+L'**explorateur musical** (page `/spotify`) permet de **chercher un artiste ou une chanson**, puis d'afficher ses titres phares, sa discographie et d'**écouter un extrait de 30 secondes** sans quitter la page. Chaque artiste peut être enregistré en favori (stockage local) et renvoyé vers Intel pour analyser son actualité.
+
+Deux moteurs, choisis automatiquement :
+
+- **Sans aucune clé** — l'API publique de **Deezer**, qui fournit les pochettes, la discographie et un extrait MP3 de 30 s par titre.
+- **Avec `SPOTIFY_CLIENT_ID` et `SPOTIFY_CLIENT_SECRET`** — l'**API Spotify officielle**, qui ajoute les genres, l'indice de popularité et un lecteur Spotify intégré. Créez une application gratuite sur [developer.spotify.com](https://developer.spotify.com/dashboard) : aucune redirection à configurer, seul le flux *Client Credentials* est utilisé.
+
+Si Spotify est configuré mais injoignable, la page repasse d'elle-même sur Deezer et l'indique clairement plutôt que de renvoyer une erreur. Le moteur réellement utilisé est toujours affiché sous la barre de recherche.
+
+> Cette page **ne stocke ni ne télécharge aucune musique** : les extraits sont diffusés par la plateforme elle-même et durent 30 secondes. Pour écouter un titre en entier, ouvrez-le sur Spotify ou Deezer via le lien fourni.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
@@ -69,10 +81,14 @@ app/
 │   ├── TextGenerator.tsx        # Interface génération de texte
 │   ├── ImageGenerator.tsx       # Interface génération d'image
 │   └── VideoGenerator.tsx       # Interface génération de vidéo
+├── spotify/
+│   ├── page.tsx                 # Explorateur musical (recherche, écoute)
+│   └── spotify.module.css       # Styles de la page
 └── api/
     ├── generate-text/route.ts   # API Claude en streaming
     ├── generate-image/route.ts  # API Replicate (FLUX)
-    └── generate-video/route.ts  # API Replicate (WAN) + suivi d'état
+    ├── generate-video/route.ts  # API Replicate (WAN) + suivi d'état
+    └── spotify/route.ts         # Spotify si clés, Deezer sinon
 ```
 
 ## Déploiement
@@ -91,3 +107,4 @@ L'application se déploie en un clic sur [Vercel](https://vercel.com) :
 | **Premium textes** (clé Anthropic) | Facturé par Anthropic selon les tokens utilisés |
 | **Premium images** (jeton Replicate) | ~0,003 $ par image (FLUX Schnell) |
 | **Vidéos** (jeton Replicate requis) | Quelques centimes par vidéo (WAN 2.1) |
+| **Explorateur musical** (`/spotify`) | 0 F CFA — Deezer et l'API Spotify sont gratuites pour ces usages |
