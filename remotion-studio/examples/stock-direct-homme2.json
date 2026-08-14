@@ -1,0 +1,34 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_stock_homme2.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Réservez avant votre cérémonie",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 0,
+      "durationInSeconds": 10.72,
+      "zoomTo": 1.1,
+      "volume": 0
+    },
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 11,
+      "durationInSeconds": 10.72,
+      "zoomTo": 1.1,
+      "volume": 0
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 5.67, "text": "Violet, doré, bronze, noir... chaque Bazin est prêt à partir."},
+    {"start": 5.67, "end": 9.90, "text": "Vous préparez un mariage, un baptême, une fête ?"},
+    {"start": 9.90, "end": 13.78, "text": "Ne courez pas plusieurs boutiques pour rien."},
+    {"start": 13.78, "end": 21.44, "text": "Réservez maintenant sur WhatsApp, au 55 13 34 14, et votre Bazin vous attend le jour J."}
+  ]
+}
