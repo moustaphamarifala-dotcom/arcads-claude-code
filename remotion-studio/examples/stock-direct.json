@@ -1,0 +1,53 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_stock_direct.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Réservez avant votre cérémonie",
+  "ctaDurationInSeconds": 4.5,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 0,
+      "durationInSeconds": 5.17,
+      "zoomTo": 1.1,
+      "volume": 0
+    },
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 8,
+      "durationInSeconds": 6.33,
+      "zoomTo": 1.1,
+      "volume": 0
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e6d2c894-e23950b5168c43d0923cd6861536319d.jpeg",
+      "durationInSeconds": 4.98,
+      "from": {"zoom": 1.15, "x": 0.5, "y": 0.3},
+      "to": {"zoom": 1.3, "x": 0.5, "y": 0.55}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/99e32f90-5f4b874d73d342e6821b45a91044319f.jpeg",
+      "durationInSeconds": 4.56,
+      "from": {"zoom": 1.2, "x": 0.5, "y": 0.4},
+      "to": {"zoom": 1.05, "x": 0.5, "y": 0.6}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e6670760-12cf1dd94d4443caab78f796419b0f7f.jpeg",
+      "durationInSeconds": 5.08,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.35},
+      "to": {"zoom": 1.15, "x": 0.5, "y": 0.5}
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 5.17, "text": "Voici tout notre stock, aujourd'hui, en direct."},
+    {"start": 5.17, "end": 11.50, "text": "Violet, doré, bronze, noir... chaque tissu est prêt à partir."},
+    {"start": 11.50, "end": 16.48, "text": "Vous préparez un mariage, un baptême, une fête ?"},
+    {"start": 16.48, "end": 21.04, "text": "Ne courez pas plusieurs boutiques pour rien."},
+    {"start": 21.04, "end": 26.12, "text": "Réservez maintenant sur WhatsApp, au 55 13 34 14."}
+  ]
+}
