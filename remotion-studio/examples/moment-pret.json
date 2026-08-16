@@ -1,0 +1,35 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_moment.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Réservez avant votre cérémonie",
+  "ctaDurationInSeconds": 0.05,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 0,
+      "durationInSeconds": 11.5,
+      "zoomTo": 1.1,
+      "volume": 0
+    },
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/04b538da-v26044gc0000d9n9a3fog65g7iul4kdg.mp4",
+      "videoStartFrom": 11.5,
+      "durationInSeconds": 11.42,
+      "zoomTo": 1.1,
+      "volume": 0
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 6.10, "text": "Un mariage. Un baptême. Une cérémonie qui ne se refait pas deux fois."},
+    {"start": 6.10, "end": 9.20, "text": "Ces moments-là, on ne les rate pas."},
+    {"start": 9.20, "end": 15.00, "text": "Chez Bazin Mari Falah, chaque Bazin est déjà prêt, déjà teint, déjà magnifique."},
+    {"start": 15.00, "end": 17.60, "text": "À vous d'être prêt, vous aussi."},
+    {"start": 17.60, "end": 22.92, "text": "Réservez maintenant sur WhatsApp, au 55 13 34 14."}
+  ]
+}
