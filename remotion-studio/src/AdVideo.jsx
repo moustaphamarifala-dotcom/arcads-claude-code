@@ -95,26 +95,46 @@ const VideoShot = ({fps, src, videoStartFrom = 0, durationInFrames, zoomTo = 1.0
 };
 
 // ───────────────────────── Brand banner (top) ─────────────────────────
-const BrandBanner = ({brand, accent}) => (
+const BrandBanner = ({brand, accent}) => {
+	const frame = useCurrentFrame();
+	const in_ = interpolate(frame, [0, 18], [0, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+	const y = interpolate(frame, [0, 18], [-14, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				top: 60,
+				left: '50%',
+				transform: `translateX(-50%) translateY(${y}px)`,
+				opacity: in_,
+				background: 'rgba(8,8,16,0.72)',
+				borderRadius: 999,
+				padding: '14px 34px',
+				fontFamily: 'Georgia, serif',
+				fontWeight: 800,
+				fontSize: 40,
+				color: accent,
+				letterSpacing: 1,
+				whiteSpace: 'nowrap',
+			}}
+		>
+			{brand}
+		</div>
+	);
+};
+
+// ───────────────────────── Cinematic vignette / grade ─────────────────────────
+// Subtle edge darkening so the eye settles on the center where captions live.
+// Sits above the footage, below all text overlays — kept faint on purpose.
+const Vignette = () => (
 	<div
 		style={{
 			position: 'absolute',
-			top: 60,
-			left: '50%',
-			transform: 'translateX(-50%)',
-			background: 'rgba(8,8,16,0.72)',
-			borderRadius: 999,
-			padding: '14px 34px',
-			fontFamily: 'Georgia, serif',
-			fontWeight: 800,
-			fontSize: 40,
-			color: accent,
-			letterSpacing: 1,
-			whiteSpace: 'nowrap',
+			inset: 0,
+			pointerEvents: 'none',
+			background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 52%, rgba(0,0,0,0.38) 100%)',
 		}}
-	>
-		{brand}
-	</div>
+	/>
 );
 
 // ───────────────────────── Title overlay (product style) ─────────────────────────
@@ -215,6 +235,36 @@ const KaraokeCaptionBar = ({words, accent, fps, groupStart}) => {
 	);
 };
 
+// ───────────────────────── Shot crossfade wrapper ─────────────────────────
+// The shot's Sequence starts `ovIn` frames before its nominal cut point so it
+// can fade in on top of the previous (still-visible) shot. `ovIn` is 0 for
+// the first shot, so this is a no-op there.
+const ShotFade = ({ovIn, children}) => {
+	const frame = useCurrentFrame();
+	const opacity = ovIn > 0 ? interpolate(frame, [0, ovIn], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) : 1;
+	return <AbsoluteFill style={{opacity}}>{children}</AbsoluteFill>;
+};
+
+// ───────────────────────── Auto word timing for karaoke captions ─────────────────────────
+// Splits `text` into words and distributes [start,end] proportionally to word
+// length, so every caption gets a karaoke highlight even without hand-authored
+// per-word timestamps.
+const autoWordTimings = (text, start, end) => {
+	const raw = text.split(/\s+/).filter(Boolean);
+	if (!raw.length) return [];
+	const weights = raw.map((w) => w.replace(/[.,!?;:]/g, '').length + 1);
+	const totalWeight = weights.reduce((a, b) => a + b, 0);
+	const span = end - start;
+	let t = start;
+	return raw.map((w, i) => {
+		const dur = (weights[i] / totalWeight) * span;
+		const wStart = t;
+		const wEnd = t + dur;
+		t = wEnd;
+		return {text: w, start: wStart, end: wEnd};
+	});
+};
+
 // ───────────────────────── CTA end card ─────────────────────────
 const CtaCard = ({brand, accent, dark, dark2, phone, tagline}) => {
 	const frame = useCurrentFrame();
@@ -285,51 +335,73 @@ const AdVideo = (props) => {
 		phone,
 		tagline = 'Commandez sur WhatsApp',
 		ctaDurationInSeconds = 4.5,
+		transitionSeconds = 0.35,
 	} = props;
 
-	const shotsTotalFrames = shots.reduce((acc, s) => acc + Math.round(s.durationInSeconds * fps), 0);
+	const durations = shots.map((s) => Math.round(s.durationInSeconds * fps));
+	const starts = [];
+	{
+		let c = 0;
+		durations.forEach((d) => {
+			starts.push(c);
+			c += d;
+		});
+	}
+	const shotsTotalFrames = durations.reduce((a, b) => a + b, 0);
 	const ctaFrames = Math.round(ctaDurationInSeconds * fps);
 
-	let cursor = 0;
+	// Overlap at each internal boundary, clamped so it never exceeds either
+	// neighboring shot's own length (avoids negative/degenerate durations).
+	const defaultOverlap = Math.round(transitionSeconds * fps);
+	const boundaryOverlap = durations.slice(0, -1).map((d, i) => {
+		if (!defaultOverlap) return 0;
+		return Math.max(0, Math.min(defaultOverlap, d, durations[i + 1]));
+	});
+
 	const shotSequences = shots.map((s, i) => {
-		const durationInFrames = Math.round(s.durationInSeconds * fps);
-		const seq = (
-			<Sequence key={`shot-${i}`} from={cursor} durationInFrames={durationInFrames}>
-				{s.type === 'video' ? (
-					<VideoShot
-						fps={fps}
-						src={s.src}
-						videoStartFrom={s.videoStartFrom || 0}
-						durationInFrames={durationInFrames}
-						zoomTo={s.zoomTo ?? 1.08}
-						volume={s.volume ?? 0}
-					/>
-				) : (
-					<KenBurnsShot
-						photo={s.photo}
-						from={s.from}
-						to={s.to}
-						durationInFrames={durationInFrames}
-						fps={fps}
-						shake={s.shake ?? 0}
-					/>
-				)}
-				{s.title ? (
-					<TitleOverlay title={s.title} subtitle={s.subtitle} accent={accent} durationInFrames={durationInFrames} />
-				) : null}
+		const durationInFrames = durations[i];
+		const ovIn = i === 0 ? 0 : boundaryOverlap[i - 1];
+		const ovOut = i === shots.length - 1 ? 0 : boundaryOverlap[i];
+		const seqStart = starts[i] - ovIn;
+		const seqDur = durationInFrames + ovIn + ovOut;
+		return (
+			<Sequence key={`shot-${i}`} from={seqStart} durationInFrames={seqDur}>
+				<ShotFade ovIn={ovIn}>
+					{s.type === 'video' ? (
+						<VideoShot
+							fps={fps}
+							src={s.src}
+							videoStartFrom={s.videoStartFrom || 0}
+							durationInFrames={durationInFrames}
+							zoomTo={s.zoomTo ?? 1.08}
+							volume={s.volume ?? 0}
+						/>
+					) : (
+						<KenBurnsShot
+							photo={s.photo}
+							from={s.from}
+							to={s.to}
+							durationInFrames={durationInFrames}
+							fps={fps}
+							shake={s.shake ?? 0}
+						/>
+					)}
+					{s.title ? (
+						<TitleOverlay title={s.title} subtitle={s.subtitle} accent={accent} durationInFrames={durationInFrames} />
+					) : null}
+				</ShotFade>
 			</Sequence>
 		);
-		cursor += durationInFrames;
-		return seq;
 	});
 
 	const captionSequences = captions.map((c, i) => {
 		const from = Math.round(c.start * fps);
 		const durationInFrames = Math.round((c.end - c.start) * fps);
+		const words = c.words || (c.plain ? null : autoWordTimings(c.text, c.start, c.end));
 		return (
 			<Sequence key={`cap-${i}`} from={from} durationInFrames={durationInFrames}>
-				{c.words ? (
-					<KaraokeCaptionBar words={c.words} accent={accent} fps={fps} groupStart={c.start} />
+				{words && words.length ? (
+					<KaraokeCaptionBar words={words} accent={accent} fps={fps} groupStart={c.start} />
 				) : (
 					<CaptionBar text={c.text} speaker={c.speaker} accent={accent} />
 				)}
@@ -343,6 +415,7 @@ const AdVideo = (props) => {
 
 			<Sequence from={0} durationInFrames={shotsTotalFrames}>
 				<AbsoluteFill>{shotSequences}</AbsoluteFill>
+				<Vignette />
 				<BrandBanner brand={brand} accent={accent} />
 				<AbsoluteFill>{captionSequences}</AbsoluteFill>
 			</Sequence>
