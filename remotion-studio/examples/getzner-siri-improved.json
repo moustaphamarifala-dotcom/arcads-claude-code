@@ -1,0 +1,21 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "phone": "55 13 34 14",
+  "tagline": "Commandez sur WhatsApp",
+  "ctaDurationInSeconds": 4,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/2ba98b67-ec23e201e7f64eb9ac13d091aba14ce5.mov",
+      "videoStartFrom": 0,
+      "durationInSeconds": 16.4,
+      "zoomTo": 1.1,
+      "volume": 1,
+      "badge": {"text": "Disponible maintenant"}
+    }
+  ],
+  "captions": []
+}
