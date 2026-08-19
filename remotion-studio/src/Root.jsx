@@ -8,7 +8,7 @@ const calculateMetadata = ({props}) => {
 	const shotsSeconds = (props.shots || []).reduce((acc, s) => acc + s.durationInSeconds, 0);
 	const ctaSeconds = props.ctaDurationInSeconds ?? 4.5;
 	const durationInFrames = Math.max(1, Math.round((shotsSeconds + ctaSeconds) * FPS));
-	return {durationInFrames, fps: FPS, width: 1080, height: 1920};
+	return {durationInFrames, fps: FPS, width: props.width ?? 1080, height: props.height ?? 1920};
 };
 
 const RemotionRoot = () => {

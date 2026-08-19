@@ -169,8 +169,22 @@ const TitleOverlay = ({title, subtitle, accent, durationInFrames}) => {
 	);
 };
 
+// ───────────────────────── Keyword emphasis (prices, phone, brand words) ─────────────────────────
+// Splits `text` on the given substrings (case-insensitive) and marks the
+// matched pieces so callers can render them in accent color.
+const splitHighlights = (text, highlight = []) => {
+	if (!highlight.length) return [{text, hit: false}];
+	const pattern = highlight
+		.filter(Boolean)
+		.map((h) => h.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+		.join('|');
+	if (!pattern) return [{text, hit: false}];
+	const re = new RegExp(`(${pattern})`, 'gi');
+	return text.split(re).filter((s) => s !== '').map((s) => ({text: s, hit: re.test(s) && new RegExp(`^(${pattern})$`, 'i').test(s)}));
+};
+
 // ───────────────────────── Caption bar (dialogue / testimonial style) ─────────────────────────
-const CaptionBar = ({text, speaker, accent}) => (
+const CaptionBar = ({text, speaker, accent, highlight}) => (
 	<div
 		style={{
 			position: 'absolute',
@@ -187,12 +201,49 @@ const CaptionBar = ({text, speaker, accent}) => (
 				{speaker}
 			</div>
 		) : null}
-		<div style={{fontFamily: 'sans-serif', fontWeight: 700, fontSize: 40, color: '#fff', lineHeight: 1.3}}>{text}</div>
+		<div style={{fontFamily: 'sans-serif', fontWeight: 700, fontSize: 40, color: '#fff', lineHeight: 1.3}}>
+			{splitHighlights(text, highlight).map((p, i) => (
+				<span key={i} style={{color: p.hit ? accent : '#fff'}}>
+					{p.text}
+				</span>
+			))}
+		</div>
 	</div>
 );
 
+// ───────────────────────── Animated badge (pill callout) ─────────────────────────
+// A small always-on-top pill — "Stock limité", "Prêt à porter" — that slides
+// in from the edge and settles. Attach via a shot's `badge: {text, side?}`.
+const Badge = ({text, accent, dark, side = 'right'}) => {
+	const frame = useCurrentFrame();
+	const in_ = interpolate(frame, [0, 14], [0, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.6))});
+	const offset = interpolate(frame, [0, 14], [side === 'right' ? 60 : -60, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.6))});
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				top: 200,
+				[side]: 40,
+				transform: `translateX(${offset}px) scale(${0.85 + in_ * 0.15})`,
+				opacity: in_,
+				background: accent,
+				color: dark,
+				fontFamily: 'sans-serif',
+				fontWeight: 800,
+				fontSize: 30,
+				padding: '14px 26px',
+				borderRadius: 999,
+				boxShadow: '0 6px 18px rgba(0,0,0,0.35)',
+				whiteSpace: 'nowrap',
+			}}
+		>
+			{text}
+		</div>
+	);
+};
+
 // ───────────────────────── Karaoke caption bar (word-by-word highlight) ─────────────────────────
-const KaraokeCaptionBar = ({words, accent, fps, groupStart}) => {
+const KaraokeCaptionBar = ({words, accent, fps, groupStart, highlight = []}) => {
 	const frame = useCurrentFrame();
 	const t = groupStart + frame / fps;
 	return (
@@ -214,6 +265,8 @@ const KaraokeCaptionBar = ({words, accent, fps, groupStart}) => {
 			{words.map((w, i) => {
 				const active = t >= w.start && t < w.end;
 				const spoken = t >= w.end;
+				const isKeyword = highlight.some((h) => h && w.text.toLowerCase().includes(h.toLowerCase()));
+				const color = active || isKeyword ? accent : spoken ? '#fff' : 'rgba(255,255,255,0.45)';
 				return (
 					<span
 						key={i}
@@ -221,7 +274,7 @@ const KaraokeCaptionBar = ({words, accent, fps, groupStart}) => {
 							fontFamily: 'sans-serif',
 							fontWeight: 800,
 							fontSize: 42,
-							color: active ? accent : spoken ? '#fff' : 'rgba(255,255,255,0.45)',
+							color,
 							transform: active ? 'scale(1.08)' : 'scale(1)',
 							display: 'inline-block',
 							transition: 'none',
@@ -336,7 +389,14 @@ const AdVideo = (props) => {
 		tagline = 'Commandez sur WhatsApp',
 		ctaDurationInSeconds = 4.5,
 		transitionSeconds = 0.35,
+		highlightWords = [],
 	} = props;
+	// Phone number and brand name are always emphasized in captions unless the
+	// caller already listed keywords of their own. Flattened to individual
+	// tokens so word-by-word karaoke can match a multi-word phone number.
+	const effectiveHighlight = (highlightWords.length ? highlightWords : [phone, brand].filter(Boolean))
+		.flatMap((h) => h.toLowerCase().split(/\s+/))
+		.filter(Boolean);
 
 	const durations = shots.map((s) => Math.round(s.durationInSeconds * fps));
 	const starts = [];
@@ -389,6 +449,9 @@ const AdVideo = (props) => {
 					{s.title ? (
 						<TitleOverlay title={s.title} subtitle={s.subtitle} accent={accent} durationInFrames={durationInFrames} />
 					) : null}
+					{s.badge ? (
+						<Badge text={s.badge.text} accent={s.badge.accent ?? accent} dark={dark} side={s.badge.side ?? 'right'} />
+					) : null}
 				</ShotFade>
 			</Sequence>
 		);
@@ -401,9 +464,9 @@ const AdVideo = (props) => {
 		return (
 			<Sequence key={`cap-${i}`} from={from} durationInFrames={durationInFrames}>
 				{words && words.length ? (
-					<KaraokeCaptionBar words={words} accent={accent} fps={fps} groupStart={c.start} />
+					<KaraokeCaptionBar words={words} accent={accent} fps={fps} groupStart={c.start} highlight={effectiveHighlight} />
 				) : (
-					<CaptionBar text={c.text} speaker={c.speaker} accent={accent} />
+					<CaptionBar text={c.text} speaker={c.speaker} accent={accent} highlight={effectiveHighlight} />
 				)}
 			</Sequence>
 		);
