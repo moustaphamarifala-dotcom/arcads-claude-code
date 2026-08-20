@@ -122,3 +122,39 @@ Puis ouvrez le dossier dans Claude Code ou Cursor et demandez par exemple :
 Les skills sources vivent dans `skills/` et `shared/skills/` ; un hook `SessionStart`
 (`.claude/settings.json`) les recopie automatiquement vers `.claude/skills/` et
 `.cursor/skills/` (dossiers générés, non versionnés) à chaque ouverture de session.
+
+### Sans compte Arcads : les créas image via Gemini
+
+L'API Arcads demande un abonnement payant. La **bibliothèque de 37 templates** du pack,
+elle, n'est que du texte — indépendante du fournisseur. Le script
+`scripts/generate-image-ad-gemini.py` la branche directement sur l'API Gemini, avec la
+même `GOOGLE_API_KEY` que la page `/couture` ([clé gratuite avec quota sur Google AI
+Studio](https://aistudio.google.com/apikey)).
+
+```bash
+# Les 37 templates disponibles
+./scripts/generate-image-ad-gemini.py --list
+
+# Lire un template (variables, prompt, notes de rendu)
+./scripts/generate-image-ad-gemini.py --show T7
+
+# Vérifier le prompt final sans rien consommer
+./scripts/generate-image-ad-gemini.py --template T7 --var sticky_note_color=jaune --dry-run
+
+# Générer 2 variantes avec une photo produit en référence
+./scripts/generate-image-ad-gemini.py --template T7 \
+    --var sticky_note_color=jaune \
+    --var handwritten_text_lines="ZÉRO SUCRE" \
+    --var product_unit_description="sachets dorés" \
+    --var powder_or_residue_hint="quelques grains dispersés" \
+    --image-ref references/products/mon-produit.jpg --n 2
+```
+
+Les images sortent dans `outputs/image-ads/` (dossier non versionné). Python 3 seul, aucun
+`pip install`. Les trois garde-fous du pack (anti-chrome, marge de sécurité, anti-emoji dans
+les blocs de texte) sont ajoutés automatiquement, comme dans les skills Arcads.
+
+**Ce que ça couvre et ce que ça ne couvre pas :** les créas **image**, oui — et Gemini accepte
+même des ratios que l'API Arcads refuse (`4:5`, `2:3`). La **vidéo**, non : le modèle vidéo de
+Google (Veo) est en palier payant. Il n'existe pas de route gratuite pour la vidéo, ni ici ni
+ailleurs.

@@ -9,6 +9,7 @@
 - **Image-ad ecosystem (Meta image creatives):** read `shared/skills/image-ad-prompting/OVERVIEW.md` FIRST. Three skills (`chatgpt-image-ad`, `nano-banana-image-ad`, `image-ad-clone`) + a shared 37-template prompt library. The `image-ad-clone` skill asks which backend to validate against at Phase 1, so generic "clone this ad" prompts route correctly. Output is image files; Meta upload is the separate `meta-ad-builder` skill.
 - **Cost disclosure:** Always present credit totals as **estimates** — Arcads has no billing endpoint. Tell the user to confirm exact pricing in the Arcads platform.
 - **Logging:** Log every generation call to `logs/arcads-api.jsonl`.
+- **Sans clé Arcads :** l'API Arcads est payante. Pour les créas **image** uniquement, `./scripts/generate-image-ad-gemini.py` rejoue la bibliothèque de 37 templates (`shared/skills/image-ad-prompting/prompting/prompt-library.md`) sur l'API Gemini avec `GOOGLE_API_KEY` (quota gratuit). Mêmes garde-fous que les skills Arcads. Aucune route gratuite n'existe pour la vidéo — ne pas en promettre une.
 - **First-time setup:** If `.env` is missing, run `./scripts/setup.sh`. If `MASTER_CONTEXT.md` is missing, copy `MASTER_CONTEXT.template.md` to `MASTER_CONTEXT.md`.
 
 # Ce dépôt héberge aussi une application Next.js
