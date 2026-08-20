@@ -195,6 +195,12 @@ textarea {
   padding-top: 20px;
 }
 
+.result-meta {
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
 .result-text {
   white-space: pre-wrap;
   line-height: 1.65;

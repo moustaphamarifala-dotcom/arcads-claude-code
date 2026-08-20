@@ -21,6 +21,13 @@ const TONES = [
   "Informatif",
 ];
 
+// Renvoyé par /api/generate-text dans l’en-tête X-Moteur.
+const LABELS_MOTEUR: Record<string, string> = {
+  claude: "Claude",
+  gemini: "Gemini",
+  gratuit: "Mode gratuit",
+};
+
 export default function TextGenerator() {
   const [prompt, setPrompt] = useState("");
   const [contentType, setContentType] = useState(CONTENT_TYPES[0]);
@@ -29,6 +36,7 @@ export default function TextGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [moteur, setMoteur] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   async function generate() {
@@ -37,6 +45,7 @@ export default function TextGenerator() {
     setError(null);
     setOutput("");
     setCopied(false);
+    setMoteur(null);
 
     const controller = new AbortController();
     abortRef.current = controller;
@@ -53,6 +62,8 @@ export default function TextGenerator() {
         const data = await res.json().catch(() => null);
         throw new Error(data?.error ?? `Erreur serveur (${res.status})`);
       }
+
+      setMoteur(res.headers.get("X-Moteur"));
 
       const reader = res.body!.getReader();
       const decoder = new TextDecoder();
@@ -136,6 +147,7 @@ export default function TextGenerator() {
 
       {output && (
         <div className="result">
+          {moteur && <div className="result-meta">Généré par {LABELS_MOTEUR[moteur] ?? moteur}</div>}
           <div className="result-text">{output}</div>
         </div>
       )}

@@ -8,7 +8,7 @@ Application web de génération de contenu par intelligence artificielle : **tex
 
 | Onglet / Page | Mode gratuit (sans clé) | Mode premium (avec clés) |
 |---|---|---|
-| ✍️ **Textes** | Pollinations.ai | Claude (Anthropic), streaming temps réel |
+| ✍️ **Textes** | Pollinations.ai | Claude (Anthropic) ou Gemini 3.7 Flash (Google), streaming temps réel |
 | 🎨 **Images** | Pollinations.ai | FLUX Schnell (Replicate) |
 | 🎬 **Vidéos** | ❌ non disponible* | WAN 2.1 (Replicate) |
 | 📷 **Studio Photo** (`/photo`) | FLUX ultra-réaliste (Pollinations) | FLUX 1.1 Pro (Replicate) |
@@ -32,6 +32,22 @@ Les **Fiches Personnalités** (page `/personnes`) permettent de **chercher des i
 L'analyse tourne gratuitement sans clé (Pollinations.ai) et bascule sur **Claude** si `ANTHROPIC_API_KEY` est présente. Chaque fiche personnalité propose un bouton « ⚡ Analyser l'actualité » qui ouvre directement Intel sur la bonne personne.
 
 > Intel **résume et questionne des articles existants** : il n'enquête pas, ne révèle rien, n'invente aucun fait et n'écrit au nom d'aucun journaliste. Les titres utilisés sont listés et cliquables sous chaque analyse — vérifiez-les avant de reprendre quoi que ce soit.
+
+### Quel moteur génère les textes ?
+
+L'onglet **Textes** choisit tout seul, dans cet ordre :
+
+1. **Claude** si `ANTHROPIC_API_KEY` est présente ;
+2. **Gemini 3.7 Flash** si `GOOGLE_API_KEY` est présente (la même clé que le Studio Couture) ;
+3. **Pollinations.ai**, le mode gratuit, sinon.
+
+Le moteur utilisé est affiché au-dessus du texte produit. Gemini passe par l'**Interactions API**
+de Google (`POST /v1beta/interactions`), en streaming, sans dépendance supplémentaire.
+
+Deux réglages optionnels : `GEMINI_TEXT_MODEL` pour changer de modèle, et `GEMINI_THINKING_LEVEL`
+(`minimal` / `low` / `medium` / `high`, défaut `low`) pour l'effort de réflexion. Attention au coût :
+les tokens de réflexion sont facturés sans apparaître dans le texte affiché, et pèsent en général
+bien plus lourd que la réponse visible.
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 
