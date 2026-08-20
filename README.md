@@ -91,3 +91,34 @@ L'application se déploie en un clic sur [Vercel](https://vercel.com) :
 | **Premium textes** (clé Anthropic) | Facturé par Anthropic selon les tokens utilisés |
 | **Premium images** (jeton Replicate) | ~0,003 $ par image (FLUX Schnell) |
 | **Vidéos** (jeton Replicate requis) | Quelques centimes par vidéo (WAN 2.1) |
+
+---
+
+## 🤖 Pack de skills Arcads (agent Claude Code / Cursor)
+
+Ce dépôt embarque également le **pack de skills Arcads** de
+[krusemediallc/arcads-claude-code](https://github.com/krusemediallc/arcads-claude-code)
+(licence MIT — voir `LICENSE-arcads-skill-pack`). Il n'a **aucun lien avec l'application
+Next.js ci-dessus** : c'est un ensemble d'instructions pour l'agent (Claude Code ou Cursor)
+qui sait piloter l'API Arcads — vidéos IA (Seedance 2.0, Sora 2, Veo 3.1, Kling 3.0,
+Grok Video, OmniHuman), images (Nano Banana, ChatGPT Image 2), publicités image pour Meta,
+miniatures YouTube.
+
+### Démarrer
+
+```bash
+./scripts/setup.sh                      # clé d'API Arcads + MASTER_CONTEXT.md + sync des skills
+./scripts/fetch-arcads-references.sh    # (optionnel) bibliothèque d'images de référence (~119 Mo)
+```
+
+Puis ouvrez le dossier dans Claude Code ou Cursor et demandez par exemple :
+« Génère une vidéo UGC Seedance de 12 secondes pour ce produit ».
+
+- 📖 Documentation complète du pack : **[ARCADS-SKILL-PACK.md](ARCADS-SKILL-PACK.md)**
+- 🔑 Clé d'API : [app.arcads.ai/settings/api](https://app.arcads.ai/settings/api) — stockée dans `.env` (jamais versionnée)
+- ✅ Vérifier la configuration : `./scripts/check-arcads-env.sh`
+- 🔄 Après modification d'un skill : `./scripts/sync-skill.sh`
+
+Les skills sources vivent dans `skills/` et `shared/skills/` ; un hook `SessionStart`
+(`.claude/settings.json`) les recopie automatiquement vers `.claude/skills/` et
+`.cursor/skills/` (dossiers générés, non versionnés) à chaque ouverture de session.
