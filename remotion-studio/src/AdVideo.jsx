@@ -211,6 +211,30 @@ const CaptionBar = ({text, speaker, accent, highlight}) => (
 	</div>
 );
 
+// ───────────────────────── Raw / native caption (no box, script font) ─────────────────────────
+// Mimics the plain CapCut-style price/name label seen on native vendor videos
+// — no background panel, no brand chrome, just text with a soft shadow so it
+// reads on any footage. Use via a caption's `raw: true`.
+const RawCaption = ({text}) => (
+	<div
+		style={{
+			position: 'absolute',
+			bottom: 420,
+			left: 60,
+			right: 60,
+			fontFamily: 'Georgia, serif',
+			fontStyle: 'italic',
+			fontWeight: 600,
+			fontSize: 46,
+			color: '#fff',
+			lineHeight: 1.25,
+			textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 0 3px rgba(0,0,0,0.5)',
+		}}
+	>
+		{text}
+	</div>
+);
+
 // ───────────────────────── Animated badge (pill callout) ─────────────────────────
 // A small always-on-top pill — "Stock limité", "Prêt à porter" — that slides
 // in from the edge and settles. Attach via a shot's `badge: {text, side?}`.
@@ -390,6 +414,8 @@ const AdVideo = (props) => {
 		ctaDurationInSeconds = 4.5,
 		transitionSeconds = 0.35,
 		highlightWords = [],
+		showBanner = true,
+		showVignette = true,
 	} = props;
 	// Phone number and brand name are always emphasized in captions unless the
 	// caller already listed keywords of their own. Flattened to individual
@@ -460,10 +486,12 @@ const AdVideo = (props) => {
 	const captionSequences = captions.map((c, i) => {
 		const from = Math.round(c.start * fps);
 		const durationInFrames = Math.round((c.end - c.start) * fps);
-		const words = c.words || (c.plain ? null : autoWordTimings(c.text, c.start, c.end));
+		const words = c.words || (c.plain || c.raw ? null : autoWordTimings(c.text, c.start, c.end));
 		return (
 			<Sequence key={`cap-${i}`} from={from} durationInFrames={durationInFrames}>
-				{words && words.length ? (
+				{c.raw ? (
+					<RawCaption text={c.text} />
+				) : words && words.length ? (
 					<KaraokeCaptionBar words={words} accent={accent} fps={fps} groupStart={c.start} highlight={effectiveHighlight} />
 				) : (
 					<CaptionBar text={c.text} speaker={c.speaker} accent={accent} highlight={effectiveHighlight} />
@@ -478,14 +506,16 @@ const AdVideo = (props) => {
 
 			<Sequence from={0} durationInFrames={shotsTotalFrames}>
 				<AbsoluteFill>{shotSequences}</AbsoluteFill>
-				<Vignette />
-				<BrandBanner brand={brand} accent={accent} />
+				{showVignette ? <Vignette /> : null}
+				{showBanner ? <BrandBanner brand={brand} accent={accent} /> : null}
 				<AbsoluteFill>{captionSequences}</AbsoluteFill>
 			</Sequence>
 
-			<Sequence from={shotsTotalFrames} durationInFrames={ctaFrames}>
-				<CtaCard brand={brand} accent={accent} dark={dark} dark2={dark2} phone={phone} tagline={tagline} />
-			</Sequence>
+			{ctaFrames > 0 ? (
+				<Sequence from={shotsTotalFrames} durationInFrames={ctaFrames}>
+					<CtaCard brand={brand} accent={accent} dark={dark} dark2={dark2} phone={phone} tagline={tagline} />
+				</Sequence>
+			) : null}
 		</AbsoluteFill>
 	);
 };
