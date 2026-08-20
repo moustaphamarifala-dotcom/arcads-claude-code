@@ -228,6 +228,7 @@ const RawCaption = ({text}) => (
 			fontSize: 46,
 			color: '#fff',
 			lineHeight: 1.25,
+			whiteSpace: 'pre-line',
 			textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 0 3px rgba(0,0,0,0.5)',
 		}}
 	>
