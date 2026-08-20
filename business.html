@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon Business — Tableau de bord entrepreneur</title>
+<style>
+  :root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eef1f6; --ink: #14213a; --muted: #5c6b86;
+    --line: #dde3ec; --accent: #0e9f6e; --accent-ink: #0a7a53; --accent-soft: rgba(14,159,110,0.12);
+    --money: #b7791f; --good: #0e9f6e; --bad: #dc2626; --warn: #c2770b;
+    --good-soft: rgba(14,159,110,0.12); --bad-soft: rgba(220,38,38,0.10); --warn-soft: rgba(194,119,11,0.14);
+    --shadow: 0 1px 2px rgba(20,33,58,0.05), 0 10px 26px rgba(20,33,58,0.07);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1626; --surface: #172034; --surface-2: #1f2a42; --ink: #e9eff8; --muted: #93a1bd;
+      --line: #2a3650; --accent: #22c58a; --accent-ink: #5fe0b0; --accent-soft: rgba(34,197,138,0.15);
+      --money: #e0b34e; --good: #22c58a; --bad: #f2545b; --warn: #f0a83e;
+      --good-soft: rgba(34,197,138,0.15); --bad-soft: rgba(242,84,91,0.14); --warn-soft: rgba(240,168,62,0.15);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 14px 34px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eef1f6; --ink: #14213a; --muted: #5c6b86;
+    --line: #dde3ec; --accent: #0e9f6e; --accent-ink: #0a7a53; --accent-soft: rgba(14,159,110,0.12);
+    --money: #b7791f; --good: #0e9f6e; --bad: #dc2626; --warn: #c2770b;
+    --good-soft: rgba(14,159,110,0.12); --bad-soft: rgba(220,38,38,0.10); --warn-soft: rgba(194,119,11,0.14);
+    --shadow: 0 1px 2px rgba(20,33,58,0.05), 0 10px 26px rgba(20,33,58,0.07);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1626; --surface: #172034; --surface-2: #1f2a42; --ink: #e9eff8; --muted: #93a1bd;
+    --line: #2a3650; --accent: #22c58a; --accent-ink: #5fe0b0; --accent-soft: rgba(34,197,138,0.15);
+    --money: #e0b34e; --good: #22c58a; --bad: #f2545b; --warn: #f0a83e;
+    --good-soft: rgba(34,197,138,0.15); --bad-soft: rgba(242,84,91,0.14); --warn-soft: rgba(240,168,62,0.15);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 14px 34px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; min-height: 100vh; }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+  .top {
+    background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20;
+  }
+  .top-inner { max-width: 960px; margin: 0 auto; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.01em; font-size: 1.12rem; }
+  .brand .mk { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 1rem; }
+  .top-actions { display: flex; gap: 8px; }
+  .icon-btn { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; }
+  .icon-btn:hover { border-color: var(--accent); }
+
+  .tabs { max-width: 960px; margin: 0 auto; padding: 12px 12px 0; display: flex; gap: 6px; overflow-x: auto; }
+  .tab { flex-shrink: 0; background: transparent; border: none; color: var(--muted); padding: 10px 15px; border-radius: 10px 10px 0 0; cursor: pointer; font-size: 0.95rem; font-weight: 600; font-family: inherit; white-space: nowrap; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent-ink); background: var(--surface); border: 1px solid var(--line); border-bottom-color: var(--surface); margin-bottom: -1px; }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 22px 18px 90px; }
+  h2.section-title { font-size: 1.3rem; font-weight: 820; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .section-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 18px; }
+
+  /* Stat cards */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
+  .stat .lbl { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 700; }
+  .stat .val { font-size: 1.5rem; font-weight: 850; letter-spacing: -0.02em; margin-top: 6px; }
+  .stat.rev .val { color: var(--money); }
+  .stat.profit .val { color: var(--good); }
+  .stat.profit.neg .val { color: var(--bad); }
+  .stat.exp .val { color: var(--bad); }
+  .stat .sub { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 16px; }
+  .card h3 { font-size: 1.02rem; font-weight: 750; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+  /* Forms */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; align-items: end; }
+  .fld label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
+  .fld input, .fld select {
+    width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 12px;
+    color: var(--ink); font-family: inherit; font-size: 0.98rem; outline: none;
+  }
+  .fld input:focus, .fld select:focus { border-color: var(--accent); }
+  .btn { border: none; border-radius: 9px; padding: 11px 18px; font-size: 0.96rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.05); }
+  .btn-sm { padding: 7px 12px; font-size: 0.85rem; }
+  .btn-ghost { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+
+  /* Lists / tables */
+  .rows { display: flex; flex-direction: column; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: none; }
+  .row .main { flex: 1; min-width: 0; }
+  .row .main .t { font-weight: 650; font-size: 0.98rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .main .m { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .row .amt { font-weight: 800; letter-spacing: -0.01em; text-align: right; white-space: nowrap; }
+  .row .amt.pos { color: var(--good); }
+  .row .amt.neg { color: var(--bad); }
+  .del { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 4px 7px; border-radius: 7px; line-height: 1; }
+  .del:hover { color: var(--bad); background: var(--bad-soft); }
+
+  .pill { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.ok { background: var(--good-soft); color: var(--accent-ink); }
+
+  .empty { text-align: center; color: var(--muted); font-style: italic; padding: 26px 10px; font-size: 0.94rem; }
+  .alert { background: var(--warn-soft); border: 1px solid var(--warn); border-radius: 12px; padding: 12px 16px; color: var(--warn); font-size: 0.9rem; margin-bottom: 16px; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 520px) {
+    .stat .val { font-size: 1.3rem; }
+    .row .main .t { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="mk">₣</span> Mon Business</div>
+    <div class="top-actions">
+      <button class="icon-btn" id="exportBtn" title="Sauvegarder mes données">⬇</button>
+      <button class="icon-btn" id="importBtn" title="Restaurer une sauvegarde">⬆</button>
+      <button class="icon-btn" id="themeBtn" title="Thème clair / sombre">◐</button>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="dash">📊 Tableau de bord</button>
+    <button class="tab" data-tab="sales">💰 Ventes</button>
+    <button class="tab" data-tab="exp">🧾 Dépenses</button>
+    <button class="tab" data-tab="prod">📦 Produits</button>
+    <button class="tab" data-tab="cli">👥 Clients</button>
+  </nav>
+</div>
+
+<div class="wrap" id="view"></div>
+
+<script>
+  "use strict";
+
+  // ---------- Utilitaires ----------
+  const $ = (s, r = document) => r.querySelector(s);
+  const view = $("#view");
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const today = () => new Date().toISOString().slice(0, 10);
+  const curMonth = () => new Date().toISOString().slice(0, 7);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const F = (n) => (Math.round(Number(n) || 0)).toLocaleString("fr-FR").replace(/[  ]/g, " ") + " F";
+  const dateFr = (d) => { try { return new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }); } catch { return d; } };
+
+  // ---------- Stockage ----------
+  const DB = {
+    products: [], sales: [], expenses: [], clients: [],
+    load() {
+      try {
+        const raw = localStorage.getItem("biz.data");
+        if (raw) Object.assign(this, JSON.parse(raw));
+      } catch (e) {}
+    },
+    save() {
+      try {
+        localStorage.setItem("biz.data", JSON.stringify({
+          products: this.products, sales: this.sales, expenses: this.expenses, clients: this.clients,
+        }));
+      } catch (e) {}
+    },
+  };
+  DB.load();
+
+  // ---------- Calculs ----------
+  const sum = (arr, f) => arr.reduce((a, x) => a + (Number(f(x)) || 0), 0);
+  function stats() {
+    const m = curMonth();
+    const caTotal = sum(DB.sales, (s) => s.total);
+    const caMois = sum(DB.sales.filter((s) => (s.date || "").startsWith(m)), (s) => s.total);
+    const depTotal = sum(DB.expenses, (e) => e.amount);
+    const depMois = sum(DB.expenses.filter((e) => (e.date || "").startsWith(m)), (e) => e.amount);
+    return {
+      caTotal, caMois, depTotal, depMois,
+      benefTotal: caTotal - depTotal, benefMois: caMois - depMois,
+      nbClients: DB.clients.length, nbVentes: DB.sales.length,
+      stockBas: DB.products.filter((p) => Number(p.stock) <= 5),
+    };
+  }
+
+  // ---------- Vues ----------
+  let tab = "dash";
+
+  function render() {
+    if (tab === "dash") renderDash();
+    else if (tab === "sales") renderSales();
+    else if (tab === "exp") renderExpenses();
+    else if (tab === "prod") renderProducts();
+    else if (tab === "cli") renderClients();
+  }
+
+  function renderDash() {
+    const s = stats();
+    const negP = s.benefMois < 0 ? "neg" : "";
+    // Top produits
+    const agg = {};
+    DB.sales.forEach((v) => { agg[v.productName] = agg[v.productName] || { qty: 0, total: 0 }; agg[v.productName].qty += Number(v.qty) || 0; agg[v.productName].total += Number(v.total) || 0; });
+    const top = Object.entries(agg).sort((a, b) => b[1].total - a[1].total).slice(0, 5);
+    const recent = DB.sales.slice(0, 5);
+
+    view.innerHTML = `
+      <h2 class="section-title">Tableau de bord</h2>
+      <p class="section-sub">Vue d'ensemble de ton activité — ce mois-ci et depuis le début.</p>
+
+      <div class="stats">
+        <div class="stat rev"><div class="lbl">Chiffre d'affaires (mois)</div><div class="val num">${F(s.caMois)}</div><div class="sub num">Total : ${F(s.caTotal)}</div></div>
+        <div class="stat profit ${negP}"><div class="lbl">Bénéfice (mois)</div><div class="val num">${F(s.benefMois)}</div><div class="sub num">Total : ${F(s.benefTotal)}</div></div>
+        <div class="stat exp"><div class="lbl">Dépenses (mois)</div><div class="val num">${F(s.depMois)}</div><div class="sub num">Total : ${F(s.depTotal)}</div></div>
+        <div class="stat"><div class="lbl">Clients</div><div class="val num">${s.nbClients}</div><div class="sub num">${s.nbVentes} vente${s.nbVentes > 1 ? "s" : ""}</div></div>
+      </div>
+
+      ${s.stockBas.length ? `<div class="alert">⚠️ Stock bas : ${s.stockBas.map((p) => `${esc(p.name)} (${p.stock})`).join(", ")}. Pense à réapprovisionner.</div>` : ""}
+
+      <div class="card">
+        <h3>🏆 Meilleurs produits</h3>
+        <div class="rows">
+          ${top.length ? top.map(([name, d]) => `
+            <div class="row">
+              <div class="main"><div class="t">${esc(name)}</div><div class="m num">${d.qty} vendu${d.qty > 1 ? "s" : ""}</div></div>
+              <div class="amt num">${F(d.total)}</div>
+            </div>`).join("") : `<div class="empty">Aucune vente enregistrée pour l'instant.</div>`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🕒 Ventes récentes</h3>
+        <div class="rows">
+          ${recent.length ? recent.map((v) => `
+            <div class="row">
+              <div class="main"><div class="t">${esc(v.productName)}${v.clientName ? " — " + esc(v.clientName) : ""}</div><div class="m num">${dateFr(v.date)} · ${v.qty} × ${F(v.unitPrice)}</div></div>
+              <div class="amt num pos">+${F(v.total)}</div>
+            </div>`).join("") : `<div class="empty">Enregistre ta première vente dans l'onglet « Ventes ».</div>`}
+        </div>
+      </div>`;
+  }
+
+  function renderSales() {
+    const prodOptions = DB.products.map((p) => `<option value="${p.id}" data-price="${p.price}">${esc(p.name)} (${F(p.price)})</option>`).join("");
+    view.innerHTML = `
+      <h2 class="section-title">Ventes</h2>
+      <p class="section-sub">Enregistre chaque vente. Le stock du produit se met à jour automatiquement.</p>
+
+      <div class="card">
+        <h3>➕ Nouvelle vente</h3>
+        <div class="form-grid">
+          <div class="fld"><label>Produit</label>
+            <select id="sProd">${DB.products.length ? prodOptions : `<option value="">— Ajoute d'abord un produit —</option>`}</select>
+          </div>
+          <div class="fld"><label>Client (optionnel)</label>
+            <select id="sClient"><option value="">— Aucun —</option>${DB.clients.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select>
+          </div>
+          <div class="fld"><label>Quantité</label><input id="sQty" type="number" min="1" value="1" inputmode="numeric"></div>
+          <div class="fld"><label>Prix unitaire (F)</label><input id="sPrice" type="number" min="0" inputmode="numeric"></div>
+          <div class="fld"><label>Date</label><input id="sDate" type="date" value="${today()}"></div>
+          <div class="fld"><button class="btn btn-primary" id="addSale">Enregistrer</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📄 Historique des ventes (${DB.sales.length})</h3>
+        <div class="rows">
+          ${DB.sales.length ? DB.sales.map((v) => `
+            <div class="row">
+              <div class="main"><div class="t">${esc(v.productName)}${v.clientName ? " — " + esc(v.clientName) : ""}</div><div class="m num">${dateFr(v.date)} · ${v.qty} × ${F(v.unitPrice)}</div></div>
+              <div class="amt num pos">+${F(v.total)}</div>
+              <button class="del" data-del-sale="${v.id}" aria-label="Supprimer">✕</button>
+            </div>`).join("") : `<div class="empty">Aucune vente pour l'instant.</div>`}
+        </div>
+      </div>`;
+
+    const prodSel = $("#sProd"), priceInp = $("#sPrice");
+    function syncPrice() { const opt = prodSel.selectedOptions[0]; if (opt && opt.dataset.price) priceInp.value = opt.dataset.price; }
+    if (DB.products.length) syncPrice();
+    prodSel.addEventListener("change", syncPrice);
+
+    $("#addSale").addEventListener("click", () => {
+      const p = DB.products.find((x) => x.id === prodSel.value);
+      if (!p) { alert("Ajoute d'abord un produit dans l'onglet « Produits »."); return; }
+      const qty = Math.max(1, parseInt($("#sQty").value) || 1);
+      const unitPrice = Math.max(0, parseFloat(priceInp.value) || 0);
+      const client = DB.clients.find((c) => c.id === $("#sClient").value);
+      DB.sales.unshift({
+        id: uid(), date: $("#sDate").value || today(),
+        productId: p.id, productName: p.name, qty, unitPrice, total: qty * unitPrice,
+        clientId: client ? client.id : null, clientName: client ? client.name : null,
+      });
+      p.stock = (Number(p.stock) || 0) - qty; // décrémente le stock
+      DB.save(); render();
+    });
+  }
+
+  function renderExpenses() {
+    const cats = ["Achat tissu", "Transport", "Salaire", "Loyer", "Matériel", "Publicité", "Autre"];
+    view.innerHTML = `
+      <h2 class="section-title">Dépenses</h2>
+      <p class="section-sub">Note toutes tes sorties d'argent pour connaître ton vrai bénéfice.</p>
+
+      <div class="card">
+        <h3>➕ Nouvelle dépense</h3>
+        <div class="form-grid">
+          <div class="fld"><label>Libellé</label><input id="eLabel" type="text" placeholder="Ex. : achat bazin getzner" maxlength="60"></div>
+          <div class="fld"><label>Catégorie</label><select id="eCat">${cats.map((c) => `<option>${c}</option>`).join("")}</select></div>
+          <div class="fld"><label>Montant (F)</label><input id="eAmount" type="number" min="0" inputmode="numeric"></div>
+          <div class="fld"><label>Date</label><input id="eDate" type="date" value="${today()}"></div>
+          <div class="fld"><button class="btn btn-primary" id="addExp">Enregistrer</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📄 Historique des dépenses (${DB.expenses.length})</h3>
+        <div class="rows">
+          ${DB.expenses.length ? DB.expenses.map((e) => `
+            <div class="row">
+              <div class="main"><div class="t">${esc(e.label || e.category)}</div><div class="m num">${dateFr(e.date)} · ${esc(e.category)}</div></div>
+              <div class="amt num neg">−${F(e.amount)}</div>
+              <button class="del" data-del-exp="${e.id}" aria-label="Supprimer">✕</button>
+            </div>`).join("") : `<div class="empty">Aucune dépense pour l'instant.</div>`}
+        </div>
+      </div>`;
+
+    $("#addExp").addEventListener("click", () => {
+      const amount = Math.max(0, parseFloat($("#eAmount").value) || 0);
+      if (!amount) { alert("Indique un montant."); return; }
+      DB.expenses.unshift({ id: uid(), date: $("#eDate").value || today(), label: $("#eLabel").value.trim(), category: $("#eCat").value, amount });
+      DB.save(); render();
+    });
+  }
+
+  function renderProducts() {
+    view.innerHTML = `
+      <h2 class="section-title">Produits & Stock</h2>
+      <p class="section-sub">Tes articles, leur prix et leur stock. La marge est calculée automatiquement.</p>
+
+      <div class="card">
+        <h3>➕ Nouveau produit</h3>
+        <div class="form-grid">
+          <div class="fld"><label>Nom</label><input id="pName" type="text" placeholder="Ex. : Bazin brodé bleu" maxlength="50"></div>
+          <div class="fld"><label>Prix d'achat (F)</label><input id="pCost" type="number" min="0" inputmode="numeric"></div>
+          <div class="fld"><label>Prix de vente (F)</label><input id="pPrice" type="number" min="0" inputmode="numeric"></div>
+          <div class="fld"><label>Stock</label><input id="pStock" type="number" min="0" value="0" inputmode="numeric"></div>
+          <div class="fld"><button class="btn btn-primary" id="addProd">Ajouter</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📦 Mes produits (${DB.products.length})</h3>
+        <div class="rows">
+          ${DB.products.length ? DB.products.map((p) => {
+            const marge = (Number(p.price) || 0) - (Number(p.cost) || 0);
+            const low = Number(p.stock) <= 5;
+            return `<div class="row">
+              <div class="main"><div class="t">${esc(p.name)}</div><div class="m num">Achat ${F(p.cost)} · Vente ${F(p.price)} · Marge <b style="color:var(--good)">${F(marge)}</b></div></div>
+              <div style="text-align:right">
+                <div class="amt num">Stock : ${Number(p.stock) || 0}</div>
+                <span class="pill ${low ? "warn" : "ok"}">${low ? "à réapprovisionner" : "en stock"}</span>
+              </div>
+              <button class="del" data-del-prod="${p.id}" aria-label="Supprimer">✕</button>
+            </div>`;
+          }).join("") : `<div class="empty">Ajoute ton premier produit ci-dessus.</div>`}
+        </div>
+      </div>`;
+
+    $("#addProd").addEventListener("click", () => {
+      const name = $("#pName").value.trim();
+      if (!name) { alert("Donne un nom au produit."); return; }
+      DB.products.push({
+        id: uid(), name,
+        cost: Math.max(0, parseFloat($("#pCost").value) || 0),
+        price: Math.max(0, parseFloat($("#pPrice").value) || 0),
+        stock: Math.max(0, parseInt($("#pStock").value) || 0),
+      });
+      DB.save(); render();
+    });
+  }
+
+  function renderClients() {
+    view.innerHTML = `
+      <h2 class="section-title">Clients</h2>
+      <p class="section-sub">Ton carnet de clients, avec ce que chacun a acheté au total.</p>
+
+      <div class="card">
+        <h3>➕ Nouveau client</h3>
+        <div class="form-grid">
+          <div class="fld"><label>Nom</label><input id="cName" type="text" placeholder="Ex. : Aïssatou Diallo" maxlength="50"></div>
+          <div class="fld"><label>Téléphone</label><input id="cPhone" type="tel" placeholder="Ex. : 77 123 45 67" maxlength="30"></div>
+          <div class="fld"><button class="btn btn-primary" id="addCli">Ajouter</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>👥 Mes clients (${DB.clients.length})</h3>
+        <div class="rows">
+          ${DB.clients.length ? DB.clients.map((c) => {
+            const totalSpent = sum(DB.sales.filter((v) => v.clientId === c.id), (v) => v.total);
+            const nb = DB.sales.filter((v) => v.clientId === c.id).length;
+            return `<div class="row">
+              <div class="main"><div class="t">${esc(c.name)}</div><div class="m num">${c.phone ? esc(c.phone) + " · " : ""}${nb} achat${nb > 1 ? "s" : ""}</div></div>
+              <div class="amt num" style="color:var(--money)">${F(totalSpent)}</div>
+              <button class="del" data-del-cli="${c.id}" aria-label="Supprimer">✕</button>
+            </div>`;
+          }).join("") : `<div class="empty">Ajoute ton premier client ci-dessus.</div>`}
+        </div>
+      </div>`;
+
+    $("#addCli").addEventListener("click", () => {
+      const name = $("#cName").value.trim();
+      if (!name) { alert("Donne un nom au client."); return; }
+      DB.clients.push({ id: uid(), name, phone: $("#cPhone").value.trim() });
+      DB.save(); render();
+    });
+  }
+
+  // ---------- Suppression (délégation) ----------
+  view.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-del-sale],[data-del-exp],[data-del-prod],[data-del-cli]");
+    if (!b) return;
+    if (b.dataset.delSale) DB.sales = DB.sales.filter((x) => x.id !== b.dataset.delSale);
+    else if (b.dataset.delExp) DB.expenses = DB.expenses.filter((x) => x.id !== b.dataset.delExp);
+    else if (b.dataset.delProd) { if (!confirm("Supprimer ce produit ?")) return; DB.products = DB.products.filter((x) => x.id !== b.dataset.delProd); }
+    else if (b.dataset.delCli) { if (!confirm("Supprimer ce client ?")) return; DB.clients = DB.clients.filter((x) => x.id !== b.dataset.delCli); }
+    DB.save(); render();
+  });
+
+  // ---------- Onglets ----------
+  $("#tabs").addEventListener("click", (e) => {
+    const t = e.target.closest(".tab"); if (!t) return;
+    tab = t.dataset.tab;
+    document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("active", x === t));
+    render();
+  });
+
+  // ---------- Thème ----------
+  $("#themeBtn").addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const isDark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+  });
+
+  // ---------- Sauvegarde / Restauration ----------
+  $("#exportBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({ products: DB.products, sales: DB.sales, expenses: DB.expenses, clients: DB.clients }, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "mon-business-sauvegarde-" + today() + ".json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  });
+  $("#importBtn").addEventListener("click", () => $("#importFile").click());
+  $("#importFile").addEventListener("change", (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const d = JSON.parse(r.result);
+        if (!confirm("Remplacer tes données actuelles par cette sauvegarde ?")) return;
+        DB.products = d.products || []; DB.sales = d.sales || []; DB.expenses = d.expenses || []; DB.clients = d.clients || [];
+        DB.save(); render();
+        alert("Sauvegarde restaurée ✅");
+      } catch { alert("Fichier de sauvegarde invalide."); }
+    };
+    r.readAsText(file);
+    e.target.value = "";
+  });
+
+  // ---------- Init ----------
+  render();
+</script>
+</body>
+</html>

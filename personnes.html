@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qui est qui ? — Fiches personnalités</title>
+<style>
+  :root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eef1f6; --ink: #14213a; --muted: #5c6b86;
+    --line: #dde3ec; --accent: #3b6ef5; --accent-ink: #2450cc; --accent-soft: rgba(59,110,245,0.12);
+    --good: #0e9f6e; --bad: #dc2626;
+    --shadow: 0 1px 2px rgba(20,33,58,0.05), 0 10px 26px rgba(20,33,58,0.07);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1626; --surface: #172034; --surface-2: #1f2a42; --ink: #e9eff8; --muted: #93a1bd;
+      --line: #2a3650; --accent: #6b93ff; --accent-ink: #9bb7ff; --accent-soft: rgba(107,147,255,0.16);
+      --good: #22c58a; --bad: #f2545b;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 14px 34px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eef1f6; --ink: #14213a; --muted: #5c6b86;
+    --line: #dde3ec; --accent: #3b6ef5; --accent-ink: #2450cc; --accent-soft: rgba(59,110,245,0.12);
+    --good: #0e9f6e; --bad: #dc2626;
+    --shadow: 0 1px 2px rgba(20,33,58,0.05), 0 10px 26px rgba(20,33,58,0.07);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1626; --surface: #172034; --surface-2: #1f2a42; --ink: #e9eff8; --muted: #93a1bd;
+    --line: #2a3650; --accent: #6b93ff; --accent-ink: #9bb7ff; --accent-soft: rgba(107,147,255,0.16);
+    --good: #22c58a; --bad: #f2545b;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 14px 34px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; min-height: 100vh; }
+
+  .top { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+  .top-inner { max-width: 960px; margin: 0 auto; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.01em; font-size: 1.12rem; }
+  .brand .mk { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 1rem; }
+  .icon-btn { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; }
+  .icon-btn:hover { border-color: var(--accent); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 22px 18px 90px; }
+
+  .intro { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; max-width: 62ch; }
+
+  .search { display: flex; gap: 8px; flex-wrap: wrap; }
+  .search input, .search select {
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink); border-radius: 12px;
+    padding: 13px 15px; font-size: 1rem; font-family: inherit; box-shadow: var(--shadow);
+  }
+  .search input { flex: 1 1 260px; min-width: 0; }
+  .search input:focus, .search select:focus { outline: none; border-color: var(--accent); }
+  .btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 13px 24px;
+    font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer;
+  }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .chips { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .chips-label { font-size: 0.82rem; color: var(--muted); }
+  .chip {
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink); border-radius: 999px;
+    padding: 7px 13px; font-size: 0.85rem; font-family: inherit; cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .chip.fav { border-color: var(--accent-soft); background: var(--accent-soft); }
+
+  .msg { margin-top: 20px; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+  .msg.err { border-color: var(--bad); color: var(--bad); }
+  .hidden { display: none !important; }
+
+  .card { margin-top: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: var(--shadow); }
+
+  .head { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
+  .portrait { width: 150px; height: 180px; object-fit: cover; border-radius: 13px; background: var(--surface-2); border: 1px solid var(--line); flex-shrink: 0; }
+  .portrait.empty { display: grid; place-items: center; font-size: 3rem; color: var(--muted); }
+  .ident { flex: 1 1 280px; min-width: 0; }
+  .ident h2 { font-size: clamp(1.35rem, 4vw, 1.9rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .role { margin-top: 5px; color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 12px; }
+  .tag { background: var(--accent-soft); color: var(--accent-ink); border-radius: 999px; padding: 5px 11px; font-size: 0.8rem; font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .link {
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: 999px;
+    padding: 7px 13px; font-size: 0.85rem; text-decoration: none;
+  }
+  .link:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+  .block { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .block h3 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 12px; }
+
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .fact { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; }
+  .fact dt { font-size: 0.74rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .fact dd { font-size: 0.95rem; line-height: 1.45; }
+
+  .para { margin-bottom: 11px; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; }
+  .tags li { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; font-size: 0.87rem; }
+
+  .rows { display: flex; flex-direction: column; gap: 9px; }
+  .row {
+    display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 13px; padding: 11px;
+    color: var(--ink); font-family: inherit; cursor: pointer;
+  }
+  .row:hover { border-color: var(--accent); }
+  .row img, .row .ph { width: 46px; height: 46px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: var(--surface-2); }
+  .row .ph { display: grid; place-items: center; font-size: 1.3rem; }
+  .row .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .row .txt strong { font-size: 0.95rem; font-weight: 650; }
+  .row .txt em { font-style: normal; font-size: 0.8rem; color: var(--accent-ink); }
+  .row .txt span { font-size: 0.85rem; color: var(--muted); }
+
+  .near { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 9px; }
+
+  .foot { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="mk">🔎</span> Qui est qui ?</div>
+    <button class="icon-btn" id="themeBtn" title="Changer de thème">🌗</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="intro">
+    Cherchez une personnalité publique — journaliste, sportif, artiste, responsable
+    politique — et obtenez sa biographie, son parcours, ses œuvres et ses comptes
+    officiels. Les informations viennent de Wikipédia et Wikidata.
+  </p>
+
+  <div class="search">
+    <input id="q" type="search" placeholder="Nom d'une personnalité (ex. Romain Molina)" aria-label="Nom à rechercher">
+    <select id="lang" aria-label="Langue">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+    <button class="btn" id="goBtn">Rechercher</button>
+  </div>
+
+  <div class="chips" id="examples"><span class="chips-label">Exemples :</span></div>
+  <div class="chips hidden" id="favs"><span class="chips-label">⭐ Enregistrées :</span></div>
+
+  <div class="msg hidden" id="msg"></div>
+
+  <article class="card hidden" id="sheet"></article>
+  <section class="rows" id="results" style="margin-top:20px"></section>
+
+  <footer class="foot">
+    Fiches construites à partir de sources publiques (Wikipédia, Wikidata) et
+    destinées aux personnalités publiques. Les informations peuvent être
+    incomplètes ou datées : vérifiez toujours à la source avant de publier.
+    Une connexion internet est nécessaire.
+  </footer>
+</main>
+
+<script>
+  "use strict";
+
+  // ---------- Utilitaires ----------
+  const $ = (s, r = document) => r.querySelector(s);
+
+  function el(tag, opts = {}, ...enfants) {
+    const n = document.createElement(tag);
+    if (opts.class) n.className = opts.class;
+    if (opts.text != null) n.textContent = opts.text;
+    for (const [k, v] of Object.entries(opts.attrs || {})) n.setAttribute(k, v);
+    if (opts.on) for (const [ev, fn] of Object.entries(opts.on)) n.addEventListener(ev, fn);
+    for (const c of enfants) if (c) n.appendChild(c);
+    return n;
+  }
+
+  const EXEMPLES = ["Romain Molina", "Sadio Mané", "Aliou Cissé", "Angélique Kidjo", "Didier Drogba"];
+  const CLE_FAVORIS = "personnes.favoris";
+  const CLE_THEME = "personnes.theme";
+
+  // ---------- Thème ----------
+  const themeSauve = localStorage.getItem(CLE_THEME);
+  if (themeSauve) document.documentElement.setAttribute("data-theme", themeSauve);
+  $("#themeBtn").addEventListener("click", () => {
+    const actuel = document.documentElement.getAttribute("data-theme");
+    const sombreParDefaut = matchMedia("(prefers-color-scheme: dark)").matches;
+    const suivant = actuel ? (actuel === "dark" ? "light" : "dark") : (sombreParDefaut ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", suivant);
+    localStorage.setItem(CLE_THEME, suivant);
+  });
+
+  // ---------- Favoris ----------
+  function lireFavoris() {
+    try { return JSON.parse(localStorage.getItem(CLE_FAVORIS)) || []; } catch { return []; }
+  }
+  function ecrireFavoris(liste) {
+    try { localStorage.setItem(CLE_FAVORIS, JSON.stringify(liste.slice(0, 12))); } catch {}
+  }
+
+  // ---------- Accès aux données publiques ----------
+  // « origin=* » autorise l'appel depuis n'importe quelle page, y compris un fichier local.
+  async function api(hote, params) {
+    const url = new URL("https://" + hote + "/w/api.php");
+    url.searchParams.set("format", "json");
+    url.searchParams.set("formatversion", "2");
+    url.searchParams.set("origin", "*");
+    for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+
+    const rep = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!rep.ok) throw new Error("Le service a répondu " + rep.status);
+    return rep.json();
+  }
+
+  const wiki = (lang, p) => api(lang + ".wikipedia.org", p);
+  const wikidata = (p) => api("www.wikidata.org", p);
+
+  function pagesVersListe(data, lang) {
+    const pages = (data && data.query && data.query.pages) || [];
+    return pages
+      .slice()
+      .sort((a, b) => (a.index || 99) - (b.index || 99))
+      .map((p) => ({
+        titre: p.title,
+        description: p.description || null,
+        extrait: (p.extract || "").trim() || null,
+        image: (p.thumbnail && p.thumbnail.source) || null,
+        lang: lang,
+      }));
+  }
+
+  const PARAMS_RECHERCHE = {
+    generator: "search", gsrlimit: "8",
+    prop: "pageimages|description|extracts",
+    piprop: "thumbnail", pithumbsize: "220",
+    exintro: "1", explaintext: "1", exsentences: "2",
+  };
+
+  async function rechercher(q, lang) {
+    const params = Object.assign({ gsrsearch: q }, PARAMS_RECHERCHE);
+    let liste = pagesVersListe(await wiki(lang, params), lang);
+    if (liste.length === 0) {
+      const secours = lang === "fr" ? "en" : "fr";
+      liste = pagesVersListe(await wiki(secours, params), secours);
+    }
+    return liste;
+  }
+
+  // ---------- Wikidata : faits structurés ----------
+  const FAITS = [
+    ["P569", "Naissance"], ["P19", "Lieu de naissance"],
+    ["P570", "Décès"], ["P20", "Lieu de décès"],
+    ["P27", "Nationalité"], ["P106", "Profession"],
+    ["P39", "Fonction"], ["P108", "Employeur"],
+    ["P69", "Formation"], ["P1412", "Langues"],
+    ["P54", "Clubs"], ["P413", "Poste"],
+  ];
+  const LISTES = [["P800", "Œuvres notables"], ["P166", "Distinctions"], ["P1411", "Nominations"]];
+  const LIENS = [
+    ["P856", "Site officiel", (v) => v],
+    ["P2002", "X (Twitter)", (v) => "https://x.com/" + v],
+    ["P2003", "Instagram", (v) => "https://instagram.com/" + v],
+    ["P2013", "Facebook", (v) => "https://facebook.com/" + v],
+    ["P2397", "YouTube", (v) => "https://youtube.com/channel/" + v],
+    ["P6634", "LinkedIn", (v) => "https://linkedin.com/in/" + v],
+    ["P345", "IMDb", (v) => "https://www.imdb.com/name/" + v + "/"],
+  ];
+
+  const MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+  function formaterDate(v) {
+    if (!v || !v.time) return null;
+    const m = /^([+-])(\d{4,})-(\d{2})-(\d{2})/.exec(v.time);
+    if (!m) return null;
+    const suffixe = m[1] === "-" ? " av. J.-C." : "";
+    const annee = parseInt(m[2], 10), mois = parseInt(m[3], 10), jour = parseInt(m[4], 10);
+    const precision = v.precision == null ? 11 : v.precision;
+    if (precision <= 9 || mois === 0) return annee + suffixe;
+    if (precision === 10 || jour === 0) return MOIS[mois - 1] + " " + annee + suffixe;
+    return jour + " " + MOIS[mois - 1] + " " + annee + suffixe;
+  }
+
+  function calculerAge(naissance, deces) {
+    if (!naissance || !naissance.time || (naissance.precision != null && naissance.precision < 11)) return null;
+    if (naissance.time.startsWith("-")) return null;
+    const debut = new Date(naissance.time.slice(1));
+    if (isNaN(debut)) return null;
+    const fin = deces && deces.time && !deces.time.startsWith("-") ? new Date(deces.time.slice(1)) : new Date();
+    if (isNaN(fin)) return null;
+    let age = fin.getFullYear() - debut.getFullYear();
+    const dm = fin.getMonth() - debut.getMonth();
+    if (dm < 0 || (dm === 0 && fin.getDate() < debut.getDate())) age -= 1;
+    return age >= 0 && age < 130 ? age : null;
+  }
+
+  function valeurs(entite, prop) {
+    const liste = (entite.claims && entite.claims[prop]) || [];
+    return liste
+      .filter((c) => c.rank !== "deprecated" && c.mainsnak && c.mainsnak.snaktype === "value")
+      .map((c) => c.mainsnak.datavalue && c.mainsnak.datavalue.value);
+  }
+
+  async function chargerLibelles(ids) {
+    const uniques = [...new Set(ids)].filter(Boolean);
+    const libelles = {};
+    for (let i = 0; i < uniques.length; i += 50) {
+      const data = await wikidata({
+        action: "wbgetentities", ids: uniques.slice(i, i + 50).join("|"),
+        props: "labels", languages: "fr|en",
+      });
+      for (const [id, ent] of Object.entries((data && data.entities) || {})) {
+        const l = ent.labels && (ent.labels.fr || ent.labels.en);
+        if (l) libelles[id] = l.value;
+      }
+    }
+    return libelles;
+  }
+
+  async function chargerProches(titre, lang) {
+    try {
+      const data = await wiki(lang, {
+        generator: "search", gsrsearch: "morelike:" + titre, gsrlimit: "6",
+        prop: "pageimages|description", piprop: "thumbnail", pithumbsize: "160",
+      });
+      return pagesVersListe(data, lang).filter((r) => r.titre !== titre);
+    } catch { return []; }
+  }
+
+  async function construireFiche(titre, lang) {
+    const data = await wiki(lang, {
+      action: "query", titles: titre, redirects: "1",
+      prop: "extracts|pageimages|pageprops|info", inprop: "url",
+      exintro: "1", explaintext: "1", piprop: "original|thumbnail", pithumbsize: "480",
+    });
+
+    const page = data && data.query && data.query.pages && data.query.pages[0];
+    if (!page || page.missing) return null;
+
+    const qid = page.pageprops && page.pageprops.wikibase_item;
+    const fiche = {
+      titre: page.title, lang: lang,
+      description: page.description || null,
+      biographie: (page.extract || "").trim(),
+      image: (page.original && page.original.source) || (page.thumbnail && page.thumbnail.source) || null,
+      urlWikipedia: page.fullurl || null,
+      urlWikidata: qid ? "https://www.wikidata.org/wiki/" + qid : null,
+      estPersonne: false, age: null, faits: [], listes: [], liens: [], proches: [],
+    };
+
+    const prochesPromesse = chargerProches(page.title, lang);
+
+    if (qid) {
+      const rep = await wikidata({ action: "wbgetentities", ids: qid, props: "claims|descriptions", languages: "fr|en" });
+      const entite = rep && rep.entities && rep.entities[qid];
+
+      if (entite) {
+        fiche.estPersonne = valeurs(entite, "P31").some((v) => v && v.id === "Q5");
+        if (!fiche.description && entite.descriptions) {
+          const d = entite.descriptions.fr || entite.descriptions.en;
+          if (d) fiche.description = d.value;
+        }
+
+        const ids = [];
+        for (const [prop] of [...FAITS, ...LISTES]) {
+          for (const v of valeurs(entite, prop)) if (v && v.id) ids.push(v.id);
+        }
+        const libelles = await chargerLibelles(ids);
+
+        const rendre = (v) => {
+          if (v == null) return null;
+          if (typeof v === "string") return v;
+          if (v.id) return libelles[v.id] || null;
+          if (v.time) return formaterDate(v);
+          if (v.text) return v.text;
+          return null;
+        };
+
+        for (const [prop, label] of FAITS) {
+          const vals = [...new Set(valeurs(entite, prop).map(rendre).filter(Boolean))].slice(0, 6);
+          if (vals.length) fiche.faits.push({ label, vals });
+        }
+        for (const [prop, label] of LISTES) {
+          const vals = [...new Set(valeurs(entite, prop).map(rendre).filter(Boolean))].slice(0, 12);
+          if (vals.length) fiche.listes.push({ label, vals });
+        }
+        for (const [prop, label, modele] of LIENS) {
+          const v = valeurs(entite, prop)[0];
+          if (typeof v === "string" && v.trim()) fiche.liens.push({ label, url: modele(v.trim()) });
+        }
+        fiche.age = calculerAge(valeurs(entite, "P569")[0], valeurs(entite, "P570")[0]);
+      }
+    }
+
+    fiche.proches = await prochesPromesse;
+    return fiche;
+  }
+
+  // ---------- Affichage ----------
+  const msgEl = $("#msg"), sheetEl = $("#sheet"), resultsEl = $("#results");
+
+  function message(texte, erreur) {
+    if (!texte) { msgEl.classList.add("hidden"); return; }
+    msgEl.textContent = texte;
+    msgEl.className = "msg" + (erreur ? " err" : "");
+  }
+
+  // Une photo peut disparaître ou refuser de se charger : on retombe sur la silhouette.
+  function photo(src, alt, classeImage, baliseRepli, classeRepli) {
+    const image = el("img", {
+      class: classeImage,
+      attrs: { src: src, alt: alt, loading: "lazy", referrerpolicy: "no-referrer" },
+    });
+    image.addEventListener("error", () => {
+      image.replaceWith(el(baliseRepli, { class: classeRepli, text: "👤" }));
+    });
+    return image;
+  }
+
+  function vignette(item) {
+    if (item.image) return photo(item.image, "", "", "span", "ph");
+    return el("span", { class: "ph", text: "👤" });
+  }
+
+  function ligne(item, avecExtrait) {
+    const txt = el("span", { class: "txt" }, el("strong", { text: item.titre }));
+    if (item.description) txt.appendChild(el("em", { text: item.description }));
+    if (avecExtrait && item.extrait) txt.appendChild(el("span", { text: item.extrait }));
+    return el("button", { class: "row", on: { click: () => ouvrirFiche(item.titre, item.lang) } }, vignette(item), txt);
+  }
+
+  function afficherResultats(liste) {
+    resultsEl.replaceChildren();
+    if (liste.length < 2) return;
+    resultsEl.appendChild(el("h3", { class: "chips-label", text: liste.length + " résultats — choisissez la bonne personne" }));
+    for (const item of liste) resultsEl.appendChild(ligne(item, true));
+  }
+
+  function bloc(titre, contenu) {
+    return el("section", { class: "block" }, el("h3", { text: titre }), contenu);
+  }
+
+  function afficherFiche(fiche) {
+    resultsEl.replaceChildren();
+    sheetEl.replaceChildren();
+    sheetEl.classList.remove("hidden");
+
+    // En-tête : portrait + identité
+    const portrait = fiche.image
+      ? photo(fiche.image, fiche.titre, "portrait", "div", "portrait empty")
+      : el("div", { class: "portrait empty", text: "👤" });
+
+    const ident = el("div", { class: "ident" }, el("h2", { text: fiche.titre }));
+    if (fiche.description) ident.appendChild(el("p", { class: "role", text: fiche.description }));
+
+    const meta = el("div", { class: "meta" });
+    if (fiche.age != null) meta.appendChild(el("span", { class: "tag", text: fiche.age + " ans" }));
+    if (!fiche.estPersonne) meta.appendChild(el("span", { class: "tag", text: "Fiche non biographique" }));
+
+    const favoris = lireFavoris();
+    const estFavori = favoris.includes(fiche.titre);
+    meta.appendChild(el("button", {
+      class: "chip", text: estFavori ? "★ Enregistrée" : "☆ Enregistrer",
+      on: { click: () => { basculerFavori(fiche.titre); afficherFiche(fiche); } },
+    }));
+    ident.appendChild(meta);
+
+    if (fiche.liens.length) {
+      const liens = el("div", { class: "links" });
+      for (const l of fiche.liens) {
+        liens.appendChild(el("a", {
+          class: "link", text: l.label + " ↗",
+          attrs: { href: l.url, target: "_blank", rel: "noopener noreferrer" },
+        }));
+      }
+      ident.appendChild(liens);
+    }
+
+    sheetEl.appendChild(el("div", { class: "head" }, portrait, ident));
+
+    // En bref
+    if (fiche.faits.length) {
+      const dl = el("dl", { class: "facts" });
+      for (const f of fiche.faits) {
+        dl.appendChild(el("div", { class: "fact" }, el("dt", { text: f.label }), el("dd", { text: f.vals.join(" · ") })));
+      }
+      sheetEl.appendChild(bloc("En bref", dl));
+    }
+
+    // Biographie
+    const paras = fiche.biographie.split("\n").map((p) => p.trim()).filter(Boolean);
+    if (paras.length) {
+      const zone = el("div");
+      for (const p of paras) zone.appendChild(el("p", { class: "para", text: p }));
+      sheetEl.appendChild(bloc("Biographie", zone));
+    }
+
+    // Œuvres, distinctions, nominations
+    for (const liste of fiche.listes) {
+      const ul = el("ul", { class: "tags" });
+      for (const v of liste.vals) ul.appendChild(el("li", { text: v }));
+      sheetEl.appendChild(bloc(liste.label, ul));
+    }
+
+    // Sources
+    const sources = el("div", { class: "links" });
+    if (fiche.urlWikipedia) {
+      sources.appendChild(el("a", { class: "link", text: "Article Wikipédia complet ↗",
+        attrs: { href: fiche.urlWikipedia, target: "_blank", rel: "noopener noreferrer" } }));
+    }
+    if (fiche.urlWikidata) {
+      sources.appendChild(el("a", { class: "link", text: "Données Wikidata ↗",
+        attrs: { href: fiche.urlWikidata, target: "_blank", rel: "noopener noreferrer" } }));
+    }
+    sheetEl.appendChild(bloc("Sources", sources));
+
+    // Profils proches
+    if (fiche.proches.length) {
+      const grille = el("div", { class: "near" });
+      for (const p of fiche.proches) grille.appendChild(ligne(p, false));
+      sheetEl.appendChild(bloc("Profils proches", grille));
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function rendreChips() {
+    const zoneEx = $("#examples");
+    zoneEx.replaceChildren(el("span", { class: "chips-label", text: "Exemples :" }));
+    for (const nom of EXEMPLES) {
+      zoneEx.appendChild(el("button", { class: "chip", text: nom, on: { click: () => lancer(nom) } }));
+    }
+
+    const favoris = lireFavoris();
+    const zoneFav = $("#favs");
+    zoneFav.replaceChildren(el("span", { class: "chips-label", text: "⭐ Enregistrées :" }));
+    zoneFav.classList.toggle("hidden", favoris.length === 0);
+    for (const nom of favoris) {
+      zoneFav.appendChild(el("button", { class: "chip fav", text: nom, on: { click: () => ouvrirFiche(nom) } }));
+    }
+  }
+
+  function basculerFavori(nom) {
+    const favoris = lireFavoris();
+    const suivant = favoris.includes(nom) ? favoris.filter((n) => n !== nom) : [nom, ...favoris];
+    ecrireFavoris(suivant);
+    rendreChips();
+  }
+
+  // ---------- Actions ----------
+  let occupe = false;
+
+  function erreurLisible(err) {
+    if (!navigator.onLine) return "Vous semblez hors ligne : cette page a besoin d'internet pour interroger Wikipédia.";
+    return (err && err.message) || "La recherche a échoué. Réessayez dans un instant.";
+  }
+
+  async function lancer(terme) {
+    const q = (terme != null ? terme : $("#q").value).trim();
+    if (!q || occupe) return;
+    if (terme != null) $("#q").value = terme;
+
+    occupe = true;
+    $("#goBtn").disabled = true;
+    sheetEl.classList.add("hidden");
+    resultsEl.replaceChildren();
+    message("Recherche en cours…", false);
+
+    try {
+      const liste = await rechercher(q, $("#lang").value);
+      if (liste.length === 0) {
+        message("Aucune personnalité trouvée pour « " + q + " ».", true);
+      } else if (liste.length === 1) {
+        message("", false);
+        await ouvrirFiche(liste[0].titre, liste[0].lang, true);
+      } else {
+        message("", false);
+        afficherResultats(liste);
+      }
+    } catch (err) {
+      message(erreurLisible(err), true);
+    } finally {
+      occupe = false;
+      $("#goBtn").disabled = false;
+    }
+  }
+
+  async function ouvrirFiche(titre, lang, dejaOccupe) {
+    if (occupe && !dejaOccupe) return;
+    if (!dejaOccupe) occupe = true;
+    $("#goBtn").disabled = true;
+    resultsEl.replaceChildren();
+    sheetEl.classList.add("hidden");
+    message("Chargement de la fiche…", false);
+
+    try {
+      const langue = lang || $("#lang").value;
+      let fiche = await construireFiche(titre, langue);
+      if (!fiche) fiche = await construireFiche(titre, langue === "fr" ? "en" : "fr");
+
+      if (!fiche) {
+        message("Aucune page trouvée pour « " + titre + " ».", true);
+      } else {
+        message("", false);
+        afficherFiche(fiche);
+      }
+    } catch (err) {
+      message(erreurLisible(err), true);
+    } finally {
+      occupe = false;
+      $("#goBtn").disabled = false;
+    }
+  }
+
+  // ---------- Init ----------
+  $("#goBtn").addEventListener("click", () => lancer());
+  $("#q").addEventListener("keydown", (e) => { if (e.key === "Enter") lancer(); });
+  rendreChips();
+</script>
+</body>
+</html>
