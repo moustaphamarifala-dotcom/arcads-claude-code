@@ -8,3 +8,28 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# ── Pack de skills Arcads (krusemediallc/arcads-claude-code) ──────────────
+MASTER_CONTEXT.md
+.claude/skills/
+.claude/worktrees/
+.claude/settings.local.json
+.cursor/skills/
+__pycache__/
+*.pyc
+*.log
+outputs/
+output/
+
+# Les médias de référence (visages, photos produit, planches de style) restent
+# locaux : déposez-les dans references/… ou lancez ./scripts/fetch-arcads-references.sh
+references/**
+!references/**/
+!references/README.md
+!references/**/.gitkeep
+
+# Scripts jetables d'itération sur les miniatures (pas le script canonique du skill)
+scripts/generate-thumbnails.sh
+scripts/generate-thumbnails-*.sh
+scripts/generate-ab-variants*.sh
+scripts/regen-*.sh
