@@ -45,9 +45,11 @@ Le moteur utilisé est affiché au-dessus du texte produit. Gemini passe par l'*
 de Google (`POST /v1beta/interactions`), en streaming, sans dépendance supplémentaire.
 
 Deux réglages optionnels : `GEMINI_TEXT_MODEL` pour changer de modèle, et `GEMINI_THINKING_LEVEL`
-(`minimal` / `low` / `medium` / `high`, défaut `low`) pour l'effort de réflexion. Attention au coût :
-les tokens de réflexion sont facturés sans apparaître dans le texte affiché, et pèsent en général
-bien plus lourd que la réponse visible.
+pour l'effort de réflexion (défaut `low`). Les valeurs acceptées dépendent du modèle — `gemini-3.7-flash`
+accepte `low`, `medium` et `high`, mais renvoie une erreur 400 sur `minimal` ; `off` n'envoie pas le
+champ du tout. Attention au coût : les tokens de réflexion sont facturés sans apparaître dans le texte
+affiché et pèsent bien plus lourd que la réponse visible (mesuré : ~220 tokens de réflexion pour une
+réponse de 4 tokens, même en `low`).
 
 Le **Studio Couture Bazin** (page `/couture`) permet d'**habiller un modèle avec ta propre photo de tissu** : ajoute une photo de référence (bazin, modèle…), décris le vêtement, et l'IA crée la tenue. Propulsé par **Nano Banana (Google Gemini)** — nécessite une clé `GOOGLE_API_KEY` (gratuite avec quota sur [Google AI Studio](https://aistudio.google.com/apikey)).
 

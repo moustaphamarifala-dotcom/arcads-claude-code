@@ -13,9 +13,9 @@ Réponds directement avec le contenu, sans préambule du type « Voici votre tex
 // l'ancien endpoint generateContent utilisé ailleurs dans l'app pour les images.
 const GEMINI_INTERACTIONS_URL = "https://generativelanguage.googleapis.com/v1beta/interactions";
 const GEMINI_TEXT_MODEL = process.env.GEMINI_TEXT_MODEL || "gemini-3.7-flash";
-// minimal | low | medium | high — ou « off » pour ne rien envoyer et laisser le modèle décider.
-// Les tokens de réflexion sont facturés sans apparaître dans la sortie visible : « low » suffit
-// largement pour de la rédaction et évite de payer un raisonnement inutile.
+// Valeurs acceptées selon le modèle — gemini-3.7-flash prend low | medium | high et refuse
+// « minimal » (400). « off » n'envoie pas le champ. Les tokens de réflexion sont facturés sans
+// apparaître dans la sortie visible, d'où « low » par défaut : c'est le moins coûteux ici.
 const GEMINI_THINKING_LEVEL = process.env.GEMINI_THINKING_LEVEL || "low";
 
 type Moteur = "claude" | "gemini" | "gratuit";
