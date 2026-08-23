@@ -15,6 +15,14 @@ Application web de génération de contenu par intelligence artificielle : **tex
 | 🔎 **Qui est qui ?** (`personnes.html`) | Fichier autonome — Wikipédia + Wikidata | — (identique) |
 | 🔎 **Fiches Personnalités** (`/personnes`) | Wikipédia + Wikidata | — (identique) |
 | ⚡ **Intel** (`/intel`) | Google Actualités + Pollinations.ai | Google Actualités + Claude |
+| 🌑 **DarkGPT** (`/dark`) | Pollinations.ai | Claude (Anthropic), streaming temps réel |
+
+**DarkGPT** (page `/dark`) est un **chat conversationnel en thème sombre** : historique multi-tours,
+réponses en streaming, rendu Markdown (titres, listes, blocs de code avec bouton *Copier*) et cinq modes
+de réponse — *Standard*, *Sans détour*, *Dev*, *Copywriter*, *Pédagogue*. Les conversations sont
+enregistrées **dans le navigateur** (localStorage), jamais côté serveur, et peuvent être exportées en
+Markdown. Avec `ANTHROPIC_API_KEY` la page utilise Claude ; sans clé, elle bascule automatiquement sur
+le mode gratuit.
 
 Le **Studio Photo** (page `/photo`) est un générateur d'images **ultra-réalistes** dédié : styles (portrait, paysage, produit, nourriture…), formats, galerie sauvegardée et téléchargement de chaque image.
 
@@ -69,7 +77,13 @@ app/
 │   ├── TextGenerator.tsx        # Interface génération de texte
 │   ├── ImageGenerator.tsx       # Interface génération d'image
 │   └── VideoGenerator.tsx       # Interface génération de vidéo
+├── dark/
+│   ├── page.tsx                 # Chat DarkGPT (thème sombre)
+│   ├── Markdown.tsx             # Rendu Markdown sans dépendance
+│   ├── personas.ts              # Modes de réponse (côté interface)
+│   └── dark.module.css          # Styles de la page
 └── api/
+    ├── dark/route.ts            # API chat en streaming (NDJSON)
     ├── generate-text/route.ts   # API Claude en streaming
     ├── generate-image/route.ts  # API Replicate (FLUX)
     └── generate-video/route.ts  # API Replicate (WAN) + suivi d'état

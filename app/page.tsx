@@ -43,6 +43,21 @@ export default function Home() {
 
       <p style={{ textAlign: "center", marginTop: 28 }}>
         <a
+          href="/dark"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🌑 DarkGPT — chat IA →
+        </a>
+        <a
           href="/photo"
           style={{
             display: "inline-block",
