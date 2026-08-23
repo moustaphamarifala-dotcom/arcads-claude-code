@@ -1,0 +1,49 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_siri_siri_douce.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Commandez sur WhatsApp",
+  "ctaDurationInSeconds": 3,
+  "shots": [
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/60e1d162-image.png",
+      "durationInSeconds": 0.6,
+      "from": {"zoom": 1.1, "x": 0.5, "y": 0.4},
+      "to": {"zoom": 1.2, "x": 0.5, "y": 0.5}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/e2bc1ef2-04f96390d6ae4e359ae41fdcea5725e8.jpeg",
+      "durationInSeconds": 5.0,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.4},
+      "to": {"zoom": 1.15, "x": 0.5, "y": 0.55}
+    },
+    {
+      "photo": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/gemini_check/f08.jpg",
+      "durationInSeconds": 4.4,
+      "from": {"zoom": 1.05, "x": 0.5, "y": 0.4},
+      "to": {"zoom": 1.15, "x": 0.5, "y": 0.5}
+    },
+    {
+      "photo": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/frames_new/f05.jpg",
+      "durationInSeconds": 3.8,
+      "from": {"zoom": 1.1, "x": 0.4, "y": 0.5},
+      "to": {"zoom": 1.2, "x": 0.6, "y": 0.5}
+    },
+    {
+      "photo": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/gemini_check/f02.jpg",
+      "durationInSeconds": 2.4,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.4},
+      "to": {"zoom": 1.1, "x": 0.5, "y": 0.5}
+    }
+  ],
+  "captions": [
+    {"start": 0.2, "end": 0.8, "text": "Mesdames,"},
+    {"start": 0.8, "end": 5.8, "text": "si vous recherchez un Bazin de qualité, élégant, original"},
+    {"start": 5.8, "end": 10.2, "text": "et qui donne une vraie allure à votre tenue,"},
+    {"start": 10.2, "end": 14.0, "text": "venez découvrir les vrais Bazins Siri Siri"},
+    {"start": 14.0, "end": 16.4, "text": "chez Bazin Mari Falah."}
+  ]
+}
