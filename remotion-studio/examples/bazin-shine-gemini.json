@@ -1,0 +1,22 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "width": 1280,
+  "height": 720,
+  "phone": "55 13 34 14",
+  "tagline": "Commandez sur WhatsApp",
+  "ctaDurationInSeconds": 3.5,
+  "shots": [
+    {
+      "type": "video",
+      "src": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/bazin-shine-enhanced.mp4",
+      "videoStartFrom": 0,
+      "durationInSeconds": 10.0,
+      "zoomTo": 1.06,
+      "volume": 1
+    }
+  ],
+  "captions": []
+}

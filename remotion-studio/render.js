@@ -20,12 +20,14 @@ const FORMATS = {
 	portrait4x5: {width: 1080, height: 1350}, // Feed (4:5)
 };
 
-const [, , specPath, outPath, format = 'vertical'] = process.argv;
+const [, , specPath, outPath, format] = process.argv;
 if (!specPath || !outPath) {
 	console.error('Usage: node render.js <spec.json> <output.mp4> [vertical|square|portrait4x5|all]');
 	process.exit(1);
 }
-if (format !== 'all' && !FORMATS[format]) {
+// No format given: render exactly as the spec says (its own width/height, or
+// the composition's 1080x1920 default) — never silently override it.
+if (format !== undefined && format !== 'all' && !FORMATS[format]) {
 	console.error(`Unknown format "${format}". Use one of: vertical, square, portrait4x5, all`);
 	process.exit(1);
 }
@@ -55,14 +57,14 @@ if (spec.audioFile) {
 	}
 });
 
-const formatsToRender = format === 'all' ? Object.keys(FORMATS) : [format];
+const formatsToRender = format === 'all' ? Object.keys(FORMATS) : [format ?? null];
 const outExt = path.extname(outPath);
 const outBase = outPath.slice(0, -outExt.length || undefined);
 
 formatsToRender.forEach((fmt) => {
-	const {width, height} = FORMATS[fmt];
+	const dims = fmt ? FORMATS[fmt] : {};
 	const fmtOutPath = format === 'all' ? `${outBase}-${fmt}${outExt}` : outPath;
-	const fmtSpec = {...spec, width, height};
+	const fmtSpec = {...spec, ...dims};
 
 	const tmpProps = path.join(__dirname, `.props-${Date.now()}-${fmt}.json`);
 	fs.writeFileSync(tmpProps, JSON.stringify(fmtSpec));
