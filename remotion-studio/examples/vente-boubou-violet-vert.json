@@ -5,23 +5,16 @@
   "dark2": "#1f2650",
   "width": 576,
   "height": 736,
-  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_vente_boubou.mp3",
   "ctaDurationInSeconds": 0,
   "shots": [
     {
       "type": "video",
       "src": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/3clips-colles-v2.mp4",
       "videoStartFrom": 0,
-      "durationInSeconds": 18.4,
+      "durationInSeconds": 18.13,
       "zoomTo": 1.08,
-      "volume": 0
+      "volume": 1
     }
   ],
-  "captions": [
-    {"start": 0.3, "end": 2.5, "text": "Regardez cette matière..."},
-    {"start": 2.5, "end": 6.8, "text": "ce boubou en Bazin riche, violet royal et vert émeraude."},
-    {"start": 6.8, "end": 10.2, "text": "Une pièce qui ne passe jamais inaperçue."},
-    {"start": 10.2, "end": 15.2, "text": "Chez Bazin Mari Falah, chaque tissu est fait pour les grandes occasions."},
-    {"start": 15.2, "end": 18.4, "text": "Dites-moi en commentaire quelle couleur vous préférez."}
-  ]
+  "captions": []
 }
