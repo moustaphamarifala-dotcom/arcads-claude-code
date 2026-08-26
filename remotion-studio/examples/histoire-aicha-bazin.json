@@ -1,0 +1,56 @@
+{
+  "brand": "BAZIN MARI FALAH",
+  "accent": "#f5c542",
+  "dark": "#0c1130",
+  "dark2": "#1f2650",
+  "audioFile": "/tmp/claude-0/-home-user/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/scratchpad/vo_histoire_bazin.mp3",
+  "phone": "55 13 34 14",
+  "tagline": "Commandez sur WhatsApp",
+  "ctaDurationInSeconds": 3.5,
+  "shots": [
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 6.3,
+      "from": {"zoom": 1.0, "x": 0.5, "y": 0.35},
+      "to": {"zoom": 1.12, "x": 0.5, "y": 0.4}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 6.8,
+      "from": {"zoom": 1.3, "x": 0.4, "y": 0.78},
+      "to": {"zoom": 1.42, "x": 0.42, "y": 0.82}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 6.8,
+      "from": {"zoom": 1.1, "x": 0.55, "y": 0.22},
+      "to": {"zoom": 1.22, "x": 0.5, "y": 0.2}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 7.2,
+      "from": {"zoom": 1.55, "x": 0.45, "y": 0.72},
+      "to": {"zoom": 1.68, "x": 0.48, "y": 0.7}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 5.9,
+      "from": {"zoom": 1.18, "x": 0.5, "y": 0.5},
+      "to": {"zoom": 1.0, "x": 0.5, "y": 0.45}
+    },
+    {
+      "photo": "/root/.claude/uploads/1f119bcb-adc6-55ca-bb38-3a77b108d8d8/bdb04a2b-image.png",
+      "durationInSeconds": 4.2,
+      "from": {"zoom": 1.15, "x": 0.5, "y": 0.18},
+      "to": {"zoom": 1.28, "x": 0.5, "y": 0.15}
+    }
+  ],
+  "captions": [
+    {"start": 0.3, "end": 6.6, "text": "À trois jours du mariage de sa sœur, Aïcha n'avait toujours pas trouvé son Bazin."},
+    {"start": 6.6, "end": 13.4, "text": "Elle avait fait trois boutiques. Des couleurs ternes, une qualité qui ne tenait pas la lumière."},
+    {"start": 13.4, "end": 20.2, "text": "Une amie lui a parlé de Bazin Mari Falah. Elle a failli ne pas y croire."},
+    {"start": 20.2, "end": 27.4, "text": "Dès qu'elle a touché le tissu, elle a su. Ce bleu, ce rouge, cette brillance... c'était celui-là."},
+    {"start": 27.4, "end": 33.3, "text": "Le jour du mariage, tout le monde lui a demandé où elle l'avait trouvé."},
+    {"start": 33.3, "end": 37.5, "text": "Chez Bazin Mari Falah. Le vrai Bazin, celui qu'on remarque."}
+  ]
+}
