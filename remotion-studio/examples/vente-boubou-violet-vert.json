@@ -6,6 +6,7 @@
   "width": 576,
   "height": 736,
   "ctaDurationInSeconds": 0,
+  "bannerPosition": "center",
   "shots": [
     {
       "type": "video",

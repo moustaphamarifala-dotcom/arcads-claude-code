@@ -94,18 +94,18 @@ const VideoShot = ({fps, src, videoStartFrom = 0, durationInFrames, zoomTo = 1.0
 	);
 };
 
-// ───────────────────────── Brand banner (top) ─────────────────────────
-const BrandBanner = ({brand, accent}) => {
+// ───────────────────────── Brand banner (top or center) ─────────────────────────
+const BrandBanner = ({brand, accent, position = 'top'}) => {
 	const frame = useCurrentFrame();
 	const in_ = interpolate(frame, [0, 18], [0, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
 	const y = interpolate(frame, [0, 18], [-14, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+	const placement = position === 'center' ? {top: '50%', transform: `translate(-50%, -50%) translateY(${y}px)`} : {top: 60, transform: `translateX(-50%) translateY(${y}px)`};
 	return (
 		<div
 			style={{
 				position: 'absolute',
-				top: 60,
 				left: '50%',
-				transform: `translateX(-50%) translateY(${y}px)`,
+				...placement,
 				opacity: in_,
 				background: 'rgba(8,8,16,0.72)',
 				borderRadius: 999,
@@ -417,6 +417,7 @@ const AdVideo = (props) => {
 		highlightWords = [],
 		showBanner = true,
 		showVignette = true,
+		bannerPosition = 'top',
 	} = props;
 	// Phone number and brand name are always emphasized in captions unless the
 	// caller already listed keywords of their own. Flattened to individual
@@ -508,7 +509,7 @@ const AdVideo = (props) => {
 			<Sequence from={0} durationInFrames={shotsTotalFrames}>
 				<AbsoluteFill>{shotSequences}</AbsoluteFill>
 				{showVignette ? <Vignette /> : null}
-				{showBanner ? <BrandBanner brand={brand} accent={accent} /> : null}
+				{showBanner ? <BrandBanner brand={brand} accent={accent} position={bannerPosition} /> : null}
 				<AbsoluteFill>{captionSequences}</AbsoluteFill>
 			</Sequence>
 
