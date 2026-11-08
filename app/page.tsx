@@ -117,6 +117,36 @@ export default function Home() {
         >
           📊 Mon Business (gestion) →
         </a>
+        <a
+          href="/factures.html"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🧾 Factures & Reçus →
+        </a>
+        <a
+          href="/calculateur.html"
+          style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            textDecoration: "none",
+            fontWeight: 600,
+            margin: "0 6px 10px",
+          }}
+        >
+          🧮 Calculateur de Prix →
+        </a>
       </p>
 
       <footer className="footer">

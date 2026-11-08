@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculateur de Prix & Marge — Mon Business</title>
+<style>
+  :root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eef1f6; --ink: #14213a; --muted: #5c6b86;
+    --line: #dde3ec; --accent: #0e9f6e; --accent-ink: #0a7a53; --accent-soft: rgba(14,159,110,0.12);
+    --gold: #a97e20; --good: #0e9f6e; --bad: #dc2626; --warn: #c2770b;
+    --shadow: 0 1px 2px rgba(20,33,58,0.05), 0 10px 26px rgba(20,33,58,0.07); --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1626; --surface: #172034; --surface-2: #1f2a42; --ink: #e9eff8; --muted: #93a1bd;
+      --line: #2a3650; --accent: #22c58a; --accent-ink: #5fe0b0; --accent-soft: rgba(34,197,138,0.15); --gold: #d9ad4e;
+      --good: #22c58a; --bad: #f2545b; --warn: #f0a83e;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 14px 34px rgba(0,0,0,0.4); }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; }
+  .num { font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 18px 90px; }
+  .app-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .app-header h1 { font-size: 1.5rem; font-weight: 820; letter-spacing: -0.02em; }
+  .app-header .back { color: var(--accent-ink); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+  .sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 1rem; font-weight: 750; margin-bottom: 16px; }
+  .fld { margin-bottom: 14px; }
+  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+  .inwrap { position: relative; }
+  input { width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 42px 12px 14px; color: var(--ink); font-family: inherit; font-size: 1.05rem; font-variant-numeric: tabular-nums; outline: none; }
+  input:focus { border-color: var(--accent); }
+  .unit { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+
+  .result { background: linear-gradient(140deg, var(--accent-soft), transparent); border: 1px solid var(--accent); }
+  .big-price { text-align: center; padding: 8px 0 4px; }
+  .big-price .lbl { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+  .big-price .val { font-size: 2.6rem; font-weight: 850; letter-spacing: -0.03em; color: var(--accent-ink); margin-top: 4px; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; text-align: center; }
+  .stat .k { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat .v { font-size: 1.3rem; font-weight: 820; margin-top: 4px; }
+  .stat .v.good { color: var(--good); } .stat .v.bad { color: var(--bad); } .stat .v.gold { color: var(--gold); }
+  .hint { font-size: 0.85rem; color: var(--muted); margin-top: 14px; line-height: 1.5; text-align: center; }
+  .pill { display:inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
+  .pill.good { background: var(--accent-soft); color: var(--accent-ink); }
+  .pill.warn { background: rgba(194,119,11,0.14); color: var(--warn); }
+  .pill.bad { background: rgba(220,38,38,0.1); color: var(--bad); }
+  .tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .tab { flex:1; background: var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px; cursor:pointer; font-weight:700; font-family:inherit; color:var(--muted); font-size:0.92rem; }
+  .tab.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="app-header">
+    <h1>🧮 Calculateur de Prix & Marge</h1>
+    <a class="back" href="/business.html">← Mon Business</a>
+  </div>
+  <p class="sub">Trouve le bon prix de vente pour être sûr de gagner de l'argent sur chaque article.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-mode="forward">Quel prix de vente ?</button>
+    <button class="tab" data-mode="reverse">Quelle marge je fais ?</button>
+  </div>
+
+  <!-- MODE 1 : trouver le prix de vente -->
+  <div id="forward">
+    <div class="card">
+      <h2>Tes coûts (par article)</h2>
+      <div class="fld"><label>Prix d'achat du tissu / produit</label><div class="inwrap"><input id="cost" type="number" min="0" inputmode="numeric" placeholder="0"><span class="unit">F</span></div></div>
+      <div class="fld"><label>Frais en plus (transport, douane, emballage…)</label><div class="inwrap"><input id="fees" type="number" min="0" inputmode="numeric" placeholder="0"><span class="unit">F</span></div></div>
+      <div class="fld"><label>Marge que tu veux faire</label><div class="inwrap"><input id="margin" type="number" min="0" inputmode="numeric" placeholder="40" value="40"><span class="unit">%</span></div></div>
+    </div>
+
+    <div class="card result">
+      <div class="big-price"><div class="lbl">Prix de vente conseillé</div><div class="val num" id="sellPrice">0 F</div></div>
+      <div style="text-align:center"><span class="pill good" id="marginPill"></span></div>
+      <div class="stat-row">
+        <div class="stat"><div class="k">Prix de revient</div><div class="v num" id="revient">0 F</div></div>
+        <div class="stat"><div class="k">Bénéfice / article</div><div class="v good num" id="profit">0 F</div></div>
+      </div>
+      <p class="hint">La « marge » est la part de bénéfice sur ton prix de vente. Astuce : vise au moins 30–40 % pour couvrir les imprévus et les invendus.</p>
+    </div>
+  </div>
+
+  <!-- MODE 2 : marge à partir du prix de vente -->
+  <div id="reverse" style="display:none">
+    <div class="card">
+      <h2>Tes chiffres</h2>
+      <div class="fld"><label>Prix d'achat + frais (coût total)</label><div class="inwrap"><input id="rCost" type="number" min="0" inputmode="numeric" placeholder="0"><span class="unit">F</span></div></div>
+      <div class="fld"><label>Prix auquel tu vends</label><div class="inwrap"><input id="rSell" type="number" min="0" inputmode="numeric" placeholder="0"><span class="unit">F</span></div></div>
+    </div>
+
+    <div class="card result">
+      <div class="big-price"><div class="lbl">Ton bénéfice par article</div><div class="val num" id="rProfit">0 F</div></div>
+      <div style="text-align:center"><span class="pill good" id="rPill"></span></div>
+      <div class="stat-row">
+        <div class="stat"><div class="k">Marge</div><div class="v gold num" id="rMargin">0 %</div></div>
+        <div class="stat"><div class="k">Coefficient</div><div class="v num" id="rCoef">0×</div></div>
+      </div>
+      <p class="hint">La marge se calcule sur le prix de vente ; le coefficient, c'est combien de fois tu multiplies ton coût.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const F = (n) => (Math.round(Number(n)||0)).toLocaleString("fr-FR").replace(/[  ]/g," ") + " F";
+  const val = (id) => Math.max(0, parseFloat($(id).value) || 0);
+
+  // Onglets
+  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+    const fwd = t.dataset.mode === "forward";
+    $("forward").style.display = fwd ? "" : "none";
+    $("reverse").style.display = fwd ? "none" : "";
+  }));
+
+  // MODE 1 : prix de vente à partir de la marge voulue
+  function calcForward(){
+    const revient = val("cost") + val("fees");
+    let m = val("margin"); if (m >= 100) m = 99; // marge sur PV : < 100 %
+    const sell = m > 0 ? revient / (1 - m/100) : revient;
+    const profit = sell - revient;
+    $("revient").textContent = F(revient);
+    $("sellPrice").textContent = F(sell);
+    $("profit").textContent = F(profit);
+    const realMargin = sell > 0 ? (profit / sell) * 100 : 0;
+    const pill = $("marginPill");
+    pill.textContent = `Marge réelle : ${realMargin.toFixed(0)} %`;
+    pill.className = "pill " + (realMargin >= 30 ? "good" : realMargin >= 15 ? "warn" : "bad");
+  }
+  ["cost","fees","margin"].forEach(id => $(id).addEventListener("input", calcForward));
+
+  // MODE 2 : marge à partir du prix de vente
+  function calcReverse(){
+    const cost = val("rCost"), sell = val("rSell");
+    const profit = sell - cost;
+    const margin = sell > 0 ? (profit / sell) * 100 : 0;
+    const coef = cost > 0 ? sell / cost : 0;
+    $("rProfit").textContent = F(profit);
+    $("rProfit").style.color = profit >= 0 ? "var(--good)" : "var(--bad)";
+    $("rMargin").textContent = margin.toFixed(0) + " %";
+    $("rCoef").textContent = coef.toFixed(2).replace(/\.?0+$/,"") + "×";
+    const pill = $("rPill");
+    if (profit < 0) { pill.textContent = "⚠️ Tu vends à perte !"; pill.className = "pill bad"; }
+    else if (margin >= 30) { pill.textContent = "✅ Bonne marge"; pill.className = "pill good"; }
+    else if (margin >= 15) { pill.textContent = "Marge correcte"; pill.className = "pill warn"; }
+    else { pill.textContent = "Marge faible"; pill.className = "pill bad"; }
+  }
+  ["rCost","rSell"].forEach(id => $(id).addEventListener("input", calcReverse));
+
+  calcForward(); calcReverse();
+</script>
+</body>
+</html>
